@@ -1,0 +1,973 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Spike Admin UI Design System (Exact Match to User Reference Demos)
+   ========================================================================== */
+:root {
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spike Admin Primary Color Palette */
+  --primary: #5d87ff;
+  --primary-hover: #4570ea;
+  --primary-light: #ecf2ff;
+  --primary-border: #d2e1ff;
+
+  --secondary: #49beff;
+  --secondary-light: #e8f7ff;
+
+  --success: #13deb9;
+  --success-light: #e6fffa;
+
+  --warning: #ffa800;
+  --warning-light: #fef5e5;
+
+  --danger: #fa896b;
+  --danger-light: #fdede8;
+
+  --indigo: #6610f2;
+  --indigo-light: #f1e9fe;
+
+  --dark: #2a3547;
+  --muted: #5a6a85;
+  --light-muted: #7c8fac;
+  --border: #ebf1f6;
+  --border-subtle: #f6f9fc;
+
+  --bg-body: #f4f7fb;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f8fafc;
+
+  /* Card Shadows */
+  --shadow-card: 0 9px 17.5px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-hover: 0 16px 32px rgba(93, 135, 255, 0.12), 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-btn: 0 4px 12px rgba(93, 135, 255, 0.35);
+
+  /* Legacy & Semantic Mappings */
+  --ink: #2a3547;
+  --card-bg: #ffffff;
+  --purple: #5d87ff;
+  --purple-soft: #ecf2ff;
+  --green: #13deb9;
+  --green-soft: #e6fffa;
+  --amber: #ffa800;
+  --amber-soft: #fef5e5;
+  --red: #fa896b;
+  --red-soft: #fdede8;
+  --blue: #49beff;
+  --blue-soft: #e8f7ff;
+
+  --brand-primary: #5d87ff;
+  --brand-secondary: #ecf2ff;
+  --brand-bg: #f4f7fb;
+  --brand-accent: #ffa800;
+  --brand-text: #2a3547;
+  --brand-card: #ffffff;
+
+  --bg-primary: #f4f7fb;
+  --bg-surface: #ffffff;
+  --bg-hover: #ecf2ff;
+
+  --border-color: #ebf1f6;
+  --text-main: #2a3547;
+  --text-muted: #5a6a85;
+  --text-light: #7c8fac;
+
+  --primary-50: #ecf2ff;
+  --primary-500: #5d87ff;
+  --primary-600: #4570ea;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: var(--font-family);
+  color: var(--dark);
+  background-color: var(--bg-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* ==========================================================================
+   Smooth Animations
+   ========================================================================== */
+@keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.75;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Layout Utilities */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-body);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--bg-body);
+}
+
+.page-body {
+  padding: 1.75rem 2rem 2.5rem;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Spike Admin Navbar (Top Bar)
+   ========================================================================== */
+.top-navbar {
+  height: 70px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.navbar-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-search input {
+  height: 38px;
+  width: 240px;
+  padding: 0 1rem 0 2.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-body);
+  font-size: 0.85rem;
+  color: var(--dark);
+  transition: all 0.2s ease;
+}
+
+.navbar-search input:focus {
+  width: 300px;
+  border-color: var(--primary);
+  background: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(93, 135, 255, 0.15);
+}
+
+.navbar-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.navbar-icon-btn:hover {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.navbar-badge-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  border: 2px solid #ffffff;
+}
+
+/* ==========================================================================
+   Spike Admin Sidebar
+   ========================================================================== */
+.app-sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 30;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.app-sidebar.collapsed {
+  width: 74px;
+}
+
+.sidebar-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.25s ease;
+}
+
+.app-sidebar.collapsed .sidebar-header {
+  padding: 0;
+  justify-content: center;
+}
+
+.sidebar-logo-text {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+}
+
+.sidebar-nav {
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  overflow-y: auto;
+  transition: all 0.25s ease;
+}
+
+.app-sidebar.collapsed .sidebar-nav {
+  padding: 1.25rem 0.5rem;
+  align-items: center;
+}
+
+.sidebar-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--light-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 0.85rem 0.25rem;
+}
+
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.app-sidebar.collapsed .nav-link-item {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.nav-link-item:hover {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.nav-link-item.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Spike Admin Card Component
+   ========================================================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem;
+  opacity: 0;
+  animation: fadeInSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Welcome Hero Banner Card */
+.welcome-hero-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* Metric Mini Wave Cards (Matching Minisidebar Demo 3 Cards) */
+.spike-stat-card {
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 145px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.spike-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+.spike-stat-card-wave {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Spike Admin Badges
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.badge-light-primary {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-light-success {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.badge-light-warning {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.badge-light-danger {
+  background-color: var(--danger-light);
+  color: var(--danger);
+}
+
+.badge-light-secondary {
+  background-color: var(--secondary-light);
+  color: var(--secondary);
+}
+
+/* Compatibility aliases */
+.badge.high, .badge-high {
+  background-color: var(--danger-light);
+  color: var(--danger);
+}
+
+.badge.med, .badge-medium {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.badge.low, .badge-low {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.badge-purple {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   Buttons & Form Controls
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 6px 16px rgba(93, 135, 255, 0.45);
+}
+
+.btn-outline {
+  border: 1px solid var(--border);
+  background-color: #ffffff;
+  color: var(--dark);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary-border);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  border-radius: 6px;
+}
+
+.input-control, .select-control {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: var(--dark);
+  transition: all 0.15s ease;
+}
+
+.input-control:focus, .select-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(93, 135, 255, 0.15);
+}
+
+/* ==========================================================================
+   Spike Admin Data Table & Responsive Container
+   ========================================================================== */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+}
+
+.data-table,
+.spike-table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.data-table th,
+.spike-table th {
+  padding: 14px 20px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+  background: #f8fafc;
+  white-space: nowrap;
+}
+
+.data-table td,
+.spike-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.86rem;
+  color: var(--dark);
+  vertical-align: middle;
+}
+
+.data-table tbody tr,
+.spike-table tbody tr {
+  transition: background-color 0.18s ease;
+}
+
+.data-table tbody tr:hover,
+.spike-table tbody tr:hover {
+  background-color: rgba(93, 135, 255, 0.04);
+}
+
+.data-table tbody tr:last-child td,
+.spike-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   Progress Bar
+   ========================================================================== */
+.progress-container {
+  height: 6px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* ==========================================================================
+   Spike Admin Authguard / Login Layout (Zoom & Aspect-Ratio Resilient)
+   ========================================================================== */
+.auth-page-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f4f7fb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.auth-blob {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.auth-blob-top {
+  top: -45px;
+  right: -35px;
+  width: 340px;
+  height: 340px;
+  border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+  background: #49beff;
+  opacity: 0.85;
+}
+
+.auth-blob-bottom {
+  bottom: -45px;
+  left: 12%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: #fa896b;
+  opacity: 0.78;
+}
+
+.auth-card {
+  max-width: 880px;
+  width: 100%;
+  margin: auto;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  position: relative;
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.auth-left-col {
+  background-color: #f8fafc;
+  border-right: 1px solid var(--border);
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.auth-right-col {
+  padding: 2.25rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 820px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+  .auth-left-col {
+    display: none;
+  }
+  .auth-right-col {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   Mentor Dashboard Section Navigation & Modular Cards
+   ========================================================================== */
+.mentor-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+}
+
+.mentor-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.05rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.mentor-tab-btn:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.mentor-tab-btn.active {
+  color: #ffffff;
+  background: var(--primary);
+  box-shadow: 0 4px 12px rgba(93, 135, 255, 0.28);
+}
+
+.badge-tab-count {
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+.mentor-tab-btn.active .badge-tab-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.mentor-tab-btn:not(.active) .badge-tab-count {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+/* ==========================================================================
+   Spike Admin Student Stat Cards & Charts
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--dark);
+  line-height: 1.15;
+  margin-bottom: 0.25rem;
+}
+
+.stat-subtext {
+  font-size: 0.74rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Semester Tabs */
+.tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.tab-btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 10px rgba(93, 135, 255, 0.25);
+}
+
+/* Clean Bar Chart */
+.chart-bar-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 170px;
+  padding: 1rem 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.75rem;
+}
+
+.chart-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.chart-bar {
+  width: 22px;
+  border-radius: 6px 6px 0 0;
+  transition: height 0.6s ease;
+  min-height: 8px;
+}
+
+.chart-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   Chatbot Floating Widget Styles
+   ========================================================================== */
+.chatbot-widget-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.chatbot-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), #4570ea);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  box-shadow: 0 8px 24px rgba(93, 135, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.chatbot-trigger-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(93, 135, 255, 0.5);
+}
+
+.chatbot-window {
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 100px);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 12px;
+  animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.chatbot-header {
+  background: linear-gradient(135deg, var(--primary), #4570ea);
+  color: #ffffff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-body {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #f8fafc;
+}
+
+.chat-bubble-ai {
+  align-self: flex-start;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  border-radius: 14px 14px 14px 4px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--dark);
+  max-width: 88%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.chat-bubble-user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 14px 14px 4px 14px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  max-width: 88%;
+  box-shadow: 0 2px 6px rgba(93, 135, 255, 0.3);
+}
+
+.chatbot-footer {
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+

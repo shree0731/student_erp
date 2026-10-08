@@ -1,0 +1,590 @@
+faculty_id,name,department,designation,email,years_of_experience,college_id,assigned_students_count
+FAC_EEC_CSE_001,Dr. Kavitha Swaminathan,CSE,Assistant Professor,kavitha.swa@eec.edu.in,2,C101,16
+FAC_EEC_CSE_002,Dr. Uma Krishnan,CSE,Assistant Professor,uma.kri@eec.edu.in,2,C101,27
+FAC_EEC_CSE_003,Dr. Deepa Chidambaram,CSE,Assistant Professor,deepa.chi@eec.edu.in,3,C101,16
+FAC_EEC_CSE_004,Dr. Dinesh Chandrasekaran,CSE,Assistant Professor,dinesh.cha@eec.edu.in,8,C101,20
+FAC_EEC_CSE_005,Prof. Subhashini Sundaram,CSE,Assistant Professor,subhashini.sun@eec.edu.in,5,C101,17
+FAC_EEC_CSE_006,Dr. Saravanan Swaminathan,CSE,Professor,saravanan.swa@eec.edu.in,22,C101,15
+FAC_EEC_CSE_007,Dr. Priya Krishnan,CSE,Assistant Professor,priya.kri@eec.edu.in,4,C101,19
+FAC_EEC_CSE_008,Prof. Sudha Swaminathan,CSE,Associate Professor,sudha.swa@eec.edu.in,10,C101,13
+FAC_EEC_CSE_009,Dr. Senthamarai Sengottaiyan,CSE,Assistant Professor,senthamarai.sen@eec.edu.in,7,C101,15
+FAC_EEC_CSE_010,Dr. Sudha Palanisamy,CSE,Associate Professor,sudha.pal@eec.edu.in,9,C101,19
+FAC_EEC_CSE_011,Prof. Uma Chidambaram,CSE,Professor,uma.chi@eec.edu.in,30,C101,17
+FAC_EEC_CSE_012,Dr. Santhosh Ramasamy,CSE,Assistant Professor,santhosh.ram@eec.edu.in,8,C101,22
+FAC_EEC_CSE_013,Dr. Malathi Balasubramanian,CSE,Assistant Professor,malathi.bal@eec.edu.in,4,C101,22
+FAC_EEC_CSE_014,Dr. Dinesh Krishnan,CSE,Assistant Professor,dinesh.kri@eec.edu.in,7,C101,19
+FAC_EEC_CSE_015,Dr. Santhosh Balasubramanian,CSE,Assistant Professor,santhosh.bal@eec.edu.in,7,C101,20
+FAC_EEC_CSE_016,Prof. Dinesh Chidambaram,CSE,Associate Professor,dinesh.chi@eec.edu.in,9,C101,19
+FAC_EEC_CSE_017,Prof. Santhosh Natarajan,CSE,Assistant Professor,santhosh.nat@eec.edu.in,2,C101,19
+FAC_EEC_CSE_018,Dr. Deepa Muthusamy,CSE,Assistant Professor,deepa.mut@eec.edu.in,7,C101,21
+FAC_EEC_CSE_019,Dr. Sridhar Subramanian,CSE,Assistant Professor,sridhar.sub@eec.edu.in,6,C101,17
+FAC_EEC_CSE_020,Prof. Bhuvaneswari Swaminathan,CSE,Assistant Professor,bhuvaneswari.swa@eec.edu.in,6,C101,24
+FAC_EEC_CSE_021,Dr. Vijay Palanisamy,CSE,Professor,vijay.pal@eec.edu.in,25,C101,24
+FAC_EEC_IT_022,Prof. Ramesh Natarajan,IT,Assistant Professor,ramesh.nat@eec.edu.in,3,C101,11
+FAC_EEC_IT_023,Dr. Padmavathi Chandrasekaran,IT,Assistant Professor,padmavathi.cha@eec.edu.in,6,C101,7
+FAC_EEC_IT_024,Dr. Sridhar Srinivasan,IT,Assistant Professor,sridhar.sri@eec.edu.in,2,C101,11
+FAC_EEC_IT_025,Prof. Uma Ramasamy,IT,Assistant Professor,uma.ram@eec.edu.in,4,C101,18
+FAC_EEC_IT_026,Dr. Gopinath Muthusamy,IT,Assistant Professor,gopinath.mut@eec.edu.in,5,C101,28
+FAC_EEC_IT_027,Prof. Kavitha Swaminathan,IT,Associate Professor,kavitha.swa@eec.edu.in,10,C101,10
+FAC_EEC_IT_028,Prof. Subhashini Gopalakrishnan,IT,Assistant Professor,subhashini.gop@eec.edu.in,3,C101,19
+FAC_EEC_IT_029,Prof. Anand Palanisamy,IT,Assistant Professor,anand.pal@eec.edu.in,8,C101,24
+FAC_EEC_IT_030,Prof. Senthamarai Srinivasan,IT,Assistant Professor,senthamarai.sri@eec.edu.in,5,C101,18
+FAC_EEC_IT_031,Prof. Kavitha Ramasamy,IT,Professor,kavitha.ram@eec.edu.in,30,C101,13
+FAC_EEC_IT_032,Dr. Padmavathi Gopalakrishnan,IT,Assistant Professor,padmavathi.gop@eec.edu.in,6,C101,17
+FAC_EEC_IT_033,Prof. Ramesh Krishnan,IT,Associate Professor,ramesh.kri@eec.edu.in,11,C101,16
+FAC_EEC_IT_034,Prof. Anand Kalyanasundaram,IT,Assistant Professor,anand.kal@eec.edu.in,6,C101,14
+FAC_EEC_IT_035,Prof. Subhashini Chandrasekaran,IT,Professor,subhashini.cha@eec.edu.in,29,C101,17
+FAC_EEC_IT_036,Prof. Nithya Venkataraman,IT,Assistant Professor,nithya.ven@eec.edu.in,7,C101,19
+FAC_EEC_IT_037,Dr. Rajesh Palanisamy,IT,Assistant Professor,rajesh.pal@eec.edu.in,2,C101,21
+FAC_EEC_IT_038,Dr. Santhosh Chidambaram,IT,Assistant Professor,santhosh.chi@eec.edu.in,6,C101,21
+FAC_EEC_IT_039,Dr. Santhosh Chidambaram,IT,Associate Professor,santhosh.chi@eec.edu.in,9,C101,13
+FAC_EEC_IT_040,Prof. Santhosh Krishnan,IT,Professor,santhosh.kri@eec.edu.in,18,C101,20
+FAC_EEC_AIDS_041,Dr. Revathi Kalyanasundaram,AIDS,Assistant Professor,revathi.kal@eec.edu.in,6,C101,15
+FAC_EEC_AIDS_042,Dr. Balaji Kalyanasundaram,AIDS,Assistant Professor,balaji.kal@eec.edu.in,5,C101,19
+FAC_EEC_AIDS_043,Dr. Deepa Ramasamy,AIDS,Assistant Professor,deepa.ram@eec.edu.in,5,C101,15
+FAC_EEC_AIDS_044,Prof. Geetha Rajagopalan,AIDS,Assistant Professor,geetha.raj@eec.edu.in,7,C101,18
+FAC_EEC_AIDS_045,Dr. Rajesh Ramasamy,AIDS,Associate Professor,rajesh.ram@eec.edu.in,10,C101,20
+FAC_EEC_AIDS_046,Dr. Santhosh Venkataraman,AIDS,Assistant Professor,santhosh.ven@eec.edu.in,5,C101,14
+FAC_EEC_AIDS_047,Dr. Venkatesh Swaminathan,AIDS,Professor,venkatesh.swa@eec.edu.in,18,C101,23
+FAC_EEC_AIDS_048,Dr. Sridhar Ramasamy,AIDS,Professor,sridhar.ram@eec.edu.in,30,C101,15
+FAC_EEC_AIDS_049,Prof. Kavitha Krishnan,AIDS,Associate Professor,kavitha.kri@eec.edu.in,11,C101,23
+FAC_EEC_AIDS_050,Dr. Geetha Kalyanasundaram,AIDS,Professor,geetha.kal@eec.edu.in,17,C101,23
+FAC_EEC_AIDS_051,Dr. Venkatesh Sengottaiyan,AIDS,Assistant Professor,venkatesh.sen@eec.edu.in,8,C101,18
+FAC_EEC_AIDS_052,Dr. Padmavathi Rajagopalan,AIDS,Associate Professor,padmavathi.raj@eec.edu.in,16,C101,16
+FAC_EEC_AIDS_053,Dr. Anand Venkataraman,AIDS,Professor,anand.ven@eec.edu.in,26,C101,9
+FAC_EEC_AIDS_054,Prof. Nithya Natarajan,AIDS,Assistant Professor,nithya.nat@eec.edu.in,6,C101,11
+FAC_EEC_AIML_055,Dr. Karthik Srinivasan,AIML,Professor,karthik.sri@eec.edu.in,18,C101,17
+FAC_EEC_AIML_056,Dr. Subhashini Balasubramanian,AIML,Assistant Professor,subhashini.bal@eec.edu.in,8,C101,13
+FAC_EEC_AIML_057,Dr. Santhosh Sengottaiyan,AIML,Professor,santhosh.sen@eec.edu.in,20,C101,14
+FAC_EEC_AIML_058,Dr. Balaji Natarajan,AIML,Assistant Professor,balaji.nat@eec.edu.in,6,C101,19
+FAC_EEC_AIML_059,Dr. Balaji Srinivasan,AIML,Assistant Professor,balaji.sri@eec.edu.in,7,C101,16
+FAC_EEC_AIML_060,Dr. Dinesh Muthusamy,AIML,Assistant Professor,dinesh.mut@eec.edu.in,7,C101,20
+FAC_EEC_AIML_061,Dr. Rajesh Gopalakrishnan,AIML,Professor,rajesh.gop@eec.edu.in,18,C101,12
+FAC_EEC_AIML_062,Dr. Kavitha Rajagopalan,AIML,Assistant Professor,kavitha.raj@eec.edu.in,2,C101,25
+FAC_EEC_AIML_063,Dr. Ramesh Venkataraman,AIML,Assistant Professor,ramesh.ven@eec.edu.in,4,C101,13
+FAC_EEC_AIML_064,Prof. Arun Krishnan,AIML,Assistant Professor,arun.kri@eec.edu.in,3,C101,16
+FAC_EEC_AIML_065,Dr. Sridhar Gopalakrishnan,AIML,Professor,sridhar.gop@eec.edu.in,27,C101,19
+FAC_EEC_AIML_066,Prof. Karthik Sundaram,AIML,Assistant Professor,karthik.sun@eec.edu.in,7,C101,18
+FAC_EEC_AIML_067,Dr. Priya Subramanian,AIML,Professor,priya.sub@eec.edu.in,28,C101,15
+FAC_EEC_AIML_068,Dr. Bhuvaneswari Subramanian,AIML,Associate Professor,bhuvaneswari.sub@eec.edu.in,14,C101,13
+FAC_EEC_AIML_069,Dr. Deepa Swaminathan,AIML,Assistant Professor,deepa.swa@eec.edu.in,8,C101,14
+FAC_EEC_Cyber Security_070,Prof. Ramesh Chandrasekaran,Cyber Security,Assistant Professor,ramesh.cha@eec.edu.in,4,C101,13
+FAC_EEC_Cyber Security_071,Dr. Gopinath Subramanian,Cyber Security,Assistant Professor,gopinath.sub@eec.edu.in,7,C101,23
+FAC_EEC_Cyber Security_072,Dr. Sridhar Chandrasekaran,Cyber Security,Assistant Professor,sridhar.cha@eec.edu.in,7,C101,18
+FAC_EEC_Cyber Security_073,Dr. Arun Subramanian,Cyber Security,Associate Professor,arun.sub@eec.edu.in,11,C101,16
+FAC_EEC_Cyber Security_074,Dr. Geetha Subramanian,Cyber Security,Assistant Professor,geetha.sub@eec.edu.in,8,C101,21
+FAC_EEC_Cyber Security_075,Prof. Subhashini Natarajan,Cyber Security,Assistant Professor,subhashini.nat@eec.edu.in,3,C101,22
+FAC_EEC_Cyber Security_076,Dr. Uma Ramasamy,Cyber Security,Assistant Professor,uma.ram@eec.edu.in,8,C101,14
+FAC_EEC_Cyber Security_077,Prof. Geetha Subramanian,Cyber Security,Assistant Professor,geetha.sub@eec.edu.in,3,C101,14
+FAC_EEC_Cyber Security_078,Prof. Padmavathi Balasubramanian,Cyber Security,Assistant Professor,padmavathi.bal@eec.edu.in,7,C101,27
+FAC_EEC_Cyber Security_079,Prof. Senthamarai Muthusamy,Cyber Security,Assistant Professor,senthamarai.mut@eec.edu.in,7,C101,19
+FAC_EEC_CSD_080,Prof. Revathi Balasubramanian,CSD,Assistant Professor,revathi.bal@eec.edu.in,8,C101,27
+FAC_EEC_CSD_081,Dr. Suresh Kalyanasundaram,CSD,Associate Professor,suresh.kal@eec.edu.in,16,C101,18
+FAC_EEC_CSD_082,Prof. Malathi Gopalakrishnan,CSD,Professor,malathi.gop@eec.edu.in,20,C101,31
+FAC_EEC_CSD_083,Dr. Kavitha Venkataraman,CSD,Assistant Professor,kavitha.ven@eec.edu.in,2,C101,19
+FAC_EEC_CSD_084,Dr. Gopinath Swaminathan,CSD,Assistant Professor,gopinath.swa@eec.edu.in,7,C101,19
+FAC_EEC_CSD_085,Prof. Ganesh Muthusamy,CSD,Assistant Professor,ganesh.mut@eec.edu.in,4,C101,16
+FAC_EEC_CSD_086,Dr. Venkatesh Swaminathan,CSD,Assistant Professor,venkatesh.swa@eec.edu.in,4,C101,24
+FAC_EEC_CSD_087,Dr. Nithya Muthusamy,CSD,Professor,nithya.mut@eec.edu.in,18,C101,18
+FAC_EEC_CSBS_088,Dr. Arun Venkataraman,CSBS,Associate Professor,arun.ven@eec.edu.in,9,C101,9
+FAC_EEC_CSBS_089,Dr. Karthik Venkataraman,CSBS,Assistant Professor,karthik.ven@eec.edu.in,7,C101,22
+FAC_EEC_CSBS_090,Dr. Senthamarai Muthusamy,CSBS,Associate Professor,senthamarai.mut@eec.edu.in,10,C101,16
+FAC_EEC_CSBS_091,Dr. Nithya Gopalakrishnan,CSBS,Associate Professor,nithya.gop@eec.edu.in,14,C101,17
+FAC_EEC_CSBS_092,Dr. Vijay Gopalakrishnan,CSBS,Assistant Professor,vijay.gop@eec.edu.in,7,C101,16
+FAC_EEC_CSBS_093,Dr. Vijay Balasubramanian,CSBS,Assistant Professor,vijay.bal@eec.edu.in,6,C101,17
+FAC_EEC_CSBS_094,Dr. Ganesh Sundaram,CSBS,Assistant Professor,ganesh.sun@eec.edu.in,8,C101,14
+FAC_EEC_CSBS_095,Dr. Balaji Muthusamy,CSBS,Assistant Professor,balaji.mut@eec.edu.in,3,C101,10
+FAC_EEC_CSBS_096,Prof. Karthik Kalyanasundaram,CSBS,Professor,karthik.kal@eec.edu.in,28,C101,24
+FAC_EEC_CSBS_097,Dr. Venkatesh Krishnan,CSBS,Associate Professor,venkatesh.kri@eec.edu.in,14,C101,18
+FAC_EEC_ECE_098,Prof. Ganesh Chidambaram,ECE,Assistant Professor,ganesh.chi@eec.edu.in,3,C101,24
+FAC_EEC_ECE_099,Dr. Anand Sundaram,ECE,Professor,anand.sun@eec.edu.in,26,C101,13
+FAC_EEC_ECE_100,Dr. Subhashini Krishnan,ECE,Professor,subhashini.kri@eec.edu.in,26,C101,26
+FAC_EEC_ECE_101,Dr. Deepa Sengottaiyan,ECE,Assistant Professor,deepa.sen@eec.edu.in,7,C101,19
+FAC_EEC_ECE_102,Prof. Dinesh Sundaram,ECE,Professor,dinesh.sun@eec.edu.in,18,C101,16
+FAC_EEC_ECE_103,Dr. Gopinath Chandrasekaran,ECE,Associate Professor,gopinath.cha@eec.edu.in,16,C101,13
+FAC_EEC_ECE_104,Prof. Suresh Chidambaram,ECE,Assistant Professor,suresh.chi@eec.edu.in,3,C101,26
+FAC_EEC_ECE_105,Prof. Padmavathi Rajagopalan,ECE,Professor,padmavathi.raj@eec.edu.in,26,C101,19
+FAC_EEC_ECE_106,Dr. Saravanan Rajagopalan,ECE,Associate Professor,saravanan.raj@eec.edu.in,15,C101,22
+FAC_EEC_ECE_107,Prof. Ganesh Rajagopalan,ECE,Associate Professor,ganesh.raj@eec.edu.in,16,C101,18
+FAC_EEC_ECE_108,Prof. Sridhar Swaminathan,ECE,Associate Professor,sridhar.swa@eec.edu.in,13,C101,17
+FAC_EEC_ECE_109,Dr. Gopinath Srinivasan,ECE,Assistant Professor,gopinath.sri@eec.edu.in,5,C101,26
+FAC_EEC_ECE_110,Dr. Ramesh Gopalakrishnan,ECE,Assistant Professor,ramesh.gop@eec.edu.in,6,C101,25
+FAC_EEC_EEE_111,Dr. Anand Subramanian,EEE,Associate Professor,anand.sub@eec.edu.in,12,C101,22
+FAC_EEC_EEE_112,Dr. Ramesh Chandrasekaran,EEE,Assistant Professor,ramesh.cha@eec.edu.in,5,C101,22
+FAC_EEC_EEE_113,Prof. Suresh Venkataraman,EEE,Assistant Professor,suresh.ven@eec.edu.in,8,C101,26
+FAC_EEC_EEE_114,Prof. Balaji Sundaram,EEE,Associate Professor,balaji.sun@eec.edu.in,15,C101,23
+FAC_EEC_EEE_115,Prof. Meena Sundaram,EEE,Assistant Professor,meena.sun@eec.edu.in,5,C101,21
+FAC_EEC_EEE_116,Dr. Subhashini Chandrasekaran,EEE,Associate Professor,subhashini.cha@eec.edu.in,12,C101,22
+FAC_EEC_EEE_117,Dr. Meena Chidambaram,EEE,Assistant Professor,meena.chi@eec.edu.in,5,C101,22
+FAC_EEC_EEE_118,Prof. Saravanan Sengottaiyan,EEE,Associate Professor,saravanan.sen@eec.edu.in,11,C101,20
+FAC_EEC_EEE_119,Prof. Sudha Sundaram,EEE,Assistant Professor,sudha.sun@eec.edu.in,7,C101,24
+FAC_EEC_EEE_120,Dr. Kavitha Krishnan,EEE,Assistant Professor,kavitha.kri@eec.edu.in,5,C101,20
+FAC_EEC_Mechanical_121,Dr. Suresh Swaminathan,Mechanical,Assistant Professor,suresh.swa@eec.edu.in,4,C101,18
+FAC_EEC_Mechanical_122,Dr. Saravanan Sengottaiyan,Mechanical,Professor,saravanan.sen@eec.edu.in,23,C101,22
+FAC_EEC_Mechanical_123,Dr. Revathi Krishnan,Mechanical,Associate Professor,revathi.kri@eec.edu.in,9,C101,18
+FAC_EEC_Mechanical_124,Prof. Malathi Chidambaram,Mechanical,Associate Professor,malathi.chi@eec.edu.in,9,C101,18
+FAC_EEC_Mechanical_125,Prof. Gopinath Sundaram,Mechanical,Assistant Professor,gopinath.sun@eec.edu.in,2,C101,22
+FAC_EEC_Mechanical_126,Dr. Sudha Subramanian,Mechanical,Assistant Professor,sudha.sub@eec.edu.in,2,C101,28
+FAC_EEC_Mechanical_127,Dr. Balaji Venkataraman,Mechanical,Assistant Professor,balaji.ven@eec.edu.in,4,C101,17
+FAC_EEC_Mechanical_128,Prof. Venkatesh Ramasamy,Mechanical,Assistant Professor,venkatesh.ram@eec.edu.in,4,C101,15
+FAC_EEC_Mechanical_129,Prof. Priya Sundaram,Mechanical,Assistant Professor,priya.sun@eec.edu.in,5,C101,20
+FAC_EEC_Mechanical_130,Dr. Vijay Venkataraman,Mechanical,Associate Professor,vijay.ven@eec.edu.in,12,C101,20
+FAC_EEC_Civil_131,Prof. Dinesh Gopalakrishnan,Civil,Associate Professor,dinesh.gop@eec.edu.in,10,C101,21
+FAC_EEC_Civil_132,Dr. Padmavathi Natarajan,Civil,Assistant Professor,padmavathi.nat@eec.edu.in,4,C101,16
+FAC_EEC_Civil_133,Dr. Ramesh Srinivasan,Civil,Assistant Professor,ramesh.sri@eec.edu.in,5,C101,19
+FAC_EEC_Civil_134,Dr. Ganesh Kalyanasundaram,Civil,Professor,ganesh.kal@eec.edu.in,27,C101,23
+FAC_EEC_Civil_135,Prof. Arun Rajagopalan,Civil,Assistant Professor,arun.raj@eec.edu.in,7,C101,25
+FAC_EEC_Civil_136,Dr. Karthik Swaminathan,Civil,Professor,karthik.swa@eec.edu.in,29,C101,15
+FAC_EEC_Robotics_137,Prof. Sridhar Chandrasekaran,Robotics,Assistant Professor,sridhar.cha@eec.edu.in,4,C101,9
+FAC_EEC_Robotics_138,Prof. Subhashini Chidambaram,Robotics,Assistant Professor,subhashini.chi@eec.edu.in,5,C101,9
+FAC_EEC_Robotics_139,Dr. Santhosh Rajagopalan,Robotics,Associate Professor,santhosh.raj@eec.edu.in,14,C101,9
+FAC_EEC_Robotics_140,Prof. Kavitha Kalyanasundaram,Robotics,Assistant Professor,kavitha.kal@eec.edu.in,3,C101,6
+FAC_EEC_Robotics_141,Dr. Malathi Swaminathan,Robotics,Professor,malathi.swa@eec.edu.in,28,C101,10
+FAC_EEC_Robotics_142,Dr. Arun Swaminathan,Robotics,Assistant Professor,arun.swa@eec.edu.in,3,C101,7
+FAC_EEC_Automobile_143,Dr. Santhosh Chandrasekaran,Automobile,Associate Professor,santhosh.cha@eec.edu.in,16,C101,7
+FAC_EEC_Automobile_144,Dr. Rajesh Kalyanasundaram,Automobile,Assistant Professor,rajesh.kal@eec.edu.in,4,C101,10
+FAC_EEC_Automobile_145,Prof. Santhosh Sengottaiyan,Automobile,Assistant Professor,santhosh.sen@eec.edu.in,6,C101,7
+FAC_KRIT_CSE_146,Dr. Meena Srinivasan,CSE,Professor,meena.sri@krit.edu.in,25,C102,21
+FAC_KRIT_CSE_147,Prof. Saravanan Palanisamy,CSE,Assistant Professor,saravanan.pal@krit.edu.in,4,C102,20
+FAC_KRIT_CSE_148,Prof. Santhosh Ramasamy,CSE,Assistant Professor,santhosh.ram@krit.edu.in,7,C102,16
+FAC_KRIT_CSE_149,Dr. Bhuvaneswari Balasubramanian,CSE,Associate Professor,bhuvaneswari.bal@krit.edu.in,13,C102,14
+FAC_KRIT_CSE_150,Dr. Nithya Srinivasan,CSE,Professor,nithya.sri@krit.edu.in,30,C102,12
+FAC_KRIT_CSE_151,Dr. Deepa Gopalakrishnan,CSE,Assistant Professor,deepa.gop@krit.edu.in,2,C102,13
+FAC_KRIT_CSE_152,Dr. Dinesh Subramanian,CSE,Professor,dinesh.sub@krit.edu.in,25,C102,25
+FAC_KRIT_CSE_153,Dr. Murugan Subramanian,CSE,Associate Professor,murugan.sub@krit.edu.in,10,C102,12
+FAC_KRIT_CSE_154,Dr. Subhashini Sundaram,CSE,Assistant Professor,subhashini.sun@krit.edu.in,5,C102,18
+FAC_KRIT_CSE_155,Prof. Saravanan Balasubramanian,CSE,Assistant Professor,saravanan.bal@krit.edu.in,8,C102,20
+FAC_KRIT_CSE_156,Prof. Meena Ramasamy,CSE,Assistant Professor,meena.ram@krit.edu.in,2,C102,13
+FAC_KRIT_CSE_157,Dr. Balaji Natarajan,CSE,Associate Professor,balaji.nat@krit.edu.in,13,C102,17
+FAC_KRIT_CSE_158,Dr. Ramesh Chidambaram,CSE,Associate Professor,ramesh.chi@krit.edu.in,12,C102,16
+FAC_KRIT_CSE_159,Dr. Gopinath Srinivasan,CSE,Professor,gopinath.sri@krit.edu.in,21,C102,22
+FAC_KRIT_CSE_160,Dr. Subhashini Chandrasekaran,CSE,Associate Professor,subhashini.cha@krit.edu.in,10,C102,14
+FAC_KRIT_CSE_161,Dr. Gopinath Venkataraman,CSE,Assistant Professor,gopinath.ven@krit.edu.in,2,C102,13
+FAC_KRIT_CSE_162,Dr. Venkatesh Chidambaram,CSE,Assistant Professor,venkatesh.chi@krit.edu.in,2,C102,12
+FAC_KRIT_CSE_163,Prof. Geetha Rajagopalan,CSE,Assistant Professor,geetha.raj@krit.edu.in,2,C102,13
+FAC_KRIT_CSE_164,Prof. Santhosh Gopalakrishnan,CSE,Associate Professor,santhosh.gop@krit.edu.in,16,C102,13
+FAC_KRIT_CSE_165,Prof. Ramesh Chidambaram,CSE,Associate Professor,ramesh.chi@krit.edu.in,12,C102,12
+FAC_KRIT_CSE_166,Dr. Geetha Ramasamy,CSE,Associate Professor,geetha.ram@krit.edu.in,13,C102,16
+FAC_KRIT_CSE_167,Dr. Ganesh Subramanian,CSE,Assistant Professor,ganesh.sub@krit.edu.in,4,C102,21
+FAC_KRIT_CSE_168,Dr. Sudha Gopalakrishnan,CSE,Assistant Professor,sudha.gop@krit.edu.in,4,C102,16
+FAC_KRIT_IT_169,Dr. Revathi Srinivasan,IT,Assistant Professor,revathi.sri@krit.edu.in,6,C102,16
+FAC_KRIT_IT_170,Prof. Suresh Chandrasekaran,IT,Associate Professor,suresh.cha@krit.edu.in,9,C102,9
+FAC_KRIT_IT_171,Prof. Ramesh Chidambaram,IT,Associate Professor,ramesh.chi@krit.edu.in,9,C102,15
+FAC_KRIT_IT_172,Dr. Gopinath Swaminathan,IT,Associate Professor,gopinath.swa@krit.edu.in,11,C102,21
+FAC_KRIT_IT_173,Prof. Meena Srinivasan,IT,Professor,meena.sri@krit.edu.in,19,C102,18
+FAC_KRIT_IT_174,Dr. Balaji Chandrasekaran,IT,Assistant Professor,balaji.cha@krit.edu.in,2,C102,16
+FAC_KRIT_IT_175,Dr. Meena Palanisamy,IT,Assistant Professor,meena.pal@krit.edu.in,2,C102,16
+FAC_KRIT_IT_176,Dr. Subhashini Balasubramanian,IT,Associate Professor,subhashini.bal@krit.edu.in,13,C102,16
+FAC_KRIT_IT_177,Prof. Uma Sengottaiyan,IT,Assistant Professor,uma.sen@krit.edu.in,5,C102,9
+FAC_KRIT_IT_178,Dr. Ramesh Muthusamy,IT,Assistant Professor,ramesh.mut@krit.edu.in,8,C102,19
+FAC_KRIT_IT_179,Prof. Vijay Srinivasan,IT,Assistant Professor,vijay.sri@krit.edu.in,8,C102,19
+FAC_KRIT_IT_180,Dr. Bhuvaneswari Rajagopalan,IT,Assistant Professor,bhuvaneswari.raj@krit.edu.in,4,C102,15
+FAC_KRIT_IT_181,Dr. Sudha Kalyanasundaram,IT,Associate Professor,sudha.kal@krit.edu.in,12,C102,13
+FAC_KRIT_IT_182,Prof. Revathi Subramanian,IT,Assistant Professor,revathi.sub@krit.edu.in,7,C102,15
+FAC_KRIT_IT_183,Dr. Meena Ramasamy,IT,Associate Professor,meena.ram@krit.edu.in,12,C102,11
+FAC_KRIT_IT_184,Dr. Dinesh Balasubramanian,IT,Assistant Professor,dinesh.bal@krit.edu.in,5,C102,14
+FAC_KRIT_IT_185,Prof. Ramesh Chidambaram,IT,Professor,ramesh.chi@krit.edu.in,24,C102,18
+FAC_KRIT_IT_186,Dr. Priya Subramanian,IT,Associate Professor,priya.sub@krit.edu.in,13,C102,9
+FAC_KRIT_IT_187,Prof. Geetha Kalyanasundaram,IT,Assistant Professor,geetha.kal@krit.edu.in,6,C102,16
+FAC_KRIT_AIDS_188,Prof. Vijay Venkataraman,AIDS,Assistant Professor,vijay.ven@krit.edu.in,3,C102,15
+FAC_KRIT_AIDS_189,Dr. Subhashini Krishnan,AIDS,Associate Professor,subhashini.kri@krit.edu.in,15,C102,24
+FAC_KRIT_AIDS_190,Dr. Saravanan Srinivasan,AIDS,Assistant Professor,saravanan.sri@krit.edu.in,7,C102,21
+FAC_KRIT_AIDS_191,Prof. Murugan Kalyanasundaram,AIDS,Assistant Professor,murugan.kal@krit.edu.in,5,C102,19
+FAC_KRIT_AIDS_192,Dr. Malathi Muthusamy,AIDS,Assistant Professor,malathi.mut@krit.edu.in,5,C102,13
+FAC_KRIT_AIDS_193,Prof. Senthamarai Muthusamy,AIDS,Professor,senthamarai.mut@krit.edu.in,20,C102,14
+FAC_KRIT_AIDS_194,Dr. Balaji Sengottaiyan,AIDS,Associate Professor,balaji.sen@krit.edu.in,9,C102,26
+FAC_KRIT_AIDS_195,Prof. Saravanan Kalyanasundaram,AIDS,Associate Professor,saravanan.kal@krit.edu.in,15,C102,12
+FAC_KRIT_AIDS_196,Dr. Uma Subramanian,AIDS,Assistant Professor,uma.sub@krit.edu.in,6,C102,15
+FAC_KRIT_AIDS_197,Prof. Balaji Muthusamy,AIDS,Professor,balaji.mut@krit.edu.in,24,C102,13
+FAC_KRIT_AIDS_198,Prof. Priya Srinivasan,AIDS,Assistant Professor,priya.sri@krit.edu.in,3,C102,19
+FAC_KRIT_AIDS_199,Dr. Geetha Subramanian,AIDS,Associate Professor,geetha.sub@krit.edu.in,13,C102,21
+FAC_KRIT_AIDS_200,Dr. Saravanan Sengottaiyan,AIDS,Professor,saravanan.sen@krit.edu.in,30,C102,17
+FAC_KRIT_AIDS_201,Prof. Uma Sengottaiyan,AIDS,Associate Professor,uma.sen@krit.edu.in,16,C102,14
+FAC_KRIT_AIML_202,Dr. Sudha Krishnan,AIML,Associate Professor,sudha.kri@krit.edu.in,13,C102,25
+FAC_KRIT_AIML_203,Dr. Santhosh Krishnan,AIML,Assistant Professor,santhosh.kri@krit.edu.in,7,C102,18
+FAC_KRIT_AIML_204,Dr. Dinesh Ramasamy,AIML,Associate Professor,dinesh.ram@krit.edu.in,9,C102,15
+FAC_KRIT_AIML_205,Prof. Suresh Muthusamy,AIML,Assistant Professor,suresh.mut@krit.edu.in,4,C102,13
+FAC_KRIT_AIML_206,Dr. Geetha Subramanian,AIML,Assistant Professor,geetha.sub@krit.edu.in,7,C102,21
+FAC_KRIT_AIML_207,Dr. Padmavathi Balasubramanian,AIML,Assistant Professor,padmavathi.bal@krit.edu.in,8,C102,16
+FAC_KRIT_AIML_208,Dr. Vijay Chidambaram,AIML,Assistant Professor,vijay.chi@krit.edu.in,3,C102,20
+FAC_KRIT_AIML_209,Dr. Sridhar Swaminathan,AIML,Associate Professor,sridhar.swa@krit.edu.in,16,C102,18
+FAC_KRIT_AIML_210,Prof. Arun Gopalakrishnan,AIML,Assistant Professor,arun.gop@krit.edu.in,5,C102,18
+FAC_KRIT_AIML_211,Dr. Malathi Gopalakrishnan,AIML,Assistant Professor,malathi.gop@krit.edu.in,4,C102,20
+FAC_KRIT_AIML_212,Dr. Sridhar Gopalakrishnan,AIML,Assistant Professor,sridhar.gop@krit.edu.in,5,C102,19
+FAC_KRIT_AIML_213,Dr. Priya Chidambaram,AIML,Assistant Professor,priya.chi@krit.edu.in,4,C102,15
+FAC_KRIT_Cyber Security_214,Dr. Kavitha Sengottaiyan,Cyber Security,Assistant Professor,kavitha.sen@krit.edu.in,7,C102,19
+FAC_KRIT_Cyber Security_215,Prof. Gopinath Natarajan,Cyber Security,Associate Professor,gopinath.nat@krit.edu.in,13,C102,19
+FAC_KRIT_Cyber Security_216,Dr. Gopinath Chidambaram,Cyber Security,Assistant Professor,gopinath.chi@krit.edu.in,7,C102,16
+FAC_KRIT_Cyber Security_217,Prof. Deepa Swaminathan,Cyber Security,Associate Professor,deepa.swa@krit.edu.in,11,C102,18
+FAC_KRIT_Cyber Security_218,Prof. Rajesh Ramasamy,Cyber Security,Associate Professor,rajesh.ram@krit.edu.in,13,C102,22
+FAC_KRIT_Cyber Security_219,Dr. Padmavathi Rajagopalan,Cyber Security,Assistant Professor,padmavathi.raj@krit.edu.in,3,C102,14
+FAC_KRIT_Cyber Security_220,Dr. Ramesh Gopalakrishnan,Cyber Security,Assistant Professor,ramesh.gop@krit.edu.in,3,C102,19
+FAC_KRIT_Cyber Security_221,Dr. Anand Palanisamy,Cyber Security,Professor,anand.pal@krit.edu.in,30,C102,15
+FAC_KRIT_Cyber Security_222,Prof. Venkatesh Swaminathan,Cyber Security,Professor,venkatesh.swa@krit.edu.in,29,C102,23
+FAC_KRIT_Cyber Security_223,Prof. Murugan Muthusamy,Cyber Security,Assistant Professor,murugan.mut@krit.edu.in,2,C102,23
+FAC_KRIT_Cyber Security_224,Prof. Anand Chidambaram,Cyber Security,Associate Professor,anand.chi@krit.edu.in,15,C102,18
+FAC_KRIT_Cyber Security_225,Dr. Subhashini Palanisamy,Cyber Security,Assistant Professor,subhashini.pal@krit.edu.in,4,C102,16
+FAC_KRIT_CSD_226,Prof. Sridhar Palanisamy,CSD,Associate Professor,sridhar.pal@krit.edu.in,15,C102,19
+FAC_KRIT_CSD_227,Dr. Ganesh Palanisamy,CSD,Assistant Professor,ganesh.pal@krit.edu.in,2,C102,15
+FAC_KRIT_CSD_228,Prof. Sudha Muthusamy,CSD,Assistant Professor,sudha.mut@krit.edu.in,2,C102,16
+FAC_KRIT_CSD_229,Prof. Rajesh Rajagopalan,CSD,Assistant Professor,rajesh.raj@krit.edu.in,5,C102,24
+FAC_KRIT_CSD_230,Dr. Priya Subramanian,CSD,Assistant Professor,priya.sub@krit.edu.in,5,C102,13
+FAC_KRIT_CSD_231,Dr. Priya Ramasamy,CSD,Assistant Professor,priya.ram@krit.edu.in,5,C102,17
+FAC_KRIT_CSD_232,Prof. Sridhar Palanisamy,CSD,Associate Professor,sridhar.pal@krit.edu.in,15,C102,20
+FAC_KRIT_CSBS_233,Prof. Arun Chandrasekaran,CSBS,Associate Professor,arun.cha@krit.edu.in,15,C102,22
+FAC_KRIT_CSBS_234,Prof. Revathi Natarajan,CSBS,Assistant Professor,revathi.nat@krit.edu.in,5,C102,8
+FAC_KRIT_CSBS_235,Dr. Santhosh Palanisamy,CSBS,Associate Professor,santhosh.pal@krit.edu.in,14,C102,15
+FAC_KRIT_CSBS_236,Dr. Suresh Sengottaiyan,CSBS,Professor,suresh.sen@krit.edu.in,30,C102,15
+FAC_KRIT_CSBS_237,Dr. Ganesh Rajagopalan,CSBS,Assistant Professor,ganesh.raj@krit.edu.in,7,C102,19
+FAC_KRIT_CSBS_238,Dr. Sudha Sundaram,CSBS,Assistant Professor,sudha.sun@krit.edu.in,3,C102,9
+FAC_KRIT_CSBS_239,Dr. Padmavathi Venkataraman,CSBS,Associate Professor,padmavathi.ven@krit.edu.in,12,C102,23
+FAC_KRIT_CSBS_240,Prof. Balaji Venkataraman,CSBS,Assistant Professor,balaji.ven@krit.edu.in,8,C102,16
+FAC_KRIT_ECE_241,Dr. Padmavathi Sundaram,ECE,Professor,padmavathi.sun@krit.edu.in,19,C102,28
+FAC_KRIT_ECE_242,Prof. Bhuvaneswari Swaminathan,ECE,Assistant Professor,bhuvaneswari.swa@krit.edu.in,8,C102,17
+FAC_KRIT_ECE_243,Dr. Kavitha Subramanian,ECE,Associate Professor,kavitha.sub@krit.edu.in,12,C102,17
+FAC_KRIT_ECE_244,Dr. Balaji Muthusamy,ECE,Assistant Professor,balaji.mut@krit.edu.in,3,C102,16
+FAC_KRIT_ECE_245,Dr. Nithya Chandrasekaran,ECE,Associate Professor,nithya.cha@krit.edu.in,16,C102,12
+FAC_KRIT_ECE_246,Dr. Sridhar Palanisamy,ECE,Assistant Professor,sridhar.pal@krit.edu.in,6,C102,21
+FAC_KRIT_ECE_247,Prof. Santhosh Natarajan,ECE,Professor,santhosh.nat@krit.edu.in,27,C102,17
+FAC_KRIT_ECE_248,Dr. Karthik Gopalakrishnan,ECE,Professor,karthik.gop@krit.edu.in,17,C102,10
+FAC_KRIT_ECE_249,Dr. Meena Sengottaiyan,ECE,Assistant Professor,meena.sen@krit.edu.in,7,C102,18
+FAC_KRIT_ECE_250,Dr. Senthamarai Rajagopalan,ECE,Assistant Professor,senthamarai.raj@krit.edu.in,6,C102,25
+FAC_KRIT_ECE_251,Dr. Anand Krishnan,ECE,Associate Professor,anand.kri@krit.edu.in,14,C102,18
+FAC_KRIT_ECE_252,Dr. Vijay Srinivasan,ECE,Assistant Professor,vijay.sri@krit.edu.in,5,C102,20
+FAC_KRIT_ECE_253,Prof. Priya Ramasamy,ECE,Associate Professor,priya.ram@krit.edu.in,12,C102,15
+FAC_KRIT_ECE_254,Prof. Geetha Rajagopalan,ECE,Assistant Professor,geetha.raj@krit.edu.in,8,C102,16
+FAC_KRIT_EEE_255,Prof. Vijay Chandrasekaran,EEE,Assistant Professor,vijay.cha@krit.edu.in,4,C102,10
+FAC_KRIT_EEE_256,Dr. Uma Swaminathan,EEE,Assistant Professor,uma.swa@krit.edu.in,5,C102,13
+FAC_KRIT_EEE_257,Prof. Ramesh Krishnan,EEE,Assistant Professor,ramesh.kri@krit.edu.in,2,C102,11
+FAC_KRIT_EEE_258,Prof. Nithya Palanisamy,EEE,Assistant Professor,nithya.pal@krit.edu.in,6,C102,12
+FAC_KRIT_EEE_259,Prof. Bhuvaneswari Muthusamy,EEE,Assistant Professor,bhuvaneswari.mut@krit.edu.in,8,C102,14
+FAC_KRIT_EEE_260,Prof. Uma Chandrasekaran,EEE,Associate Professor,uma.cha@krit.edu.in,13,C102,21
+FAC_KRIT_EEE_261,Dr. Sudha Gopalakrishnan,EEE,Assistant Professor,sudha.gop@krit.edu.in,3,C102,18
+FAC_KRIT_EEE_262,Dr. Anand Kalyanasundaram,EEE,Assistant Professor,anand.kal@krit.edu.in,8,C102,15
+FAC_KRIT_EEE_263,Dr. Bhuvaneswari Palanisamy,EEE,Assistant Professor,bhuvaneswari.pal@krit.edu.in,3,C102,17
+FAC_KRIT_EEE_264,Prof. Padmavathi Chandrasekaran,EEE,Professor,padmavathi.cha@krit.edu.in,30,C102,17
+FAC_KRIT_EEE_265,Dr. Sudha Sundaram,EEE,Associate Professor,sudha.sun@krit.edu.in,13,C102,15
+FAC_KRIT_EEE_266,Dr. Kavitha Balasubramanian,EEE,Associate Professor,kavitha.bal@krit.edu.in,14,C102,19
+FAC_KRIT_EEE_267,Dr. Malathi Sundaram,EEE,Assistant Professor,malathi.sun@krit.edu.in,7,C102,20
+FAC_KRIT_Mechanical_268,Prof. Ramesh Subramanian,Mechanical,Professor,ramesh.sub@krit.edu.in,18,C102,11
+FAC_KRIT_Mechanical_269,Dr. Nithya Srinivasan,Mechanical,Assistant Professor,nithya.sri@krit.edu.in,4,C102,11
+FAC_KRIT_Mechanical_270,Dr. Venkatesh Palanisamy,Mechanical,Assistant Professor,venkatesh.pal@krit.edu.in,6,C102,14
+FAC_KRIT_Mechanical_271,Prof. Sudha Krishnan,Mechanical,Assistant Professor,sudha.kri@krit.edu.in,8,C102,16
+FAC_KRIT_Mechanical_272,Prof. Sudha Natarajan,Mechanical,Assistant Professor,sudha.nat@krit.edu.in,7,C102,10
+FAC_KRIT_Mechanical_273,Dr. Geetha Kalyanasundaram,Mechanical,Assistant Professor,geetha.kal@krit.edu.in,3,C102,17
+FAC_KRIT_Mechanical_274,Dr. Gopinath Srinivasan,Mechanical,Assistant Professor,gopinath.sri@krit.edu.in,4,C102,21
+FAC_KRIT_Mechanical_275,Dr. Uma Kalyanasundaram,Mechanical,Assistant Professor,uma.kal@krit.edu.in,3,C102,14
+FAC_KRIT_Mechanical_276,Dr. Vijay Natarajan,Mechanical,Assistant Professor,vijay.nat@krit.edu.in,3,C102,17
+FAC_KRIT_Mechanical_277,Prof. Gopinath Subramanian,Mechanical,Assistant Professor,gopinath.sub@krit.edu.in,2,C102,18
+FAC_KRIT_Mechanical_278,Prof. Kavitha Kalyanasundaram,Mechanical,Assistant Professor,kavitha.kal@krit.edu.in,5,C102,13
+FAC_KRIT_Mechanical_279,Dr. Bhuvaneswari Chidambaram,Mechanical,Associate Professor,bhuvaneswari.chi@krit.edu.in,14,C102,15
+FAC_KRIT_Civil_280,Dr. Vijay Natarajan,Civil,Assistant Professor,vijay.nat@krit.edu.in,2,C102,19
+FAC_KRIT_Civil_281,Dr. Subhashini Muthusamy,Civil,Assistant Professor,subhashini.mut@krit.edu.in,7,C102,19
+FAC_KRIT_Civil_282,Dr. Rajesh Chandrasekaran,Civil,Assistant Professor,rajesh.cha@krit.edu.in,4,C102,21
+FAC_KRIT_Civil_283,Prof. Venkatesh Rajagopalan,Civil,Professor,venkatesh.raj@krit.edu.in,18,C102,22
+FAC_KRIT_Civil_284,Dr. Geetha Ramasamy,Civil,Assistant Professor,geetha.ram@krit.edu.in,6,C102,20
+FAC_KRIT_Civil_285,Prof. Ramesh Sengottaiyan,Civil,Associate Professor,ramesh.sen@krit.edu.in,12,C102,19
+FAC_KRIT_Robotics_286,Dr. Gopinath Balasubramanian,Robotics,Associate Professor,gopinath.bal@krit.edu.in,12,C102,9
+FAC_KRIT_Robotics_287,Dr. Arun Palanisamy,Robotics,Professor,arun.pal@krit.edu.in,27,C102,10
+FAC_KRIT_Robotics_288,Dr. Ganesh Subramanian,Robotics,Assistant Professor,ganesh.sub@krit.edu.in,3,C102,7
+FAC_KRIT_Robotics_289,Prof. Venkatesh Subramanian,Robotics,Associate Professor,venkatesh.sub@krit.edu.in,11,C102,11
+FAC_KRIT_Robotics_290,Dr. Gopinath Kalyanasundaram,Robotics,Assistant Professor,gopinath.kal@krit.edu.in,6,C102,11
+FAC_KRIT_Automobile_291,Prof. Uma Muthusamy,Automobile,Associate Professor,uma.mut@krit.edu.in,11,C102,4
+FAC_KRIT_Automobile_292,Dr. Sridhar Krishnan,Automobile,Associate Professor,sridhar.kri@krit.edu.in,13,C102,3
+FAC_KRIT_Automobile_293,Dr. Balaji Natarajan,Automobile,Assistant Professor,balaji.nat@krit.edu.in,5,C102,1
+FAC_KRIT_Automobile_294,Dr. Sridhar Natarajan,Automobile,Associate Professor,sridhar.nat@krit.edu.in,10,C102,3
+FAC_KRIT_Automobile_295,Dr. Rajesh Krishnan,Automobile,Assistant Professor,rajesh.kri@krit.edu.in,5,C102,3
+FAC_KRIT_Automobile_296,Dr. Balaji Natarajan,Automobile,Associate Professor,balaji.nat@krit.edu.in,12,C102,1
+FAC_MIST_CSE_297,Dr. Sudha Kalyanasundaram,CSE,Professor,sudha.kal@mist.edu.in,24,C103,22
+FAC_MIST_CSE_298,Prof. Priya Muthusamy,CSE,Assistant Professor,priya.mut@mist.edu.in,7,C103,20
+FAC_MIST_CSE_299,Dr. Venkatesh Natarajan,CSE,Assistant Professor,venkatesh.nat@mist.edu.in,5,C103,15
+FAC_MIST_CSE_300,Dr. Karthik Srinivasan,CSE,Assistant Professor,karthik.sri@mist.edu.in,4,C103,17
+FAC_MIST_CSE_301,Prof. Vijay Chandrasekaran,CSE,Associate Professor,vijay.cha@mist.edu.in,9,C103,13
+FAC_MIST_CSE_302,Dr. Padmavathi Muthusamy,CSE,Assistant Professor,padmavathi.mut@mist.edu.in,7,C103,18
+FAC_MIST_CSE_303,Dr. Vijay Gopalakrishnan,CSE,Professor,vijay.gop@mist.edu.in,26,C103,17
+FAC_MIST_CSE_304,Dr. Subhashini Subramanian,CSE,Assistant Professor,subhashini.sub@mist.edu.in,3,C103,13
+FAC_MIST_CSE_305,Dr. Senthamarai Palanisamy,CSE,Associate Professor,senthamarai.pal@mist.edu.in,15,C103,10
+FAC_MIST_CSE_306,Dr. Anand Krishnan,CSE,Assistant Professor,anand.kri@mist.edu.in,8,C103,20
+FAC_MIST_CSE_307,Prof. Saravanan Subramanian,CSE,Associate Professor,saravanan.sub@mist.edu.in,10,C103,18
+FAC_MIST_CSE_308,Dr. Rajesh Chandrasekaran,CSE,Assistant Professor,rajesh.cha@mist.edu.in,4,C103,19
+FAC_MIST_CSE_309,Dr. Venkatesh Venkataraman,CSE,Associate Professor,venkatesh.ven@mist.edu.in,12,C103,8
+FAC_MIST_CSE_310,Dr. Santhosh Subramanian,CSE,Assistant Professor,santhosh.sub@mist.edu.in,8,C103,13
+FAC_MIST_CSE_311,Prof. Priya Srinivasan,CSE,Associate Professor,priya.sri@mist.edu.in,9,C103,13
+FAC_MIST_CSE_312,Prof. Uma Muthusamy,CSE,Associate Professor,uma.mut@mist.edu.in,15,C103,21
+FAC_MIST_CSE_313,Dr. Anand Balasubramanian,CSE,Associate Professor,anand.bal@mist.edu.in,11,C103,13
+FAC_MIST_CSE_314,Dr. Nithya Rajagopalan,CSE,Assistant Professor,nithya.raj@mist.edu.in,7,C103,10
+FAC_MIST_CSE_315,Dr. Santhosh Rajagopalan,CSE,Associate Professor,santhosh.raj@mist.edu.in,16,C103,20
+FAC_MIST_CSE_316,Dr. Santhosh Chidambaram,CSE,Associate Professor,santhosh.chi@mist.edu.in,16,C103,10
+FAC_MIST_CSE_317,Dr. Arun Venkataraman,CSE,Professor,arun.ven@mist.edu.in,24,C103,20
+FAC_MIST_CSE_318,Prof. Sridhar Gopalakrishnan,CSE,Assistant Professor,sridhar.gop@mist.edu.in,5,C103,16
+FAC_MIST_CSE_319,Prof. Venkatesh Venkataraman,CSE,Assistant Professor,venkatesh.ven@mist.edu.in,4,C103,16
+FAC_MIST_IT_320,Prof. Rajesh Kalyanasundaram,IT,Assistant Professor,rajesh.kal@mist.edu.in,2,C103,12
+FAC_MIST_IT_321,Prof. Dinesh Srinivasan,IT,Assistant Professor,dinesh.sri@mist.edu.in,8,C103,12
+FAC_MIST_IT_322,Dr. Venkatesh Swaminathan,IT,Assistant Professor,venkatesh.swa@mist.edu.in,8,C103,14
+FAC_MIST_IT_323,Prof. Geetha Krishnan,IT,Assistant Professor,geetha.kri@mist.edu.in,5,C103,16
+FAC_MIST_IT_324,Prof. Arun Palanisamy,IT,Assistant Professor,arun.pal@mist.edu.in,5,C103,19
+FAC_MIST_IT_325,Dr. Karthik Palanisamy,IT,Professor,karthik.pal@mist.edu.in,22,C103,18
+FAC_MIST_IT_326,Dr. Santhosh Sundaram,IT,Assistant Professor,santhosh.sun@mist.edu.in,7,C103,11
+FAC_MIST_IT_327,Prof. Rajesh Muthusamy,IT,Assistant Professor,rajesh.mut@mist.edu.in,4,C103,13
+FAC_MIST_IT_328,Prof. Senthamarai Kalyanasundaram,IT,Assistant Professor,senthamarai.kal@mist.edu.in,7,C103,15
+FAC_MIST_IT_329,Dr. Meena Rajagopalan,IT,Professor,meena.raj@mist.edu.in,17,C103,20
+FAC_MIST_IT_330,Prof. Revathi Venkataraman,IT,Assistant Professor,revathi.ven@mist.edu.in,7,C103,17
+FAC_MIST_IT_331,Dr. Sudha Srinivasan,IT,Associate Professor,sudha.sri@mist.edu.in,12,C103,19
+FAC_MIST_IT_332,Dr. Murugan Ramasamy,IT,Assistant Professor,murugan.ram@mist.edu.in,8,C103,22
+FAC_MIST_IT_333,Dr. Sudha Rajagopalan,IT,Associate Professor,sudha.raj@mist.edu.in,16,C103,19
+FAC_MIST_IT_334,Dr. Sudha Sundaram,IT,Assistant Professor,sudha.sun@mist.edu.in,7,C103,22
+FAC_MIST_IT_335,Dr. Anand Gopalakrishnan,IT,Associate Professor,anand.gop@mist.edu.in,12,C103,19
+FAC_MIST_AIDS_336,Dr. Venkatesh Krishnan,AIDS,Assistant Professor,venkatesh.kri@mist.edu.in,6,C103,14
+FAC_MIST_AIDS_337,Prof. Bhuvaneswari Srinivasan,AIDS,Assistant Professor,bhuvaneswari.sri@mist.edu.in,2,C103,8
+FAC_MIST_AIDS_338,Dr. Vijay Kalyanasundaram,AIDS,Assistant Professor,vijay.kal@mist.edu.in,4,C103,15
+FAC_MIST_AIDS_339,Dr. Revathi Sundaram,AIDS,Assistant Professor,revathi.sun@mist.edu.in,3,C103,12
+FAC_MIST_AIDS_340,Prof. Nithya Ramasamy,AIDS,Associate Professor,nithya.ram@mist.edu.in,14,C103,16
+FAC_MIST_AIDS_341,Dr. Anand Natarajan,AIDS,Assistant Professor,anand.nat@mist.edu.in,7,C103,9
+FAC_MIST_AIDS_342,Prof. Venkatesh Rajagopalan,AIDS,Assistant Professor,venkatesh.raj@mist.edu.in,3,C103,11
+FAC_MIST_AIDS_343,Dr. Padmavathi Subramanian,AIDS,Associate Professor,padmavathi.sub@mist.edu.in,16,C103,5
+FAC_MIST_AIDS_344,Dr. Suresh Gopalakrishnan,AIDS,Associate Professor,suresh.gop@mist.edu.in,9,C103,18
+FAC_MIST_AIDS_345,Dr. Saravanan Gopalakrishnan,AIDS,Professor,saravanan.gop@mist.edu.in,25,C103,20
+FAC_MIST_AIDS_346,Dr. Meena Swaminathan,AIDS,Associate Professor,meena.swa@mist.edu.in,13,C103,9
+FAC_MIST_AIDS_347,Prof. Malathi Natarajan,AIDS,Assistant Professor,malathi.nat@mist.edu.in,2,C103,12
+FAC_MIST_AIDS_348,Dr. Padmavathi Palanisamy,AIDS,Assistant Professor,padmavathi.pal@mist.edu.in,5,C103,13
+FAC_MIST_AIDS_349,Dr. Arun Sengottaiyan,AIDS,Assistant Professor,arun.sen@mist.edu.in,7,C103,17
+FAC_MIST_AIDS_350,Prof. Meena Palanisamy,AIDS,Assistant Professor,meena.pal@mist.edu.in,8,C103,10
+FAC_MIST_AIDS_351,Dr. Ramesh Chandrasekaran,AIDS,Associate Professor,ramesh.cha@mist.edu.in,11,C103,16
+FAC_MIST_AIML_352,Dr. Saravanan Ramasamy,AIML,Associate Professor,saravanan.ram@mist.edu.in,13,C103,14
+FAC_MIST_AIML_353,Dr. Sridhar Chandrasekaran,AIML,Assistant Professor,sridhar.cha@mist.edu.in,5,C103,21
+FAC_MIST_AIML_354,Dr. Suresh Palanisamy,AIML,Assistant Professor,suresh.pal@mist.edu.in,7,C103,12
+FAC_MIST_AIML_355,Dr. Padmavathi Natarajan,AIML,Associate Professor,padmavathi.nat@mist.edu.in,14,C103,12
+FAC_MIST_AIML_356,Prof. Karthik Balasubramanian,AIML,Assistant Professor,karthik.bal@mist.edu.in,6,C103,21
+FAC_MIST_AIML_357,Dr. Uma Rajagopalan,AIML,Assistant Professor,uma.raj@mist.edu.in,8,C103,15
+FAC_MIST_AIML_358,Dr. Rajesh Palanisamy,AIML,Professor,rajesh.pal@mist.edu.in,17,C103,22
+FAC_MIST_AIML_359,Prof. Sudha Subramanian,AIML,Professor,sudha.sub@mist.edu.in,22,C103,14
+FAC_MIST_AIML_360,Dr. Sridhar Krishnan,AIML,Assistant Professor,sridhar.kri@mist.edu.in,5,C103,14
+FAC_MIST_AIML_361,Dr. Saravanan Swaminathan,AIML,Assistant Professor,saravanan.swa@mist.edu.in,7,C103,7
+FAC_MIST_AIML_362,Dr. Venkatesh Kalyanasundaram,AIML,Professor,venkatesh.kal@mist.edu.in,18,C103,9
+FAC_MIST_AIML_363,Prof. Revathi Swaminathan,AIML,Assistant Professor,revathi.swa@mist.edu.in,6,C103,14
+FAC_MIST_AIML_364,Dr. Murugan Kalyanasundaram,AIML,Assistant Professor,murugan.kal@mist.edu.in,2,C103,16
+FAC_MIST_AIML_365,Prof. Sridhar Balasubramanian,AIML,Assistant Professor,sridhar.bal@mist.edu.in,2,C103,18
+FAC_MIST_Cyber Security_366,Prof. Uma Palanisamy,Cyber Security,Assistant Professor,uma.pal@mist.edu.in,4,C103,19
+FAC_MIST_Cyber Security_367,Prof. Arun Gopalakrishnan,Cyber Security,Associate Professor,arun.gop@mist.edu.in,11,C103,18
+FAC_MIST_Cyber Security_368,Dr. Padmavathi Palanisamy,Cyber Security,Assistant Professor,padmavathi.pal@mist.edu.in,3,C103,17
+FAC_MIST_Cyber Security_369,Dr. Padmavathi Subramanian,Cyber Security,Assistant Professor,padmavathi.sub@mist.edu.in,4,C103,14
+FAC_MIST_Cyber Security_370,Dr. Bhuvaneswari Palanisamy,Cyber Security,Professor,bhuvaneswari.pal@mist.edu.in,19,C103,11
+FAC_MIST_Cyber Security_371,Dr. Sudha Krishnan,Cyber Security,Assistant Professor,sudha.kri@mist.edu.in,7,C103,17
+FAC_MIST_Cyber Security_372,Dr. Nithya Kalyanasundaram,Cyber Security,Associate Professor,nithya.kal@mist.edu.in,10,C103,16
+FAC_MIST_Cyber Security_373,Dr. Anand Muthusamy,Cyber Security,Assistant Professor,anand.mut@mist.edu.in,7,C103,13
+FAC_MIST_Cyber Security_374,Dr. Karthik Palanisamy,Cyber Security,Associate Professor,karthik.pal@mist.edu.in,11,C103,21
+FAC_MIST_Cyber Security_375,Dr. Gopinath Subramanian,Cyber Security,Professor,gopinath.sub@mist.edu.in,17,C103,12
+FAC_MIST_Cyber Security_376,Dr. Ganesh Ramasamy,Cyber Security,Assistant Professor,ganesh.ram@mist.edu.in,3,C103,18
+FAC_MIST_Cyber Security_377,Dr. Saravanan Chidambaram,Cyber Security,Professor,saravanan.chi@mist.edu.in,21,C103,9
+FAC_MIST_CSD_378,Dr. Revathi Venkataraman,CSD,Assistant Professor,revathi.ven@mist.edu.in,3,C103,22
+FAC_MIST_CSD_379,Dr. Rajesh Gopalakrishnan,CSD,Assistant Professor,rajesh.gop@mist.edu.in,7,C103,15
+FAC_MIST_CSD_380,Dr. Venkatesh Subramanian,CSD,Associate Professor,venkatesh.sub@mist.edu.in,14,C103,23
+FAC_MIST_CSD_381,Prof. Ganesh Natarajan,CSD,Assistant Professor,ganesh.nat@mist.edu.in,2,C103,18
+FAC_MIST_CSD_382,Prof. Rajesh Swaminathan,CSD,Associate Professor,rajesh.swa@mist.edu.in,15,C103,20
+FAC_MIST_CSD_383,Dr. Sudha Sundaram,CSD,Associate Professor,sudha.sun@mist.edu.in,13,C103,22
+FAC_MIST_CSD_384,Dr. Rajesh Gopalakrishnan,CSD,Associate Professor,rajesh.gop@mist.edu.in,15,C103,19
+FAC_MIST_CSBS_385,Prof. Sridhar Krishnan,CSBS,Assistant Professor,sridhar.kri@mist.edu.in,5,C103,13
+FAC_MIST_CSBS_386,Dr. Meena Rajagopalan,CSBS,Associate Professor,meena.raj@mist.edu.in,14,C103,10
+FAC_MIST_CSBS_387,Prof. Subhashini Muthusamy,CSBS,Professor,subhashini.mut@mist.edu.in,23,C103,12
+FAC_MIST_CSBS_388,Dr. Anand Palanisamy,CSBS,Assistant Professor,anand.pal@mist.edu.in,3,C103,20
+FAC_MIST_CSBS_389,Dr. Sridhar Ramasamy,CSBS,Assistant Professor,sridhar.ram@mist.edu.in,2,C103,16
+FAC_MIST_CSBS_390,Prof. Suresh Gopalakrishnan,CSBS,Professor,suresh.gop@mist.edu.in,23,C103,15
+FAC_MIST_CSBS_391,Prof. Santhosh Balasubramanian,CSBS,Professor,santhosh.bal@mist.edu.in,28,C103,13
+FAC_MIST_CSBS_392,Prof. Saravanan Venkataraman,CSBS,Assistant Professor,saravanan.ven@mist.edu.in,6,C103,13
+FAC_MIST_CSBS_393,Prof. Sridhar Kalyanasundaram,CSBS,Assistant Professor,sridhar.kal@mist.edu.in,2,C103,15
+FAC_MIST_ECE_394,Prof. Karthik Rajagopalan,ECE,Assistant Professor,karthik.raj@mist.edu.in,4,C103,15
+FAC_MIST_ECE_395,Dr. Suresh Natarajan,ECE,Assistant Professor,suresh.nat@mist.edu.in,8,C103,10
+FAC_MIST_ECE_396,Dr. Rajesh Kalyanasundaram,ECE,Assistant Professor,rajesh.kal@mist.edu.in,2,C103,14
+FAC_MIST_ECE_397,Prof. Geetha Subramanian,ECE,Associate Professor,geetha.sub@mist.edu.in,15,C103,12
+FAC_MIST_ECE_398,Dr. Malathi Natarajan,ECE,Assistant Professor,malathi.nat@mist.edu.in,3,C103,12
+FAC_MIST_ECE_399,Dr. Malathi Gopalakrishnan,ECE,Assistant Professor,malathi.gop@mist.edu.in,8,C103,8
+FAC_MIST_ECE_400,Prof. Bhuvaneswari Swaminathan,ECE,Associate Professor,bhuvaneswari.swa@mist.edu.in,10,C103,11
+FAC_MIST_ECE_401,Dr. Anand Ramasamy,ECE,Associate Professor,anand.ram@mist.edu.in,14,C103,18
+FAC_MIST_ECE_402,Prof. Bhuvaneswari Palanisamy,ECE,Assistant Professor,bhuvaneswari.pal@mist.edu.in,6,C103,9
+FAC_MIST_ECE_403,Dr. Vijay Srinivasan,ECE,Assistant Professor,vijay.sri@mist.edu.in,7,C103,15
+FAC_MIST_ECE_404,Dr. Saravanan Kalyanasundaram,ECE,Assistant Professor,saravanan.kal@mist.edu.in,6,C103,13
+FAC_MIST_ECE_405,Prof. Anand Muthusamy,ECE,Assistant Professor,anand.mut@mist.edu.in,5,C103,18
+FAC_MIST_ECE_406,Dr. Sudha Gopalakrishnan,ECE,Assistant Professor,sudha.gop@mist.edu.in,6,C103,17
+FAC_MIST_ECE_407,Prof. Bhuvaneswari Kalyanasundaram,ECE,Assistant Professor,bhuvaneswari.kal@mist.edu.in,8,C103,13
+FAC_MIST_ECE_408,Dr. Kavitha Palanisamy,ECE,Assistant Professor,kavitha.pal@mist.edu.in,5,C103,9
+FAC_MIST_ECE_409,Prof. Balaji Gopalakrishnan,ECE,Associate Professor,balaji.gop@mist.edu.in,9,C103,11
+FAC_MIST_EEE_410,Prof. Revathi Chidambaram,EEE,Assistant Professor,revathi.chi@mist.edu.in,3,C103,16
+FAC_MIST_EEE_411,Dr. Karthik Sengottaiyan,EEE,Associate Professor,karthik.sen@mist.edu.in,9,C103,10
+FAC_MIST_EEE_412,Dr. Balaji Ramasamy,EEE,Assistant Professor,balaji.ram@mist.edu.in,5,C103,12
+FAC_MIST_EEE_413,Prof. Anand Chandrasekaran,EEE,Assistant Professor,anand.cha@mist.edu.in,8,C103,12
+FAC_MIST_EEE_414,Prof. Sudha Kalyanasundaram,EEE,Associate Professor,sudha.kal@mist.edu.in,9,C103,14
+FAC_MIST_EEE_415,Dr. Dinesh Subramanian,EEE,Assistant Professor,dinesh.sub@mist.edu.in,7,C103,17
+FAC_MIST_EEE_416,Dr. Meena Srinivasan,EEE,Professor,meena.sri@mist.edu.in,24,C103,11
+FAC_MIST_EEE_417,Dr. Senthamarai Muthusamy,EEE,Associate Professor,senthamarai.mut@mist.edu.in,13,C103,15
+FAC_MIST_EEE_418,Dr. Sudha Kalyanasundaram,EEE,Assistant Professor,sudha.kal@mist.edu.in,6,C103,14
+FAC_MIST_EEE_419,Prof. Murugan Chidambaram,EEE,Professor,murugan.chi@mist.edu.in,29,C103,13
+FAC_MIST_EEE_420,Prof. Murugan Venkataraman,EEE,Assistant Professor,murugan.ven@mist.edu.in,5,C103,10
+FAC_MIST_EEE_421,Dr. Malathi Swaminathan,EEE,Assistant Professor,malathi.swa@mist.edu.in,6,C103,12
+FAC_MIST_EEE_422,Prof. Vijay Sengottaiyan,EEE,Professor,vijay.sen@mist.edu.in,29,C103,12
+FAC_MIST_Mechanical_423,Dr. Murugan Natarajan,Mechanical,Associate Professor,murugan.nat@mist.edu.in,14,C103,11
+FAC_MIST_Mechanical_424,Prof. Senthamarai Rajagopalan,Mechanical,Associate Professor,senthamarai.raj@mist.edu.in,12,C103,16
+FAC_MIST_Mechanical_425,Prof. Deepa Swaminathan,Mechanical,Associate Professor,deepa.swa@mist.edu.in,11,C103,13
+FAC_MIST_Mechanical_426,Dr. Priya Chidambaram,Mechanical,Associate Professor,priya.chi@mist.edu.in,12,C103,19
+FAC_MIST_Mechanical_427,Dr. Rajesh Chidambaram,Mechanical,Assistant Professor,rajesh.chi@mist.edu.in,7,C103,16
+FAC_MIST_Mechanical_428,Prof. Meena Ramasamy,Mechanical,Assistant Professor,meena.ram@mist.edu.in,6,C103,9
+FAC_MIST_Mechanical_429,Dr. Senthamarai Balasubramanian,Mechanical,Professor,senthamarai.bal@mist.edu.in,24,C103,20
+FAC_MIST_Mechanical_430,Prof. Meena Venkataraman,Mechanical,Assistant Professor,meena.ven@mist.edu.in,4,C103,16
+FAC_MIST_Mechanical_431,Prof. Rajesh Natarajan,Mechanical,Assistant Professor,rajesh.nat@mist.edu.in,6,C103,25
+FAC_MIST_Mechanical_432,Prof. Santhosh Natarajan,Mechanical,Assistant Professor,santhosh.nat@mist.edu.in,8,C103,18
+FAC_MIST_Civil_433,Prof. Senthamarai Natarajan,Civil,Assistant Professor,senthamarai.nat@mist.edu.in,5,C103,19
+FAC_MIST_Civil_434,Prof. Venkatesh Gopalakrishnan,Civil,Assistant Professor,venkatesh.gop@mist.edu.in,6,C103,14
+FAC_MIST_Civil_435,Prof. Sudha Ramasamy,Civil,Assistant Professor,sudha.ram@mist.edu.in,5,C103,12
+FAC_MIST_Civil_436,Dr. Rajesh Srinivasan,Civil,Professor,rajesh.sri@mist.edu.in,30,C103,8
+FAC_MIST_Civil_437,Dr. Karthik Rajagopalan,Civil,Associate Professor,karthik.raj@mist.edu.in,14,C103,18
+FAC_MIST_Civil_438,Dr. Venkatesh Rajagopalan,Civil,Associate Professor,venkatesh.raj@mist.edu.in,9,C103,22
+FAC_MIST_Civil_439,Prof. Nithya Muthusamy,Civil,Assistant Professor,nithya.mut@mist.edu.in,8,C103,9
+FAC_MIST_Robotics_440,Prof. Venkatesh Sengottaiyan,Robotics,Assistant Professor,venkatesh.sen@mist.edu.in,2,C103,13
+FAC_MIST_Robotics_441,Dr. Vijay Ramasamy,Robotics,Assistant Professor,vijay.ram@mist.edu.in,4,C103,13
+FAC_MIST_Robotics_442,Dr. Senthamarai Chidambaram,Robotics,Assistant Professor,senthamarai.chi@mist.edu.in,5,C103,12
+FAC_MIST_Robotics_443,Prof. Gopinath Swaminathan,Robotics,Assistant Professor,gopinath.swa@mist.edu.in,7,C103,6
+FAC_MIST_Automobile_444,Prof. Revathi Palanisamy,Automobile,Assistant Professor,revathi.pal@mist.edu.in,2,C103,6
+FAC_MIST_Automobile_445,Dr. Sridhar Gopalakrishnan,Automobile,Associate Professor,sridhar.gop@mist.edu.in,13,C103,3
+FAC_MIST_Automobile_446,Dr. Dinesh Ramasamy,Automobile,Professor,dinesh.ram@mist.edu.in,22,C103,14
+FAC_SDU_CSE_447,Dr. Santhosh Subramanian,CSE,Assistant Professor,santhosh.sub@sdu.edu.in,6,C104,15
+FAC_SDU_CSE_448,Prof. Malathi Chandrasekaran,CSE,Professor,malathi.cha@sdu.edu.in,29,C104,11
+FAC_SDU_CSE_449,Prof. Bhuvaneswari Venkataraman,CSE,Associate Professor,bhuvaneswari.ven@sdu.edu.in,10,C104,16
+FAC_SDU_CSE_450,Dr. Karthik Rajagopalan,CSE,Assistant Professor,karthik.raj@sdu.edu.in,6,C104,21
+FAC_SDU_CSE_451,Prof. Priya Natarajan,CSE,Professor,priya.nat@sdu.edu.in,20,C104,14
+FAC_SDU_CSE_452,Dr. Balaji Subramanian,CSE,Professor,balaji.sub@sdu.edu.in,24,C104,16
+FAC_SDU_CSE_453,Prof. Priya Venkataraman,CSE,Assistant Professor,priya.ven@sdu.edu.in,6,C104,10
+FAC_SDU_CSE_454,Dr. Sridhar Natarajan,CSE,Assistant Professor,sridhar.nat@sdu.edu.in,5,C104,9
+FAC_SDU_CSE_455,Dr. Balaji Natarajan,CSE,Associate Professor,balaji.nat@sdu.edu.in,13,C104,9
+FAC_SDU_CSE_456,Dr. Nithya Sundaram,CSE,Associate Professor,nithya.sun@sdu.edu.in,12,C104,13
+FAC_SDU_CSE_457,Dr. Balaji Krishnan,CSE,Assistant Professor,balaji.kri@sdu.edu.in,2,C104,13
+FAC_SDU_CSE_458,Prof. Bhuvaneswari Natarajan,CSE,Assistant Professor,bhuvaneswari.nat@sdu.edu.in,5,C104,10
+FAC_SDU_CSE_459,Dr. Suresh Gopalakrishnan,CSE,Associate Professor,suresh.gop@sdu.edu.in,15,C104,17
+FAC_SDU_CSE_460,Dr. Malathi Sengottaiyan,CSE,Professor,malathi.sen@sdu.edu.in,23,C104,11
+FAC_SDU_CSE_461,Prof. Vijay Krishnan,CSE,Associate Professor,vijay.kri@sdu.edu.in,11,C104,11
+FAC_SDU_CSE_462,Dr. Rajesh Palanisamy,CSE,Professor,rajesh.pal@sdu.edu.in,23,C104,9
+FAC_SDU_CSE_463,Prof. Karthik Subramanian,CSE,Assistant Professor,karthik.sub@sdu.edu.in,2,C104,16
+FAC_SDU_CSE_464,Prof. Gopinath Sundaram,CSE,Assistant Professor,gopinath.sun@sdu.edu.in,7,C104,10
+FAC_SDU_CSE_465,Dr. Bhuvaneswari Chandrasekaran,CSE,Associate Professor,bhuvaneswari.cha@sdu.edu.in,12,C104,15
+FAC_SDU_CSE_466,Dr. Sridhar Palanisamy,CSE,Assistant Professor,sridhar.pal@sdu.edu.in,7,C104,16
+FAC_SDU_CSE_467,Dr. Gopinath Ramasamy,CSE,Associate Professor,gopinath.ram@sdu.edu.in,9,C104,7
+FAC_SDU_CSE_468,Dr. Santhosh Venkataraman,CSE,Assistant Professor,santhosh.ven@sdu.edu.in,5,C104,15
+FAC_SDU_IT_469,Dr. Santhosh Natarajan,IT,Assistant Professor,santhosh.nat@sdu.edu.in,3,C104,12
+FAC_SDU_IT_470,Dr. Gopinath Natarajan,IT,Professor,gopinath.nat@sdu.edu.in,20,C104,19
+FAC_SDU_IT_471,Dr. Ganesh Muthusamy,IT,Associate Professor,ganesh.mut@sdu.edu.in,14,C104,10
+FAC_SDU_IT_472,Prof. Santhosh Gopalakrishnan,IT,Professor,santhosh.gop@sdu.edu.in,25,C104,14
+FAC_SDU_IT_473,Dr. Santhosh Chandrasekaran,IT,Assistant Professor,santhosh.cha@sdu.edu.in,6,C104,19
+FAC_SDU_IT_474,Dr. Arun Balasubramanian,IT,Assistant Professor,arun.bal@sdu.edu.in,5,C104,20
+FAC_SDU_IT_475,Prof. Suresh Palanisamy,IT,Associate Professor,suresh.pal@sdu.edu.in,14,C104,17
+FAC_SDU_IT_476,Dr. Dinesh Chandrasekaran,IT,Assistant Professor,dinesh.cha@sdu.edu.in,3,C104,9
+FAC_SDU_IT_477,Dr. Gopinath Kalyanasundaram,IT,Assistant Professor,gopinath.kal@sdu.edu.in,8,C104,13
+FAC_SDU_IT_478,Prof. Dinesh Subramanian,IT,Professor,dinesh.sub@sdu.edu.in,25,C104,19
+FAC_SDU_IT_479,Dr. Geetha Chandrasekaran,IT,Assistant Professor,geetha.cha@sdu.edu.in,3,C104,4
+FAC_SDU_IT_480,Dr. Revathi Venkataraman,IT,Assistant Professor,revathi.ven@sdu.edu.in,5,C104,17
+FAC_SDU_IT_481,Dr. Subhashini Palanisamy,IT,Associate Professor,subhashini.pal@sdu.edu.in,12,C104,17
+FAC_SDU_IT_482,Dr. Suresh Swaminathan,IT,Associate Professor,suresh.swa@sdu.edu.in,9,C104,9
+FAC_SDU_IT_483,Dr. Subhashini Krishnan,IT,Associate Professor,subhashini.kri@sdu.edu.in,12,C104,19
+FAC_SDU_IT_484,Prof. Meena Venkataraman,IT,Assistant Professor,meena.ven@sdu.edu.in,2,C104,17
+FAC_SDU_AIDS_485,Prof. Senthamarai Venkataraman,AIDS,Assistant Professor,senthamarai.ven@sdu.edu.in,8,C104,9
+FAC_SDU_AIDS_486,Prof. Meena Chidambaram,AIDS,Associate Professor,meena.chi@sdu.edu.in,15,C104,23
+FAC_SDU_AIDS_487,Dr. Senthamarai Chidambaram,AIDS,Associate Professor,senthamarai.chi@sdu.edu.in,15,C104,18
+FAC_SDU_AIDS_488,Dr. Sridhar Palanisamy,AIDS,Assistant Professor,sridhar.pal@sdu.edu.in,5,C104,12
+FAC_SDU_AIDS_489,Prof. Sridhar Ramasamy,AIDS,Associate Professor,sridhar.ram@sdu.edu.in,14,C104,16
+FAC_SDU_AIDS_490,Dr. Senthamarai Venkataraman,AIDS,Assistant Professor,senthamarai.ven@sdu.edu.in,6,C104,8
+FAC_SDU_AIDS_491,Prof. Subhashini Chidambaram,AIDS,Assistant Professor,subhashini.chi@sdu.edu.in,6,C104,20
+FAC_SDU_AIDS_492,Dr. Senthamarai Chandrasekaran,AIDS,Assistant Professor,senthamarai.cha@sdu.edu.in,3,C104,16
+FAC_SDU_AIDS_493,Dr. Vijay Chidambaram,AIDS,Associate Professor,vijay.chi@sdu.edu.in,14,C104,15
+FAC_SDU_AIDS_494,Prof. Revathi Kalyanasundaram,AIDS,Associate Professor,revathi.kal@sdu.edu.in,16,C104,11
+FAC_SDU_AIDS_495,Prof. Sridhar Balasubramanian,AIDS,Assistant Professor,sridhar.bal@sdu.edu.in,3,C104,8
+FAC_SDU_AIDS_496,Dr. Nithya Kalyanasundaram,AIDS,Professor,nithya.kal@sdu.edu.in,27,C104,13
+FAC_SDU_AIDS_497,Dr. Suresh Srinivasan,AIDS,Associate Professor,suresh.sri@sdu.edu.in,9,C104,16
+FAC_SDU_AIDS_498,Dr. Gopinath Sundaram,AIDS,Associate Professor,gopinath.sun@sdu.edu.in,12,C104,14
+FAC_SDU_AIML_499,Dr. Dinesh Subramanian,AIML,Assistant Professor,dinesh.sub@sdu.edu.in,4,C104,14
+FAC_SDU_AIML_500,Prof. Suresh Kalyanasundaram,AIML,Assistant Professor,suresh.kal@sdu.edu.in,6,C104,14
+FAC_SDU_AIML_501,Dr. Bhuvaneswari Chandrasekaran,AIML,Assistant Professor,bhuvaneswari.cha@sdu.edu.in,4,C104,8
+FAC_SDU_AIML_502,Dr. Bhuvaneswari Gopalakrishnan,AIML,Associate Professor,bhuvaneswari.gop@sdu.edu.in,15,C104,13
+FAC_SDU_AIML_503,Dr. Padmavathi Balasubramanian,AIML,Assistant Professor,padmavathi.bal@sdu.edu.in,3,C104,24
+FAC_SDU_AIML_504,Dr. Santhosh Venkataraman,AIML,Assistant Professor,santhosh.ven@sdu.edu.in,4,C104,10
+FAC_SDU_AIML_505,Dr. Revathi Sengottaiyan,AIML,Professor,revathi.sen@sdu.edu.in,24,C104,20
+FAC_SDU_AIML_506,Prof. Balaji Chidambaram,AIML,Assistant Professor,balaji.chi@sdu.edu.in,7,C104,22
+FAC_SDU_AIML_507,Prof. Ganesh Krishnan,AIML,Professor,ganesh.kri@sdu.edu.in,29,C104,16
+FAC_SDU_AIML_508,Dr. Suresh Krishnan,AIML,Assistant Professor,suresh.kri@sdu.edu.in,5,C104,22
+FAC_SDU_AIML_509,Prof. Suresh Sundaram,AIML,Assistant Professor,suresh.sun@sdu.edu.in,8,C104,18
+FAC_SDU_AIML_510,Dr. Geetha Muthusamy,AIML,Professor,geetha.mut@sdu.edu.in,18,C104,17
+FAC_SDU_Cyber Security_511,Prof. Santhosh Venkataraman,Cyber Security,Associate Professor,santhosh.ven@sdu.edu.in,16,C104,10
+FAC_SDU_Cyber Security_512,Prof. Revathi Natarajan,Cyber Security,Associate Professor,revathi.nat@sdu.edu.in,13,C104,16
+FAC_SDU_Cyber Security_513,Dr. Arun Natarajan,Cyber Security,Professor,arun.nat@sdu.edu.in,17,C104,15
+FAC_SDU_Cyber Security_514,Prof. Deepa Subramanian,Cyber Security,Associate Professor,deepa.sub@sdu.edu.in,15,C104,15
+FAC_SDU_Cyber Security_515,Dr. Senthamarai Krishnan,Cyber Security,Assistant Professor,senthamarai.kri@sdu.edu.in,6,C104,14
+FAC_SDU_Cyber Security_516,Prof. Ganesh Sengottaiyan,Cyber Security,Assistant Professor,ganesh.sen@sdu.edu.in,5,C104,11
+FAC_SDU_Cyber Security_517,Prof. Gopinath Subramanian,Cyber Security,Associate Professor,gopinath.sub@sdu.edu.in,10,C104,12
+FAC_SDU_Cyber Security_518,Dr. Karthik Palanisamy,Cyber Security,Assistant Professor,karthik.pal@sdu.edu.in,8,C104,11
+FAC_SDU_Cyber Security_519,Dr. Ramesh Muthusamy,Cyber Security,Associate Professor,ramesh.mut@sdu.edu.in,15,C104,19
+FAC_SDU_Cyber Security_520,Dr. Gopinath Muthusamy,Cyber Security,Assistant Professor,gopinath.mut@sdu.edu.in,5,C104,21
+FAC_SDU_CSD_521,Dr. Santhosh Palanisamy,CSD,Assistant Professor,santhosh.pal@sdu.edu.in,3,C104,15
+FAC_SDU_CSD_522,Dr. Uma Sengottaiyan,CSD,Associate Professor,uma.sen@sdu.edu.in,12,C104,8
+FAC_SDU_CSD_523,Dr. Dinesh Krishnan,CSD,Assistant Professor,dinesh.kri@sdu.edu.in,7,C104,7
+FAC_SDU_CSD_524,Prof. Padmavathi Subramanian,CSD,Assistant Professor,padmavathi.sub@sdu.edu.in,2,C104,10
+FAC_SDU_CSD_525,Prof. Ramesh Sundaram,CSD,Assistant Professor,ramesh.sun@sdu.edu.in,8,C104,8
+FAC_SDU_CSD_526,Dr. Revathi Ramasamy,CSD,Assistant Professor,revathi.ram@sdu.edu.in,5,C104,15
+FAC_SDU_CSD_527,Dr. Bhuvaneswari Srinivasan,CSD,Assistant Professor,bhuvaneswari.sri@sdu.edu.in,4,C104,10
+FAC_SDU_CSD_528,Dr. Bhuvaneswari Krishnan,CSD,Associate Professor,bhuvaneswari.kri@sdu.edu.in,15,C104,14
+FAC_SDU_CSD_529,Dr. Kavitha Gopalakrishnan,CSD,Associate Professor,kavitha.gop@sdu.edu.in,12,C104,17
+FAC_SDU_CSD_530,Dr. Balaji Srinivasan,CSD,Assistant Professor,balaji.sri@sdu.edu.in,3,C104,25
+FAC_SDU_CSBS_531,Dr. Murugan Swaminathan,CSBS,Assistant Professor,murugan.swa@sdu.edu.in,5,C104,3
+FAC_SDU_CSBS_532,Dr. Revathi Chandrasekaran,CSBS,Associate Professor,revathi.cha@sdu.edu.in,14,C104,14
+FAC_SDU_CSBS_533,Prof. Revathi Chidambaram,CSBS,Assistant Professor,revathi.chi@sdu.edu.in,6,C104,11
+FAC_SDU_CSBS_534,Dr. Deepa Rajagopalan,CSBS,Assistant Professor,deepa.raj@sdu.edu.in,5,C104,13
+FAC_SDU_CSBS_535,Prof. Saravanan Sengottaiyan,CSBS,Assistant Professor,saravanan.sen@sdu.edu.in,4,C104,15
+FAC_SDU_CSBS_536,Dr. Geetha Subramanian,CSBS,Associate Professor,geetha.sub@sdu.edu.in,12,C104,13
+FAC_SDU_CSBS_537,Dr. Meena Muthusamy,CSBS,Assistant Professor,meena.mut@sdu.edu.in,4,C104,11
+FAC_SDU_CSBS_538,Prof. Murugan Kalyanasundaram,CSBS,Associate Professor,murugan.kal@sdu.edu.in,14,C104,17
+FAC_SDU_CSBS_539,Prof. Vijay Swaminathan,CSBS,Assistant Professor,vijay.swa@sdu.edu.in,2,C104,13
+FAC_SDU_ECE_540,Prof. Balaji Balasubramanian,ECE,Assistant Professor,balaji.bal@sdu.edu.in,7,C104,19
+FAC_SDU_ECE_541,Dr. Sridhar Venkataraman,ECE,Assistant Professor,sridhar.ven@sdu.edu.in,7,C104,9
+FAC_SDU_ECE_542,Prof. Ramesh Chandrasekaran,ECE,Assistant Professor,ramesh.cha@sdu.edu.in,4,C104,15
+FAC_SDU_ECE_543,Prof. Santhosh Swaminathan,ECE,Associate Professor,santhosh.swa@sdu.edu.in,15,C104,13
+FAC_SDU_ECE_544,Prof. Ramesh Rajagopalan,ECE,Assistant Professor,ramesh.raj@sdu.edu.in,5,C104,20
+FAC_SDU_ECE_545,Prof. Bhuvaneswari Srinivasan,ECE,Professor,bhuvaneswari.sri@sdu.edu.in,23,C104,14
+FAC_SDU_ECE_546,Prof. Bhuvaneswari Natarajan,ECE,Assistant Professor,bhuvaneswari.nat@sdu.edu.in,8,C104,18
+FAC_SDU_ECE_547,Dr. Bhuvaneswari Krishnan,ECE,Assistant Professor,bhuvaneswari.kri@sdu.edu.in,7,C104,13
+FAC_SDU_ECE_548,Dr. Malathi Balasubramanian,ECE,Assistant Professor,malathi.bal@sdu.edu.in,7,C104,14
+FAC_SDU_ECE_549,Prof. Uma Sengottaiyan,ECE,Assistant Professor,uma.sen@sdu.edu.in,8,C104,16
+FAC_SDU_ECE_550,Dr. Geetha Ramasamy,ECE,Assistant Professor,geetha.ram@sdu.edu.in,6,C104,26
+FAC_SDU_ECE_551,Dr. Nithya Srinivasan,ECE,Associate Professor,nithya.sri@sdu.edu.in,12,C104,10
+FAC_SDU_ECE_552,Dr. Sridhar Palanisamy,ECE,Associate Professor,sridhar.pal@sdu.edu.in,11,C104,21
+FAC_SDU_ECE_553,Dr. Malathi Sundaram,ECE,Assistant Professor,malathi.sun@sdu.edu.in,2,C104,24
+FAC_SDU_EEE_554,Dr. Ganesh Subramanian,EEE,Assistant Professor,ganesh.sub@sdu.edu.in,8,C104,17
+FAC_SDU_EEE_555,Dr. Deepa Srinivasan,EEE,Assistant Professor,deepa.sri@sdu.edu.in,5,C104,12
+FAC_SDU_EEE_556,Dr. Nithya Rajagopalan,EEE,Assistant Professor,nithya.raj@sdu.edu.in,8,C104,11
+FAC_SDU_EEE_557,Dr. Dinesh Ramasamy,EEE,Assistant Professor,dinesh.ram@sdu.edu.in,2,C104,22
+FAC_SDU_EEE_558,Prof. Uma Balasubramanian,EEE,Associate Professor,uma.bal@sdu.edu.in,11,C104,19
+FAC_SDU_EEE_559,Dr. Bhuvaneswari Balasubramanian,EEE,Assistant Professor,bhuvaneswari.bal@sdu.edu.in,5,C104,13
+FAC_SDU_EEE_560,Dr. Santhosh Sengottaiyan,EEE,Assistant Professor,santhosh.sen@sdu.edu.in,7,C104,18
+FAC_SDU_EEE_561,Dr. Geetha Sengottaiyan,EEE,Associate Professor,geetha.sen@sdu.edu.in,12,C104,18
+FAC_SDU_EEE_562,Dr. Sridhar Chandrasekaran,EEE,Associate Professor,sridhar.cha@sdu.edu.in,12,C104,17
+FAC_SDU_EEE_563,Dr. Revathi Krishnan,EEE,Associate Professor,revathi.kri@sdu.edu.in,11,C104,15
+FAC_SDU_Mechanical_564,Dr. Saravanan Venkataraman,Mechanical,Assistant Professor,saravanan.ven@sdu.edu.in,8,C104,16
+FAC_SDU_Mechanical_565,Prof. Meena Srinivasan,Mechanical,Assistant Professor,meena.sri@sdu.edu.in,5,C104,18
+FAC_SDU_Mechanical_566,Dr. Sudha Sengottaiyan,Mechanical,Assistant Professor,sudha.sen@sdu.edu.in,8,C104,12
+FAC_SDU_Mechanical_567,Prof. Sridhar Balasubramanian,Mechanical,Associate Professor,sridhar.bal@sdu.edu.in,13,C104,10
+FAC_SDU_Mechanical_568,Prof. Senthamarai Krishnan,Mechanical,Assistant Professor,senthamarai.kri@sdu.edu.in,3,C104,12
+FAC_SDU_Mechanical_569,Dr. Murugan Ramasamy,Mechanical,Associate Professor,murugan.ram@sdu.edu.in,15,C104,10
+FAC_SDU_Mechanical_570,Dr. Geetha Subramanian,Mechanical,Assistant Professor,geetha.sub@sdu.edu.in,5,C104,12
+FAC_SDU_Mechanical_571,Dr. Rajesh Balasubramanian,Mechanical,Assistant Professor,rajesh.bal@sdu.edu.in,3,C104,11
+FAC_SDU_Mechanical_572,Prof. Venkatesh Muthusamy,Mechanical,Associate Professor,venkatesh.mut@sdu.edu.in,14,C104,19
+FAC_SDU_Mechanical_573,Dr. Kavitha Kalyanasundaram,Mechanical,Associate Professor,kavitha.kal@sdu.edu.in,16,C104,7
+FAC_SDU_Mechanical_574,Dr. Geetha Kalyanasundaram,Mechanical,Associate Professor,geetha.kal@sdu.edu.in,16,C104,14
+FAC_SDU_Civil_575,Prof. Ramesh Sundaram,Civil,Assistant Professor,ramesh.sun@sdu.edu.in,2,C104,12
+FAC_SDU_Civil_576,Dr. Revathi Chidambaram,Civil,Assistant Professor,revathi.chi@sdu.edu.in,5,C104,12
+FAC_SDU_Civil_577,Dr. Balaji Kalyanasundaram,Civil,Assistant Professor,balaji.kal@sdu.edu.in,2,C104,17
+FAC_SDU_Civil_578,Dr. Revathi Palanisamy,Civil,Associate Professor,revathi.pal@sdu.edu.in,16,C104,19
+FAC_SDU_Civil_579,Prof. Bhuvaneswari Venkataraman,Civil,Assistant Professor,bhuvaneswari.ven@sdu.edu.in,8,C104,10
+FAC_SDU_Civil_580,Dr. Rajesh Chidambaram,Civil,Professor,rajesh.chi@sdu.edu.in,24,C104,22
+FAC_SDU_Civil_581,Prof. Revathi Palanisamy,Civil,Assistant Professor,revathi.pal@sdu.edu.in,8,C104,8
+FAC_SDU_Robotics_582,Dr. Gopinath Chidambaram,Robotics,Associate Professor,gopinath.chi@sdu.edu.in,14,C104,13
+FAC_SDU_Robotics_583,Dr. Subhashini Chandrasekaran,Robotics,Assistant Professor,subhashini.cha@sdu.edu.in,3,C104,15
+FAC_SDU_Robotics_584,Prof. Ganesh Venkataraman,Robotics,Assistant Professor,ganesh.ven@sdu.edu.in,6,C104,10
+FAC_SDU_Automobile_585,Dr. Sudha Balasubramanian,Automobile,Associate Professor,sudha.bal@sdu.edu.in,13,C104,5
+FAC_SDU_Automobile_586,Prof. Balaji Swaminathan,Automobile,Assistant Professor,balaji.swa@sdu.edu.in,7,C104,3
+FAC_SDU_Automobile_587,Dr. Ganesh Ramasamy,Automobile,Associate Professor,ganesh.ram@sdu.edu.in,15,C104,5
+FAC_SDU_Automobile_588,Prof. Senthamarai Natarajan,Automobile,Professor,senthamarai.nat@sdu.edu.in,19,C104,9
+FAC_SDU_Automobile_589,Dr. Dinesh Subramanian,Automobile,Associate Professor,dinesh.sub@sdu.edu.in,12,C104,6
