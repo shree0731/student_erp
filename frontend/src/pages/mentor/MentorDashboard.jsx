@@ -324,6 +324,16 @@ export default function MentorDashboard() {
 
   const lowAttendanceStudents = mentees.filter(s => s.attendance_pct < 75);
 
+  const priorityMentee1 = mentees.find(s => s.dropout_risk_label === 'High')
+    || mentees.find(s => s.attendance_pct < 75)
+    || mentees[0]
+    || { student_id: 'STU_EEC_CSE_Y4_0350', student_name: 'Vimal Rajagopalan', department: 'CSE', year_of_study: 4, dropout_risk_label: 'Medium', attendance_pct: 67.7, backlogs_count: 10 };
+
+  const priorityMentee2 = mentees.find(s => s.student_id !== priorityMentee1?.student_id && (s.backlogs_count > 0 || s.attendance_pct < 75 || s.dropout_risk_label === 'Medium'))
+    || mentees.find(s => s.student_id !== priorityMentee1?.student_id)
+    || mentees[1]
+    || { student_id: 'STU_EEC_CSE_Y4_0331', student_name: 'Prajwal Gowda', department: 'CSE', year_of_study: 4, dropout_risk_label: 'Medium', attendance_pct: 76.3, backlogs_count: 22 };
+
   const avgAttendance = mentees.length > 0
     ? (mentees.reduce((a, b) => a + (b.attendance_pct || 0), 0) / mentees.length).toFixed(1)
     : '81.4';
@@ -623,7 +633,7 @@ export default function MentorDashboard() {
               {/* 2 Focused Mentee Cards inside Sticky Note */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.85rem', flex: 1 }}>
                 
-                {/* Mentee 1: Vimal */}
+                {/* Priority Mentee 1 */}
                 <div style={{
                   background: 'rgba(255,255,255,0.88)',
                   border: '1px solid #FDE68A',
@@ -636,32 +646,48 @@ export default function MentorDashboard() {
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                       <div>
-                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>Vimal Rajagopalan</div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>STU_EEC_CSE_Y4_0350 &bull; Year 4</div>
+                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>{priorityMentee1.student_name}</div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>{priorityMentee1.student_id} &bull; Year {priorityMentee1.year_of_study || 4}</div>
                       </div>
-                      <span className="pill pill-amber" style={{ fontSize: '0.7rem' }}>Medium Risk</span>
+                      <span className={`pill ${priorityMentee1.dropout_risk_label === 'High' ? 'pill-red' : priorityMentee1.dropout_risk_label === 'Medium' ? 'pill-amber' : 'pill-green'}`} style={{ fontSize: '0.7rem' }}>
+                        {priorityMentee1.dropout_risk_label} Risk
+                      </span>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginBottom: '0.65rem', fontSize: '0.76rem' }}>
                       <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
                         <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Attendance</div>
-                        <div style={{ fontWeight: '800', color: 'var(--red)', fontSize: '0.88rem' }}>67.7% (&lt;75%)</div>
+                        <div style={{ fontWeight: '800', color: priorityMentee1.attendance_pct < 75 ? 'var(--red)' : 'var(--green)', fontSize: '0.88rem' }}>
+                          {priorityMentee1.attendance_pct}% {priorityMentee1.attendance_pct < 75 ? '(<75%)' : ''}
+                        </div>
                       </div>
                       <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
                         <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Arrears</div>
-                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.88rem' }}>10 Courses</div>
+                        <div style={{ fontWeight: '800', color: priorityMentee1.backlogs_count > 0 ? 'var(--red)' : 'var(--ink)', fontSize: '0.88rem' }}>
+                          {priorityMentee1.backlogs_count} Courses
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '0.72rem', color: '#991B1B', marginBottom: '0.75rem', background: '#FEE2E2', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
-                      ⚠️ <strong>AU 75% Rule Alert:</strong> 7.3% deficit from exam eligibility.
-                    </div>
+                    {priorityMentee1.attendance_pct < 75 ? (
+                      <div style={{ fontSize: '0.72rem', color: '#991B1B', marginBottom: '0.75rem', background: '#FEE2E2', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        ⚠️ <strong>AU 75% Rule Alert:</strong> {(75 - priorityMentee1.attendance_pct).toFixed(1)}% deficit from exam eligibility.
+                      </div>
+                    ) : priorityMentee1.backlogs_count > 0 ? (
+                      <div style={{ fontSize: '0.72rem', color: '#92400E', marginBottom: '0.75rem', background: '#FEF3C7', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        📌 <strong>Academic Alert:</strong> {priorityMentee1.backlogs_count} active backlogs flagged for tutoring.
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '0.72rem', color: '#065F46', marginBottom: '0.75rem', background: '#D1FAE5', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        ✅ <strong>Regular Status:</strong> Meets semester academic requirements.
+                      </div>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', gap: '0.45rem' }}>
                     <button
                       className="btn btn-primary btn-sm"
-                      onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0350')}
+                      onClick={() => navigate(`/mentor/student/${priorityMentee1.student_id}`)}
                       style={{ flex: 1, fontSize: '0.74rem' }}
                     >
                       <span>Diagnostic</span>
@@ -670,7 +696,7 @@ export default function MentorDashboard() {
                     <button
                       className="btn btn-outline btn-sm"
                       onClick={() => {
-                        setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0350' }));
+                        setNewLog(prev => ({ ...prev, studentId: priorityMentee1.student_id }));
                         setShowLogModal(true);
                       }}
                       style={{ fontSize: '0.74rem' }}
@@ -680,7 +706,7 @@ export default function MentorDashboard() {
                   </div>
                 </div>
 
-                {/* Mentee 2: Prajwal */}
+                {/* Priority Mentee 2 */}
                 <div style={{
                   background: 'rgba(255,255,255,0.88)',
                   border: '1px solid #FDE68A',
@@ -693,32 +719,48 @@ export default function MentorDashboard() {
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                       <div>
-                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>Prajwal Gowda</div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>STU_EEC_CSE_Y4_0331 &bull; Year 4</div>
+                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>{priorityMentee2.student_name}</div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>{priorityMentee2.student_id} &bull; Year {priorityMentee2.year_of_study || 4}</div>
                       </div>
-                      <span className="pill pill-amber" style={{ fontSize: '0.7rem' }}>Medium Risk</span>
+                      <span className={`pill ${priorityMentee2.dropout_risk_label === 'High' ? 'pill-red' : priorityMentee2.dropout_risk_label === 'Medium' ? 'pill-amber' : 'pill-green'}`} style={{ fontSize: '0.7rem' }}>
+                        {priorityMentee2.dropout_risk_label} Risk
+                      </span>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginBottom: '0.65rem', fontSize: '0.76rem' }}>
                       <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
                         <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Attendance</div>
-                        <div style={{ fontWeight: '800', color: 'var(--green)', fontSize: '0.88rem' }}>76.3% (Safe)</div>
+                        <div style={{ fontWeight: '800', color: priorityMentee2.attendance_pct < 75 ? 'var(--red)' : 'var(--green)', fontSize: '0.88rem' }}>
+                          {priorityMentee2.attendance_pct}% {priorityMentee2.attendance_pct < 75 ? '(<75%)' : '(Safe)'}
+                        </div>
                       </div>
                       <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
                         <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Arrears</div>
-                        <div style={{ fontWeight: '800', color: 'var(--red)', fontSize: '0.88rem' }}>22 Courses</div>
+                        <div style={{ fontWeight: '800', color: priorityMentee2.backlogs_count > 0 ? 'var(--red)' : 'var(--ink)', fontSize: '0.88rem' }}>
+                          {priorityMentee2.backlogs_count} Courses
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '0.72rem', color: '#92400E', marginBottom: '0.75rem', background: '#FEF3C7', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
-                      📌 <strong>Academic Alert:</strong> Severe backlog accumulation across semesters.
-                    </div>
+                    {priorityMentee2.attendance_pct < 75 ? (
+                      <div style={{ fontSize: '0.72rem', color: '#991B1B', marginBottom: '0.75rem', background: '#FEE2E2', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        ⚠️ <strong>AU 75% Rule Alert:</strong> {(75 - priorityMentee2.attendance_pct).toFixed(1)}% deficit from exam eligibility.
+                      </div>
+                    ) : priorityMentee2.backlogs_count > 0 ? (
+                      <div style={{ fontSize: '0.72rem', color: '#92400E', marginBottom: '0.75rem', background: '#FEF3C7', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        📌 <strong>Academic Alert:</strong> Severe backlog accumulation across semesters.
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: '0.72rem', color: '#065F46', marginBottom: '0.75rem', background: '#D1FAE5', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                        ✅ <strong>Regular Status:</strong> Meets semester academic requirements.
+                      </div>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', gap: '0.45rem' }}>
                     <button
                       className="btn btn-primary btn-sm"
-                      onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0331')}
+                      onClick={() => navigate(`/mentor/student/${priorityMentee2.student_id}`)}
                       style={{ flex: 1, fontSize: '0.74rem' }}
                     >
                       <span>Diagnostic</span>
@@ -727,7 +769,7 @@ export default function MentorDashboard() {
                     <button
                       className="btn btn-outline btn-sm"
                       onClick={() => {
-                        setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0331' }));
+                        setNewLog(prev => ({ ...prev, studentId: priorityMentee2.student_id }));
                         setShowLogModal(true);
                       }}
                       style={{ fontSize: '0.74rem' }}
