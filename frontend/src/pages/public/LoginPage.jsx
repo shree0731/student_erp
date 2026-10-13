@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   const [college, setCollege] = useState(initialCollege);
   const [identifier, setIdentifier] = useState('FAC_EEC_CSE_001');
-  const [password, setPassword] = useState('demo1234');
+  const [password, setPassword] = useState('DemoPass@2026');
   const [rememberDevice, setRememberDevice] = useState(true);
   const [activePersona, setActivePersona] = useState('mentor');
   const [errorMsg, setErrorMsg] = useState('');

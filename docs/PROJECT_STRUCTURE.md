@@ -1,78 +1,82 @@
-# Project Structure: Student Academic Dropout Prediction & Intervention System
+# Project Structure: InSightERP (Student Retention & Intervention System)
 
 ```
 FSD/
-├── backend/                           # Express & Node.js backend REST API
+├── backend/                           # Express & Node.js backend REST API (Port 5000)
 │   ├── config/
 │   │   └── db.js                      # Mongoose MongoDB connection & fallback detection
 │   ├── controllers/
 │   │   ├── adminController.js         # MongoDB Aggregation Pipeline ($facet, $group)
 │   │   ├── facultyController.js       # Mentor mentee retrieval and faculty endpoints
+│   │   ├── integrationController.js   # Ingests meeting requests from AI microservice with Zod validation
+│   │   ├── meetingRequestController.js# Role-scoped meeting requests (mentor triage, student read-only)
 │   │   └── studentController.js       # Student filtering, pagination, and marks lookup
+│   ├── middleware/
+│   │   ├── auth.js                    # JWT verification and RBAC roles (student, mentor, admin)
+│   │   └── serviceKeyAuth.js          # Timing-safe ERP_SERVICE_API_KEY authentication for service calls
 │   ├── models/
-│   │   ├── Curriculum.js              # Course catalog schema across 14 engineering branches
+│   │   ├── Curriculum.js              # Course catalog schema across engineering branches
 │   │   ├── Faculty.js                 # Faculty mentor schema with experience and college ID
-│   │   ├── Marks.js                   # Subject-level continuous assessment and exam marks schema
+│   │   ├── Marks.js                   # Continuous assessment (CIA) and exam marks schema
+│   │   ├── MeetingRequest.js          # Ingested counseling and mentor consultation records
 │   │   └── Student.js                 # Student schema (rollups, monthly attendance array, demographics)
 │   ├── routes/
-│   │   └── api.js                     # REST endpoint definitions (/api/students, /faculty, /admin)
+│   │   └── api.js                     # REST endpoint definitions (auth, students, faculty, integrations)
 │   ├── scripts/
-│   │   └── seedDb.js                  # Fast batch seeder importing CSV/JSON files into MongoDB
-│   ├── utils/
-│   │   └── csvDataProvider.js         # Zero-config in-memory fallback loader when Mongo is offline
-│   ├── .env                           # Server environment variables (PORT, MONGO_URI)
-│   ├── package.json                   # Node.js dependencies (express, mongoose, cors, csv-parser)
-│   └── server.js                      # Main Express application entry point (http://localhost:5000)
+│   │   ├── check-env.js               # Startup environment integrity check (required keys, no placeholders)
+│   │   └── seedDb.js                  # Batch seeder importing CSV/JSON files into MongoDB
+│   ├── services/
+│   │   └── aiServiceClient.js         # HTTP client proxying predictions to standalone AI service (Port 5001)
+│   ├── tests/                         # Supertest & Jest test suites
+│   ├── .env                           # Server environment variables (PORT, JWT_SECRET, API keys)
+│   ├── .env.example                   # Sanitized configuration template with required variables
+│   ├── package.json                   # Node.js dependencies (express, mongoose, zod, cors)
+│   └── server.js                      # Express application entry point (http://localhost:5000)
 │
-├── frontend/                          # React + Vite Single Page Application
+├── frontend/                          # React + Vite Single Page Application (Port 5173)
 │   ├── public/                        # Static web assets
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── ChatbotWidget.jsx      # Expandable AI Academic Advisor widget (Phase 2 preview shell)
+│   │   │   ├── ChatbotWidget.jsx      # Expandable AI Academic Advisor widget
 │   │   │   ├── Navbar.jsx             # Top sticky navbar with active role badge and persona switcher
-│   │   │   └── Sidebar.jsx            # Role-aware navigation links for Student, Mentor, and Admin
+│   │   │   ├── ParentAlertModal.jsx   # Manual communication draft template with clipboard copy
+│   │   │   └── Sidebar.jsx            # Role-aware navigation links including Meeting Requests
 │   │   ├── context/
 │   │   │   └── AuthContext.jsx        # Demo persona state with instant one-click role switching
 │   │   ├── pages/
 │   │   │   ├── admin/
 │   │   │   │   └── AdminDashboard.jsx # Multi-campus analytics, risk charts, and branch health
 │   │   │   ├── mentor/
-│   │   │   │   ├── MentorDashboard.jsx# Assigned mentees table with risk badges and search/filter
+│   │   │   │   ├── MentorDashboard.jsx# Assigned mentees table + Meeting Requests triage drawer
 │   │   │   │   └── StudentDetail.jsx  # Student diagnostic dossier, weak subjects, & notes log
 │   │   │   ├── student/
-│   │   │   │   ├── StudentDashboard.jsx# Attendance %, 6-month trend, GPA, backlogs, mentor card
+│   │   │   │   ├── StudentDashboard.jsx# Attendance %, GPA, backlogs, mentor card, & meeting request status
 │   │   │   │   └── StudentMarks.jsx   # Semester tabs, CIA 1/2, assignments, external exam marks
-│   │   │   └── Login.jsx              # Role selector and sample persona launcher for evaluations
+│   │   │   └── Login.jsx              # Role selector and sample persona launcher
 │   │   ├── services/
 │   │   │   └── api.js                 # REST client communicating with Express backend
 │   │   ├── styles/
 │   │   │   └── index.css              # ERP design system (badges, tables, cards, responsive layout)
-│   │   ├── App.jsx                    # React Router configuration across all 5+ pages
+│   │   ├── App.jsx                    # React Router configuration across pages
 │   │   └── main.jsx                   # React DOM root render
-│   ├── index.html                     # HTML root template with Plus Jakarta Sans typography
+│   ├── index.html                     # HTML root template
 │   ├── package.json                   # React dependencies (react, react-router-dom, lucide-react, vite)
 │   └── vite.config.js                 # Vite build configuration with backend API proxy
 │
 ├── data/                              # Simulated datasets and static curriculum lookups
-│   ├── curriculum.json                # Complete catalog of all 14 branches across Semesters 1 to 8
-│   ├── faculty.csv                    # ~222 faculty mentors across 3 colleges and 4 departments
-│   ├── marks.csv                      # 271,128 row-level assessment records for completed courses
-│   └── students.csv                   # ~7,200 students with demographics, attendance, rollups, & risk
+│   ├── curriculum.json                # Complete catalog of branches across Semesters 1 to 8
+│   ├── faculty.csv                    # Faculty mentors across colleges and departments
+│   ├── marks.csv                      # Assessment records for completed courses
+│   └── students.csv                   # Student records with demographics, attendance, rollups, & risk
 │
 ├── scripts/                           # Data generation and pipeline scripts
 │   ├── build_curriculum.py            # Generates data/curriculum.json applying credit and lab rules
-│   └── generate_data.py               # Parametric rule-based simulation engine with latent traits
+│   └── generate_data.py               # Parametric simulation engine with latent traits
 │
-├── ml-service/                        # Phase 2 Machine Learning Microservice reservation
-│   └── README.md                      # FastAPI blueprint, XGBoost/SHAP contract, and SMOTE roadmap
-│
-└── docs/                              # Technical documentation and viva explanation guides
-    ├── architecture_note.md           # Rationale for dual Node.js/Express + Python/FastAPI services
-    ├── backend_setup.md               # Step-by-step setup for Node, MongoDB (local/Atlas), and seeding
-    ├── data_dictionary.md             # Complete attribute catalog across all 4 datasets
-    ├── PHASE1_SUMMARY.md              # Viva defense script in plain language for project evaluators
-    ├── PROJECT_STRUCTURE.md           # This annotated codebase directory tree
-    ├── task1_data_generation.md       # In-depth explanation of simulation design and risk formulas
-    ├── task2_frontend.md              # Architecture of React frontend and role-based UX
-    └── task3_backend.md               # MongoDB schema design, normalization, & aggregation pipelines
+└── docs/                              # Technical documentation and governance guides
+    ├── ATTRIBUTIONS.md                # Media licensing and icon provenance
+    ├── CHATBOT_CONTEXT_ARCHITECTURE.md# Context grounding and safety escalation design
+    ├── ML_MODEL_TRAINING.md           # Model methodology and evaluation benchmarks
+    ├── PROJECT_STRUCTURE.md           # Annotated codebase directory tree
+    └── security.md                    # Threat model, fail-closed guards, and parental communication policy
 ```

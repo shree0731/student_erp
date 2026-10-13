@@ -44,7 +44,16 @@ The ERP server enforces a strict **fail-closed** architecture:
 
 ---
 
-## 4. Secret Management & Hygiene
+## 4. Parental Communication, Consent & Student Privacy
+Communicating attendance shortages, course backlogs, or academic risk ratings to third parties (including parents and guardians of undergraduate students) requires strict adherence to institutional student data privacy policies and statutory data protection norms (such as UGC Guidelines and the Digital Personal Data Protection Act):
+- **Consent & Statutory Grounds**: Institutions must ensure appropriate student consent or statutory regulatory grounds (e.g., formal affiliation bylaws requiring advance warning of exam debarment) before transmitting academic performance dossiers to third parties.
+- **No Automated Unverified Dispatch**: The system deliberately **avoids automated broadcast dispatches** to unverified phone numbers or third-party gateways.
+- **Mentor-in-the-Loop Safeguard**: The interface provides a manual "Prepare message" template enabling faculty mentors to review, verify recipient details against official campus records, and communicate through designated institutional channels.
+- **Zero Fabricated Records**: The system never populates fake parent phone numbers or email addresses; all communications must reference verified institutional registrar records.
+
+---
+
+## 5. Secret Management & Hygiene
 - Secrets (`JWT_SECRET`, database connection URIs, API keys) are strictly loaded via `.env` files read into `process.env`.
 - Real credentials and `.env` files are ignored by git (`.gitignore` includes `.env`, `*.env`, `db.txt`, `*.key`, `*.pem`).
 - Only sanitized `.env.example` templates with non-production placeholders are checked into version control.

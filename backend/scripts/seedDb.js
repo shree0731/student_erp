@@ -83,28 +83,37 @@ async function seedDatabase() {
       {
         username: 'mentor',
         role: 'mentor',
-        linkedId: 'FAC_EEC_CSE_001',
-        name: 'Dr. Kavitha Ramanathan',
-        department: 'CSE',
-        college_id: 'C101',
+        linkedId: 'FAC_MIST_IT_333',
+        name: 'Dr. Sudha Rajagopalan',
+        department: 'IT',
+        college_id: 'C103',
         passwordHash: demoHash
       },
       {
         username: 'student',
         role: 'student',
-        linkedId: 'STU_EEC_CSE_Y2_0001',
-        name: 'Aravind Sundaram',
-        department: 'CSE',
-        college_id: 'C101',
+        linkedId: 'STU_MIST_IT_Y3_5559',
+        name: 'Bhoomika Gowda',
+        department: 'IT',
+        college_id: 'C103',
         passwordHash: demoHash
       },
       {
         username: 'student2',
         role: 'student',
-        linkedId: 'STU_KRIT_IT_Y3_3645',
-        name: 'Siddharth Gopalakrishnan',
+        linkedId: 'STU_MIST_IT_Y4_5573',
+        name: 'Vasanth Balasubramanian',
         department: 'IT',
-        college_id: 'C102',
+        college_id: 'C103',
+        passwordHash: demoHash
+      },
+      {
+        username: 'student3',
+        role: 'student',
+        linkedId: 'STU_MIST_IT_Y3_5514',
+        name: 'Sahana Hegde',
+        department: 'IT',
+        college_id: 'C103',
         passwordHash: demoHash
       }
     ];

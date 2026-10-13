@@ -275,7 +275,7 @@ export default function ChatbotWidget({ studentId, studentName }) {
             textAlign: 'center',
             lineHeight: '1.25'
           }}>
-            🛡️ AI academic assistant. Not a substitute for professional counseling or official academic advice.
+            🛡️ AI academic assistant. Not a substitute for professional counseling or official academic advice. Immediate crisis support: Tele-MANAS (14416) | KIRAN (1800-599-0019).
           </div>
         </div>
       )}

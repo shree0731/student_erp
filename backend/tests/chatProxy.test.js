@@ -35,7 +35,7 @@ describe('Task 5 — ERP Chat Proxy and Student Context Forwarding', () => {
       meeting_requested: false,
       meeting_id: null,
       counselor_notified: false,
-      disclaimer: 'AI academic assistant. Not a substitute for professional counseling or official academic advice.'
+      disclaimer: 'AI academic assistant. Not a substitute for professional counseling or official academic advice. Immediate crisis support: Tele-MANAS (14416) | KIRAN (1800-599-0019).'
     });
 
     const res = await request(app)
@@ -61,7 +61,7 @@ describe('Task 5 — ERP Chat Proxy and Student Context Forwarding', () => {
 
     // Response includes disclaimer
     expect(res.body.disclaimer).toBe(
-      'AI academic assistant. Not a substitute for professional counseling or official academic advice.'
+      'AI academic assistant. Not a substitute for professional counseling or official academic advice. Immediate crisis support: Tele-MANAS (14416) | KIRAN (1800-599-0019).'
     );
 
     sendChatSpy.mockRestore();

@@ -214,7 +214,7 @@ async function sendChatMessage(message, studentContext = {}) {
       meeting_requested: data.meeting_requested || false,
       meeting_id: data.meeting_id || null,
       counselor_notified: data.counselor_notified || false,
-      disclaimer: data.disclaimer || 'AI academic assistant. Not a substitute for professional counseling or official academic advice.',
+      disclaimer: data.disclaimer || 'AI academic assistant. Not a substitute for professional counseling or official academic advice. Immediate crisis support: Tele-MANAS (14416) | KIRAN (1800-599-0019).',
       source: 'live_ai_service'
     };
   } catch (err) {
@@ -239,7 +239,7 @@ async function sendChatMessage(message, studentContext = {}) {
       meeting_requested: false,
       meeting_id: null,
       counselor_notified: false,
-      disclaimer: 'AI academic assistant. Not a substitute for professional counseling or official academic advice.'
+      disclaimer: 'AI academic assistant. Not a substitute for professional counseling or official academic advice. Immediate crisis support: Tele-MANAS (14416) | KIRAN (1800-599-0019).'
     };
   }
 }

@@ -32,6 +32,23 @@ export default function StudentDashboard() {
   const [meetingNotes, setMeetingNotes] = useState('');
   const [meetingSubmitted, setMeetingSubmitted] = useState(false);
 
+  // Read-only meeting requests status list
+  const [myMeetingRequests, setMyMeetingRequests] = useState([]);
+
+  useEffect(() => {
+    async function loadMeetingRequests() {
+      try {
+        const res = await api.getMyMeetingRequests();
+        if (res && res.data) {
+          setMyMeetingRequests(res.data);
+        }
+      } catch (err) {
+        console.warn('Could not load student meeting requests:', err.message);
+      }
+    }
+    loadMeetingRequests();
+  }, [currentUser?.id]);
+
   useEffect(() => {
     async function loadStudentData() {
       setLoading(true);
@@ -454,6 +471,68 @@ export default function StudentDashboard() {
 
         </div>
 
+      </div>
+
+      {/* =====================================================================
+          MY MEETING REQUESTS & ADVISORY STATUS (Read-only status list)
+          ===================================================================== */}
+      <div className="card" style={{ marginBottom: '1.5rem', background: '#ffffff' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+              My Meeting Requests &amp; Advisories
+            </h3>
+            <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: '0.2rem 0 0' }}>
+              Track the status of your 1-on-1 mentor guidance and counseling requests.
+            </p>
+          </div>
+          <span className="badge badge-light-primary" style={{ fontSize: '0.75rem' }}>
+            {myMeetingRequests.length} Recorded
+          </span>
+        </div>
+
+        {myMeetingRequests.length === 0 ? (
+          <p style={{ color: 'var(--muted)', fontSize: '0.82rem', margin: 0 }}>
+            No meeting requests logged yet. Use "Request Mentor Guidance" or chat with the AI Advisor if you need support.
+          </p>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="table" style={{ width: '100%', fontSize: '0.8rem' }}>
+              <thead>
+                <tr style={{ textAlign: 'left', background: 'var(--bg-body)' }}>
+                  <th style={{ padding: '0.6rem 0.75rem' }}>Category</th>
+                  <th style={{ padding: '0.6rem 0.75rem' }}>Reason</th>
+                  <th style={{ padding: '0.6rem 0.75rem' }}>Status</th>
+                  <th style={{ padding: '0.6rem 0.75rem' }}>Scheduled Time</th>
+                  <th style={{ padding: '0.6rem 0.75rem' }}>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myMeetingRequests.map((m) => (
+                  <tr key={m.request_id || m._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '0.6rem 0.75rem', textTransform: 'capitalize' }}>
+                      <span className={`badge ${m.urgency === 'urgent' ? 'badge-light-danger' : 'badge-light-primary'}`} style={{ fontSize: '0.7rem' }}>
+                        {m.category}
+                      </span>
+                    </td>
+                    <td style={{ padding: '0.6rem 0.75rem', color: 'var(--dark)' }}>{m.reason_short}</td>
+                    <td style={{ padding: '0.6rem 0.75rem' }}>
+                      <span className={`badge ${m.status === 'resolved' ? 'badge-light-success' : m.status === 'scheduled' ? 'badge-light-primary' : m.status === 'acknowledged' ? 'badge-light-warning' : 'badge-light-danger'}`} style={{ textTransform: 'capitalize', fontSize: '0.7rem' }}>
+                        {m.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '0.6rem 0.75rem', color: 'var(--muted)' }}>
+                      {m.scheduled_at ? new Date(m.scheduled_at).toLocaleString() : 'Pending confirmation'}
+                    </td>
+                    <td style={{ padding: '0.6rem 0.75rem', color: 'var(--muted)' }}>
+                      {m.createdAt ? new Date(m.createdAt).toLocaleDateString() : 'Recent'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* =====================================================================

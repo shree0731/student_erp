@@ -39,16 +39,26 @@ flowchart TD
 - Python >= 3.10
 - MongoDB (Local community instance or Atlas connection)
 
-### Step 1: Clone and Configure Environment
+### Step 1: First-Time Setup & Secret Generation
+Copy the example environment template:
 ```bash
-# In project root:
 cd backend
 cp .env.example .env
 ```
-Edit `backend/.env` with your desired configuration:
-- Set `JWT_SECRET` (e.g. run `openssl rand -base64 32`).
-- Set `AI_SERVICE_URL=http://localhost:5001` and `AI_SERVICE_API_KEY`.
-- Set `MONGO_URI`.
+Generate cryptographically secure 32-byte hexadecimal secrets:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Configure `backend/.env` with the generated values:
+- `JWT_SECRET`: Random 32+ character hex string (used for signing session JWTs).
+- `ERP_SERVICE_API_KEY`: Random 32+ character hex string (shared with AI microservice for meeting request delivery).
+- `AI_SERVICE_BASE_URL`: URL of the AI gateway (default: `http://localhost:5001`).
+- `AI_SERVICE_API_KEY`: Service key for outgoing calls to AI gateway (must match `API_KEY` in AI microservice).
+- `CLIENT_URL`: `http://localhost:5173`.
+- `ALLOWED_ORIGINS`: `http://localhost:5173,http://localhost:3000`.
+- `MONGO_URI`: Valid MongoDB connection string.
+
+Startup will fail fast with clear diagnostics (`node scripts/check-env.js`) if any required secret is missing, under 32 characters, or contains default placeholders.
 
 ### Step 2: Seed the Database
 ```bash

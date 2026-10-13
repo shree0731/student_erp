@@ -27,16 +27,42 @@ export const SAMPLE_PERSONAS = {
   },
   student: {
     username: 'student',
-    id: 'STU_EEC_CSE_Y1_0001',
-    name: 'Divya Sengottaiyan',
+    id: 'STU_EEC_CSE_Y2_0001',
+    name: 'Aravind Sundaram',
     role: 'student',
-    email: 'divya.s@aec.edu.in',
+    email: 'aravind.s@aec.edu.in',
     department: 'CSE',
     college: 'Apex Engineering College',
     collegeId: 'C101',
-    year: 1,
+    year: 2,
+    risk: 'High',
+    avatar: 'AS'
+  },
+  'student-high': {
+    username: 'student',
+    id: 'STU_EEC_CSE_Y2_0001',
+    name: 'Aravind Sundaram',
+    role: 'student',
+    email: 'aravind.s@aec.edu.in',
+    department: 'CSE',
+    college: 'Apex Engineering College',
+    collegeId: 'C101',
+    year: 2,
+    risk: 'High',
+    avatar: 'AS'
+  },
+  'student-low': {
+    username: 'student2',
+    id: 'STU_KRIT_IT_Y3_3645',
+    name: 'Siddharth Gopalakrishnan',
+    role: 'student',
+    email: 'siddharth.g@krit.edu.in',
+    department: 'IT',
+    college: 'Kavery Residential Institute of Technology',
+    collegeId: 'C102',
+    year: 3,
     risk: 'Low',
-    avatar: 'DS'
+    avatar: 'SG'
   }
 };
 

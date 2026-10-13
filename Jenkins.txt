@@ -1,0 +1,24 @@
+Jenkins
+Agentic IDE
+deterministic principles
+agentic workflow
+to prevent hallucination, we send the model evidence and not the log
+MCP, API budget, tokens
+Bedrock, lambda, mcp server
+transient mapping, evidence - log lines to prevent hallucination
+debugging a build failure
+within guardrails, the agent fixes its won ci - aws step functions
+while fixing the ci, how often we check the new generated test cases,
+threshold - 3 tried before the ci is fixed
+aws open framework
+genesyscareersportal - apply for open position
+
+importance of fair data principles
+*AstraZeneca
+traditional - generative - agentic
+components of agentic ai - llm, rag, mcp, ai agent
+FAIR data principles - findable, accessible, interoperable, reusable
+data ingestion, taxonomy/ontology, data modelling, data quality management, data catalog
+amazon sagemaker - data, analytics, ai
+presidio - COMPANY
+areas of risk when developing ai solutions - client & edge, supply chains & ops,...

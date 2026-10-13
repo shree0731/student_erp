@@ -5,7 +5,10 @@ const studentController = require('../controllers/studentController');
 const facultyController = require('../controllers/facultyController');
 const adminController = require('../controllers/adminController');
 const authController = require('../controllers/authController');
+const integrationController = require('../controllers/integrationController');
+const meetingRequestController = require('../controllers/meetingRequestController');
 const { requireAuth, requireRole } = require('../middleware/authMiddleware');
+const { serviceKeyAuth } = require('../middleware/serviceKeyAuth');
 const { authLimiter } = require('../middleware/rateLimiter');
 const { aiServiceClient } = require('../services/aiServiceClient');
 const csvProvider = require('../utils/csvDataProvider');
@@ -146,5 +149,13 @@ router.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// --- 7. Service-Authenticated Integrations ---
+router.post('/integrations/meeting-requests', serviceKeyAuth, integrationController.ingestMeetingRequest);
+
+// --- 8. Role-Scoped Meeting Requests ---
+router.get('/meeting-requests', requireAuth, meetingRequestController.getMeetingRequests);
+router.get('/meeting-requests/my', requireAuth, meetingRequestController.getMyMeetingRequests);
+router.patch('/meeting-requests/:requestId/status', requireAuth, meetingRequestController.updateMeetingRequestStatus);
 
 module.exports = router;

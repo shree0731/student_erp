@@ -11,10 +11,12 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const { connectDB } = require('./config/db');
 const apiRoutes = require('./routes/api');
 
+const { checkEnv } = require('./scripts/check-env');
+
 function assertConfig() {
-  const secret = process.env.JWT_SECRET;
-  if (!secret || !secret.trim()) {
-    throw new Error('FATAL SECURITY ERROR: JWT_SECRET environment variable is required and cannot be empty.');
+  const result = checkEnv(process.env, { exitOnError: process.env.NODE_ENV !== 'test', silent: false });
+  if (!result.valid) {
+    throw new Error(`FATAL SECURITY ERROR: InSightERP configuration invalid: ${result.errors.join('; ')}`);
   }
 }
 

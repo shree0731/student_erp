@@ -99,6 +99,15 @@ export default function Sidebar() {
             </NavLink>
 
             <NavLink
+              to="/mentor/dashboard?tab=meetings"
+              title="Meeting & Guidance Requests"
+              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'meetings' ? 'active' : ''}`}
+            >
+              <Clock size={18} />
+              {!collapsed && <span>Meeting Requests</span>}
+            </NavLink>
+
+            <NavLink
               to="/mentor/dashboard?tab=ai"
               title="AI Retention Copilot"
               className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'ai' ? 'active' : ''}`}

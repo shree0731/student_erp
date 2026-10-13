@@ -138,6 +138,22 @@ export const api = {
     return await request('/colleges');
   },
 
+  // Meeting Requests
+  getMeetingRequests: async () => {
+    return await request('/meeting-requests');
+  },
+
+  getMyMeetingRequests: async () => {
+    return await request('/meeting-requests/my');
+  },
+
+  updateMeetingRequestStatus: async (requestId, payload) => {
+    return await request(`/meeting-requests/${requestId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+    });
+  },
+
   // Health
   checkHealth: async () => {
     return await request('/health');

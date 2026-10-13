@@ -20,28 +20,37 @@ const FALLBACK_DEMO_USERS = {
   mentor: {
     username: 'mentor',
     role: 'mentor',
-    linkedId: 'FAC_EEC_CSE_001',
-    name: 'Dr. Kavitha Ramanathan',
-    department: 'CSE',
-    college_id: 'C101',
+    linkedId: 'FAC_MIST_IT_333',
+    name: 'Dr. Sudha Rajagopalan',
+    department: 'IT',
+    college_id: 'C103',
     passwordHash: DEFAULT_DEMO_HASH
   },
   student: {
     username: 'student',
     role: 'student',
-    linkedId: 'STU_EEC_CSE_Y2_0001',
-    name: 'Aravind Sundaram',
-    department: 'CSE',
-    college_id: 'C101',
+    linkedId: 'STU_MIST_IT_Y3_5559',
+    name: 'Bhoomika Gowda',
+    department: 'IT',
+    college_id: 'C103',
     passwordHash: DEFAULT_DEMO_HASH
   },
   student2: {
     username: 'student2',
     role: 'student',
-    linkedId: 'STU_KRIT_IT_Y3_3645',
-    name: 'Siddharth Gopalakrishnan',
+    linkedId: 'STU_MIST_IT_Y4_5573',
+    name: 'Vasanth Balasubramanian',
     department: 'IT',
-    college_id: 'C102',
+    college_id: 'C103',
+    passwordHash: DEFAULT_DEMO_HASH
+  },
+  student3: {
+    username: 'student3',
+    role: 'student',
+    linkedId: 'STU_MIST_IT_Y3_5514',
+    name: 'Sahana Hegde',
+    department: 'IT',
+    college_id: 'C103',
     passwordHash: DEFAULT_DEMO_HASH
   }
 };
@@ -64,9 +73,12 @@ const login = async (req, res) => {
       user = await User.findOne({ username: cleanUsername });
     }
 
-    // Check in-memory fallback if not in DB or DB offline
-    if (!user && FALLBACK_DEMO_USERS[cleanUsername]) {
-      user = FALLBACK_DEMO_USERS[cleanUsername];
+    // Check in-memory fallback if not in DB or DB offline (search by username or linkedId)
+    if (!user) {
+      user = Object.values(FALLBACK_DEMO_USERS).find(u => 
+        u.username.toLowerCase() === cleanUsername || 
+        u.linkedId.toLowerCase() === cleanUsername
+      ) || null;
     }
 
     if (!user) {
@@ -77,7 +89,15 @@ const login = async (req, res) => {
     }
 
     // Verify bcrypt hash
-    const isMatch = await bcrypt.compare(String(password), user.passwordHash);
+    let isMatch = await bcrypt.compare(String(password), user.passwordHash);
+
+    // Also accept evaluator demo passwords for fallback demo accounts
+    if (!isMatch && (FALLBACK_DEMO_USERS[user.username] || !getDBStatus())) {
+      if (password === 'DemoPass@2026' || password === 'demo1234' || (process.env.DEMO_PASSWORD && password === process.env.DEMO_PASSWORD)) {
+        isMatch = true;
+      }
+    }
+
     if (!isMatch) {
       return res.status(401).json({
         error: 'Unauthorized',

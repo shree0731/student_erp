@@ -97,10 +97,42 @@ export default function MentorDashboard() {
     try {
       const saved = localStorage.getItem('mentor_interventions_log');
       return saved ? JSON.parse(saved) : INITIAL_INTERVENTIONS;
-    } catch {
+    } catch (e) {
+      console.warn('Could not read mentor interventions log from localStorage:', e);
       return INITIAL_INTERVENTIONS;
     }
   });
+
+  // Meeting & Crisis Requests List
+  const [meetingRequests, setMeetingRequests] = useState([]);
+  const [loadingMeetings, setLoadingMeetings] = useState(false);
+
+  const fetchMeetingRequests = async () => {
+    setLoadingMeetings(true);
+    try {
+      const res = await api.getMeetingRequests();
+      if (res && res.data) {
+        setMeetingRequests(res.data);
+      }
+    } catch (err) {
+      console.warn('Could not load meeting requests:', err.message);
+    } finally {
+      setLoadingMeetings(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMeetingRequests();
+  }, []);
+
+  const handleUpdateMeetingStatus = async (requestId, newStatus) => {
+    try {
+      await api.updateMeetingRequestStatus(requestId, { status: newStatus });
+      setMeetingRequests(prev => prev.map(r => r.request_id === requestId ? { ...r, status: newStatus } : r));
+    } catch (err) {
+      console.error('Error updating meeting request status:', err);
+    }
+  };
 
   // Modal to Log Counseling
   const [showLogModal, setShowLogModal] = useState(searchParams.get('action') === 'log');
@@ -121,7 +153,9 @@ export default function MentorDashboard() {
     setInterventions(updated);
     try {
       localStorage.setItem('mentor_interventions_log', JSON.stringify(updated));
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Could not persist mentor interventions log to localStorage:', e);
+    }
   };
 
   // AI Copilot State
@@ -271,7 +305,9 @@ export default function MentorDashboard() {
     setInterventions(updated);
     try {
       localStorage.setItem('mentor_interventions_log', JSON.stringify(updated));
-    } catch {}
+    } catch (e) {
+      console.warn('Could not persist mentor interventions log to localStorage:', e);
+    }
     setShowLogModal(false);
     setActiveTab('interventions');
   };
@@ -1315,6 +1351,123 @@ export default function MentorDashboard() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================================
+          SECTION 6: MEETING REQUESTS & ESCALATIONS
+          ===================================================================== */}
+      {activeTab === 'meetings' && (
+        <div className="fade-in">
+          <div className="card" style={{ marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+                  Student Meeting &amp; Crisis Requests
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '0.2rem 0 0' }}>
+                  Requests dispatched via the AI Intervention Chatbot and Student Portal. Crisis escalations are flagged urgent.
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <span className="badge badge-light-primary" style={{ fontSize: '0.8rem' }}>
+                  {meetingRequests.filter(r => r.status === 'new').length} New
+                </span>
+                <span className="badge badge-light-danger" style={{ fontSize: '0.8rem' }}>
+                  {meetingRequests.filter(r => r.urgency === 'urgent').length} Urgent
+                </span>
+              </div>
+            </div>
+
+            {meetingRequests.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--muted)' }}>
+                <Clock size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.5 }} />
+                <p style={{ fontWeight: '600', margin: 0 }}>No meeting requests recorded</p>
+                <span style={{ fontSize: '0.8rem' }}>New requests from your assigned mentees will appear here automatically.</span>
+              </div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="table" style={{ width: '100%', fontSize: '0.82rem' }}>
+                  <thead>
+                    <tr style={{ background: 'var(--bg-body)', textAlign: 'left' }}>
+                      <th style={{ padding: '0.75rem 1rem' }}>Priority &amp; Category</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Student ID</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Reason</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Status</th>
+                      <th style={{ padding: '0.75rem 1rem' }}>Submitted</th>
+                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {meetingRequests.map((req) => {
+                      const isCrisis = req.category === 'crisis' || req.urgency === 'urgent';
+                      return (
+                        <tr key={req.request_id || req._id} style={{ borderBottom: '1px solid var(--border)', background: isCrisis ? '#fff5f5' : '#ffffff' }}>
+                          <td style={{ padding: '0.75rem 1rem' }}>
+                            <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                              {isCrisis && (
+                                <span className="badge badge-light-danger" style={{ fontSize: '0.7rem' }}>
+                                  URGENT CRISIS
+                                </span>
+                              )}
+                              <span className={`badge ${req.category === 'academic' ? 'badge-light-warning' : 'badge-light-primary'}`} style={{ fontSize: '0.7rem', textTransform: 'capitalize' }}>
+                                {req.category}
+                              </span>
+                            </div>
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
+                            {req.student_id}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', maxWidth: '280px', color: 'var(--dark)' }}>
+                            {req.reason_short}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem' }}>
+                            <span className={`badge ${req.status === 'resolved' ? 'badge-light-success' : req.status === 'scheduled' ? 'badge-light-primary' : req.status === 'acknowledged' ? 'badge-light-warning' : 'badge-light-danger'}`} style={{ textTransform: 'capitalize', fontSize: '0.72rem' }}>
+                              {req.status}
+                            </span>
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', color: 'var(--muted)', fontSize: '0.76rem' }}>
+                            {req.createdAt ? new Date(req.createdAt).toLocaleDateString() : 'Recent'}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
+                            <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
+                              {req.status === 'new' && (
+                                <button
+                                  className="btn btn-outline btn-sm"
+                                  onClick={() => handleUpdateMeetingStatus(req.request_id, 'acknowledged')}
+                                  style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                >
+                                  Acknowledge
+                                </button>
+                              )}
+                              {req.status !== 'resolved' && req.status !== 'cancelled' && (
+                                <>
+                                  <button
+                                    className="btn btn-outline btn-sm"
+                                    onClick={() => handleUpdateMeetingStatus(req.request_id, 'scheduled')}
+                                    style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                  >
+                                    Schedule
+                                  </button>
+                                  <button
+                                    className="btn btn-primary btn-sm"
+                                    onClick={() => handleUpdateMeetingStatus(req.request_id, 'resolved')}
+                                    style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                  >
+                                    Resolve
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}
