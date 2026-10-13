@@ -6,7 +6,6 @@ import { SidebarProvider, useSidebar } from './context/SidebarContext';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
-import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/public/LoginPage';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentMarks from './pages/student/StudentMarks';

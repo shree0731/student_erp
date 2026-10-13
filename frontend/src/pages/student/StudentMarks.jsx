@@ -125,61 +125,72 @@ export default function StudentMarks() {
       </div>
 
       {/* 4 Proper Semester KPI Stat Cards with Shapes & Icons */}
-      <div className="stats-grid">
+      {/* 4 Semester KPI Stat Tiles */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         
         {/* GPA Card */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Semester GPA</div>
-            <div className="stat-value" style={{ color: Number(semGpa) < 6.0 ? 'var(--danger)' : 'var(--dark)' }}>
-              {semGpa} <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--muted)' }}>/ 10</span>
+        <div className={`stat-tile ${Number(semGpa) < 6.0 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={Number(semGpa) < 6.0 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <Award size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">Credit weighted for Sem {selectedSem}</div>
+            <span className={`pill ${Number(semGpa) < 6.0 ? 'pill-red' : 'pill-purple'}`} style={{ fontSize: '0.72rem' }}>
+              Sem {selectedSem}
+            </span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
-            <Award size={24} />
+          <div>
+            <div className="stat-tile-num" style={Number(semGpa) < 6.0 ? { color: 'var(--red)' } : {}}>
+              {semGpa} <span style={{ fontSize: '0.9rem', color: 'var(--mute)' }}>/ 10</span>
+            </div>
+            <div className="stat-tile-label">Semester GPA &bull; Credit Weighted</div>
           </div>
         </div>
 
         {/* Total Credits Card */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Total Credits</div>
-            <div className="stat-value">{semCredits}</div>
-            <div className="stat-subtext">Registered courses in semester</div>
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <BookOpen size={18} strokeWidth={1.8} />
+            </div>
+            <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Earned</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--secondary-light)', color: 'var(--secondary)' }}>
-            <BookOpen size={24} />
+          <div>
+            <div className="stat-tile-num">{semCredits}</div>
+            <div className="stat-tile-label">Registered Courses Credits</div>
           </div>
         </div>
 
         {/* Courses Passed Card */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Courses Passed</div>
-            <div className="stat-value" style={{ color: 'var(--success)' }}>
-              {passedCount} <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--muted)' }}>/ {semMarks.length}</span>
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <CheckCircle2 size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">Earned full semester credits</div>
+            <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>Cleared</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--success-light)', color: 'var(--success)' }}>
-            <CheckCircle2 size={24} />
+          <div>
+            <div className="stat-tile-num" style={{ color: 'var(--green)' }}>
+              {passedCount} <span style={{ fontSize: '0.9rem', color: 'var(--mute)' }}>/ {semMarks.length}</span>
+            </div>
+            <div className="stat-tile-label">Full Semester Credits Earned</div>
           </div>
         </div>
 
         {/* Arrears / Backlogs Card */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Arrears / Backlogs</div>
-            <div className="stat-value" style={{ color: arrearsCount > 0 ? 'var(--danger)' : 'var(--success)' }}>
-              {arrearsCount} <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--muted)' }}>courses</span>
+        <div className={`stat-tile ${arrearsCount > 0 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={arrearsCount > 0 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <AlertTriangle size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext" style={{ color: arrearsCount > 0 ? 'var(--danger)' : 'var(--success)', fontWeight: '600' }}>
-              {arrearsCount > 0 ? '⚠️ Remedial exam coaching needed' : '✓ Clean sheet this semester'}
-            </div>
+            <span className={`pill ${arrearsCount > 0 ? 'pill-red' : 'pill-green'}`} style={{ fontSize: '0.72rem' }}>
+              {arrearsCount > 0 ? 'Action Due' : 'Clean'}
+            </span>
           </div>
-          <div className="stat-icon-box" style={{ background: arrearsCount > 0 ? 'var(--danger-light)' : 'var(--success-light)', color: arrearsCount > 0 ? 'var(--danger)' : 'var(--success)' }}>
-            <AlertTriangle size={24} />
+          <div>
+            <div className="stat-tile-num" style={arrearsCount > 0 ? { color: 'var(--red)' } : {}}>
+              {arrearsCount} <span style={{ fontSize: '0.9rem', color: 'var(--mute)' }}>courses</span>
+            </div>
+            <div className="stat-tile-label">{arrearsCount > 0 ? 'Remedial coaching recommended' : 'Clean sheet this semester'}</div>
           </div>
         </div>
 
@@ -189,24 +200,24 @@ export default function StudentMarks() {
       <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
         
         {/* Table Header */}
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--ink)', margin: 0 }}>
               Semester {selectedSem} Course Marks Breakdown
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '2px 0 0' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--mute)', margin: '2px 0 0' }}>
               Detailed marks distribution across internal exams, assignments, and Anna University end-sem tests
             </p>
           </div>
 
-          <span style={{ fontSize: '0.76rem', color: 'var(--muted)', background: 'var(--bg-body)', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)' }}>
+          <span style={{ fontSize: '0.76rem', color: 'var(--mute)', background: 'var(--soft)', padding: '4px 10px', borderRadius: '8px', border: '1px solid var(--line)' }}>
             Weightage: 20% CIA Internal + 80% University External
           </span>
         </div>
 
         {/* Marks Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table className="spike-table">
+          <table className="table">
             <thead>
               <tr>
                 <th>Subject Name</th>

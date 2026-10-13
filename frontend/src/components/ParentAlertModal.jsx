@@ -79,46 +79,31 @@ You are invited for a mentor consultation to discuss your ward's academic standi
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(15, 23, 42, 0.65)',
-      backdropFilter: 'blur(4px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 9999,
-      padding: '1rem'
-    }}>
-      <div className="card fade-in" style={{
+    <div className="dialog-backdrop">
+      <div className="dialog-card fade-in" style={{
         maxWidth: '560px',
-        width: '100%',
         maxHeight: '92vh',
         overflowY: 'auto',
-        background: '#ffffff',
-        borderRadius: '16px',
-        padding: '1.75rem',
-        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.25)',
-        border: '1px solid var(--border)'
+        padding: '1.75rem'
       }}>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.85rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', borderBottom: '1px solid var(--line)', paddingBottom: '0.85rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
               <span style={{
-                background: 'var(--danger-light)',
-                color: 'var(--danger)',
+                background: '#FEE2E2',
+                color: 'var(--red)',
                 padding: '6px',
                 borderRadius: '8px',
                 display: 'inline-flex'
               }}>
                 <AlertTriangle size={18} />
               </span>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--ink)', margin: 0 }}>
                 Parent / Guardian Communication Template
               </h2>
             </div>
-            <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: 0 }}>
+            <p style={{ fontSize: '0.78rem', color: 'var(--mute)', margin: 0 }}>
               Prepare an official academic notification draft for student guardians
             </p>
           </div>
@@ -126,7 +111,7 @@ You are invited for a mentor consultation to discuss your ward's academic standi
             onClick={onClose}
             aria-label="Close dialog"
             style={{
-              background: 'var(--bg-body)',
+              background: 'var(--bg)',
               border: 'none',
               borderRadius: '50%',
               width: '32px',
@@ -134,7 +119,7 @@ You are invited for a mentor consultation to discuss your ward's academic standi
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--muted)',
+              color: 'var(--mute)',
               cursor: 'pointer'
             }}
           >
@@ -144,19 +129,19 @@ You are invited for a mentor consultation to discuss your ward's academic standi
 
         {/* Honest Disclosure Notice */}
         <div style={{
-          background: '#eff6ff',
-          border: '1px solid #bfdbfe',
-          borderRadius: '8px',
+          background: 'var(--soft)',
+          border: '1px solid var(--line)',
+          borderRadius: '12px',
           padding: '0.75rem 1rem',
           marginBottom: '1rem',
           fontSize: '0.78rem',
-          color: '#1e40af',
+          color: 'var(--ink)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: '0.5rem',
           lineHeight: '1.45'
         }}>
-          <FileText size={16} style={{ marginTop: '2px', flexShrink: 0 }} />
+          <FileText size={16} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
           <div>
             <strong>Manual Communication Draft:</strong> No automatic SMS or Email dispatch service is connected. Faculty mentors should review and copy this prepared draft to contact the student's parent or guardian through official institutional communication channels.
           </div>
@@ -277,7 +262,7 @@ You are invited for a mentor consultation to discuss your ward's academic standi
               fontSize: '0.82rem',
               padding: '0.55rem 1.25rem',
               gap: '0.5rem',
-              background: copied ? 'var(--success, #10b981)' : 'linear-gradient(135deg, #5d87ff, #4570ea)'
+              background: copied ? 'var(--green)' : 'var(--primary)'
             }}
           >
             {copied ? (

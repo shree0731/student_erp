@@ -220,104 +220,100 @@ export default function StudentDashboard() {
       </div>
 
       {/* =====================================================================
-          ROW 1: 4 PROPER STAT CARDS WITH SHAPES & ICONS
-          (Student-friendly: NO scary "High Dropout Risk" ML flags)
+          ROW 1: 4 STAT TILES
           ===================================================================== */}
-      <div className="stats-grid">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         
         {/* Card 1: Attendance */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Overall Attendance</div>
-            <div className="stat-value" style={{ color: student.attendance_pct < 75 ? 'var(--danger)' : 'var(--success)' }}>
-              {student.attendance_pct}%
+        <div className={`stat-tile ${student.attendance_pct < 75 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={student.attendance_pct < 75 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <Calendar size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext" style={{ color: student.attendance_pct < 75 ? 'var(--danger)' : 'var(--success)', fontWeight: '600' }}>
-              {student.attendance_pct < 75 ? '⚠️ Below 75% Statutory Bar' : '✓ Cleared for Semester Exams'}
-            </div>
+            <span className={`pill ${student.attendance_pct < 75 ? 'pill-red' : 'pill-green'}`} style={{ fontSize: '0.72rem' }}>
+              {student.attendance_pct < 75 ? '<75% Alert' : 'Cleared'}
+            </span>
           </div>
-          <div className="stat-icon-box" style={{ background: student.attendance_pct < 75 ? 'var(--danger-light)' : 'var(--success-light)', color: student.attendance_pct < 75 ? 'var(--danger)' : 'var(--success)' }}>
-            <Calendar size={22} />
+          <div>
+            <div className="stat-tile-num" style={student.attendance_pct < 75 ? { color: 'var(--red)' } : {}}>{student.attendance_pct}%</div>
+            <div className="stat-tile-label">{student.attendance_pct < 75 ? 'Below 75% Statutory Cutoff' : 'Cleared for Semester Exams'}</div>
           </div>
         </div>
 
         {/* Card 2: Cumulative GPA */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Cumulative GPA (CGPA)</div>
-            <div className="stat-value">
-              {student.overall_gpa} <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--muted)' }}>/ 10</span>
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <GraduationCap size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">Credit-weighted Anna Univ scale</div>
+            <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Scale 10</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
-            <GraduationCap size={24} />
+          <div>
+            <div className="stat-tile-num">
+              {student.overall_gpa} <span style={{ fontSize: '0.9rem', color: 'var(--mute)' }}>/ 10</span>
+            </div>
+            <div className="stat-tile-label">Cumulative GPA &bull; Credit Weighted</div>
           </div>
         </div>
 
         {/* Card 3: Active Backlogs */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Course Standing</div>
-            <div className="stat-value" style={{ color: student.backlogs_count > 0 ? '#B45309' : 'var(--dark)' }}>
+        <div className={`stat-tile ${student.backlogs_count > 0 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={student.backlogs_count > 0 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <AlertTriangle size={18} strokeWidth={1.8} />
+            </div>
+            <span className={`pill ${student.backlogs_count > 0 ? 'pill-amber' : 'pill-green'}`} style={{ fontSize: '0.72rem' }}>
               {student.backlogs_count > 0 ? `${student.backlogs_count} Pending` : 'All Clear'}
-            </div>
-            <div className="stat-subtext">
-              {student.arrears_cleared > 0 ? `${student.arrears_cleared} arrear cleared previously` : 'No past arrears recorded'}
-            </div>
+            </span>
           </div>
-          <div className="stat-icon-box" style={{ background: student.backlogs_count > 0 ? 'var(--warning-light)' : 'var(--success-light)', color: student.backlogs_count > 0 ? 'var(--warning)' : 'var(--success)' }}>
-            <AlertTriangle size={22} />
+          <div>
+            <div className="stat-tile-num" style={student.backlogs_count > 0 ? { color: 'var(--amber)' } : {}}>
+              {student.backlogs_count > 0 ? `${student.backlogs_count} Courses` : 'All Clear'}
+            </div>
+            <div className="stat-tile-label">{student.arrears_cleared > 0 ? `${student.arrears_cleared} arrears cleared past semester` : 'No outstanding arrears'}</div>
           </div>
         </div>
 
-        {/* Card 4: Academic Mentoring Support (Positive, Supportive, Ethical) */}
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Mentorship Status</div>
-            <div className="stat-value" style={{ color: 'var(--primary)' }}>
-              {needsAdvisory ? 'Active Guidance' : 'On Track'}
+        {/* Card 4: Mentorship Status */}
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <UserCheck size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">
-              Faculty Mentor: {student.mentor?.name || 'Dr. Kavitha Ramanathan'}
-            </div>
+            <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Assigned</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
-            <UserCheck size={22} />
+          <div>
+            <div className="stat-tile-num">{needsAdvisory ? 'Guidance' : 'On Track'}</div>
+            <div className="stat-tile-label">Faculty Mentor: {student.mentor?.name || 'Dr. Kavitha'}</div>
           </div>
         </div>
 
       </div>
 
       {/* =====================================================================
-          SUPPORTIVE ACADEMIC ADVISORY SECTION (For students with attendance < 75% or arrears)
+          PRIORITY ATTENTION: STICKY NOTE (Deadlines / Alerts / Guidance)
           ===================================================================== */}
       {needsAdvisory && (
-        <div className="card fade-in" style={{
-          marginBottom: '1.5rem',
-          background: 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)',
-          border: '1.5px solid #bbf7d0',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
+        <div className="sticky-note-card fade-in" style={{ marginBottom: '1.5rem' }}>
+          <div className="sticky-note-pin" />
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', maxWidth: '780px' }}>
               <div style={{
-                background: '#10b981',
+                background: 'var(--amber)',
                 color: '#ffffff',
-                padding: '12px',
+                padding: '10px',
                 borderRadius: '12px',
                 display: 'flex',
-                boxShadow: '0 4px 10px rgba(16, 185, 129, 0.25)'
+                boxShadow: '0 4px 10px rgba(245, 158, 11, 0.25)'
               }}>
-                <LifeBuoy size={24} />
+                <LifeBuoy size={22} />
               </div>
 
               <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#065f46', margin: '0 0 0.35rem' }}>
+                <div className="sticky-note-title" style={{ margin: '0 0 0.35rem' }}>
                   Academic Support &amp; Recovery Plan
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#1f2937', lineHeight: '1.5', margin: '0 0 0.75rem' }}>
+                </div>
+                <p style={{ fontSize: '0.84rem', color: '#78350F', lineHeight: '1.5', margin: '0 0 0.75rem' }}>
                   {hasAttendanceDeficit ? (
                     <>
                       Your current attendance is <strong>{student.attendance_pct}%</strong> (a <strong>{(75 - Number(student.attendance_pct)).toFixed(1)}% margin</strong> below Anna University's 75% exam cutoff). You can comfortably make up this deficit through scheduled Saturday practical sessions and compensatory tutorial hours.
@@ -330,20 +326,20 @@ export default function StudentDashboard() {
                 </p>
 
                 {/* Practical Supportive Recommendations */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' }}>
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.8rem' }}>
-                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>1. Saturday Compensatory Labs</strong>
-                    <span>Attend 8 hours of extra laboratory practice to restore attendance to &gt;75%.</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.65rem', marginTop: '0.5rem' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.65rem 0.75rem', borderRadius: '10px', border: '1px solid #FDE68A', fontSize: '0.78rem' }}>
+                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>1. Saturday Labs</strong>
+                    <span style={{ color: '#78350F' }}>Attend compensatory laboratory hours to restore statutory &gt;75%.</span>
                   </div>
 
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.8rem' }}>
-                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>2. CIA Improvement Tests</strong>
-                    <span>Consult your subject teachers to attempt the Continuous Assessment re-tests.</span>
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.65rem 0.75rem', borderRadius: '10px', border: '1px solid #FDE68A', fontSize: '0.78rem' }}>
+                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>2. CIA Improvement</strong>
+                    <span style={{ color: '#78350F' }}>Consult subject teachers for Continuous Assessment re-tests.</span>
                   </div>
 
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.8rem' }}>
-                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>3. Department Peer Tutoring</strong>
-                    <span>Join senior student study circles for challenging problem-oriented subjects.</span>
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.65rem 0.75rem', borderRadius: '10px', border: '1px solid #FDE68A', fontSize: '0.78rem' }}>
+                    <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>3. Peer Tutoring</strong>
+                    <span style={{ color: '#78350F' }}>Join departmental student study circles for arrear subjects.</span>
                   </div>
                 </div>
               </div>
@@ -354,13 +350,12 @@ export default function StudentDashboard() {
                 className="btn btn-primary"
                 onClick={() => setShowMeetingModal(true)}
                 style={{
-                  background: 'linear-gradient(135deg, #059669, #10b981)',
-                  padding: '0.65rem 1.25rem',
-                  gap: '0.5rem',
+                  padding: '0.6rem 1.15rem',
+                  gap: '0.45rem',
                   fontWeight: '700'
                 }}
               >
-                <MessageSquare size={16} />
+                <MessageSquare size={15} />
                 <span>Schedule Mentor Meeting</span>
               </button>
             </div>
@@ -565,25 +560,10 @@ export default function StudentDashboard() {
           MODAL: REQUEST 1-ON-1 GUIDANCE MEETING
           ===================================================================== */}
       {showMeetingModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(15, 23, 42, 0.65)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          padding: '1rem'
-        }}>
-          <div className="card fade-in" style={{
+        <div className="dialog-backdrop">
+          <div className="dialog-card fade-in" style={{
             maxWidth: '500px',
-            width: '100%',
-            background: '#ffffff',
-            borderRadius: '16px',
-            padding: '1.75rem',
-            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.25)',
-            border: '1px solid var(--border)'
+            padding: '1.75rem'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

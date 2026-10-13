@@ -583,61 +583,69 @@ export default function AdminDashboard() {
         <div className="fade-in">
           
           {/* Customizable KPI Stats Grid */}
-          <div className="stats-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
             {visibleMetrics.totalStudents && (
-              <div className="stat-card">
-                <div>
-                  <div className="stat-label">Enrolled Under Scope</div>
-                  <div className="stat-value">{totalStudents.toLocaleString()}</div>
-                  <div className="stat-subtext">Across {byDepartment.length} engineering branches</div>
+              <div className="stat-tile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon">
+                    <Users size={18} strokeWidth={1.8} />
+                  </div>
+                  <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Enrollment</span>
                 </div>
-                <div className="stat-icon-box" style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
-                  <Users size={22} />
+                <div>
+                  <div className="stat-tile-num">{totalStudents.toLocaleString()}</div>
+                  <div className="stat-tile-label">Across {byDepartment.length} engineering branches</div>
                 </div>
               </div>
             )}
 
             {visibleMetrics.highRisk && (
-              <div className="stat-card">
+              <div className="stat-tile stat-tile-warn">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon" style={{ background: '#FEE2E2', color: 'var(--red)' }}>
+                    <AlertTriangle size={18} strokeWidth={1.8} />
+                  </div>
+                  <span className="pill pill-red" style={{ fontSize: '0.72rem' }}>
+                    {highPct}% of total
+                  </span>
+                </div>
                 <div>
-                  <div className="stat-label">Active Support Cohort</div>
-                  <div className="stat-value" style={{ color: 'var(--danger)' }}>
+                  <div className="stat-tile-num" style={{ color: 'var(--red)' }}>
                     {highRiskObj.count.toLocaleString()}
                   </div>
-                  <div className="stat-subtext" style={{ color: 'var(--danger)', fontWeight: '700' }}>
-                    {highPct}% of student enrollment
-                  </div>
-                </div>
-                <div className="stat-icon-box" style={{ background: 'var(--danger-light)', color: 'var(--danger)' }}>
-                  <AlertTriangle size={22} />
+                  <div className="stat-tile-label">Active Support Cohort</div>
                 </div>
               </div>
             )}
 
             {visibleMetrics.attendanceAlerts && (
-              <div className="stat-card">
+              <div className="stat-tile stat-tile-warn">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon" style={{ background: '#FEF3C7', color: 'var(--amber)' }}>
+                    <Calendar size={18} strokeWidth={1.8} />
+                  </div>
+                  <span className="pill pill-amber" style={{ fontSize: '0.72rem' }}>&lt;75% Cutoff</span>
+                </div>
                 <div>
-                  <div className="stat-label">Attendance Debarment Risk</div>
-                  <div className="stat-value" style={{ color: '#B45309' }}>
+                  <div className="stat-tile-num" style={{ color: 'var(--amber)' }}>
                     {Number(lowAttendanceNumber).toLocaleString()}
                   </div>
-                  <div className="stat-subtext">Below Anna Univ 75% cutoff</div>
-                </div>
-                <div className="stat-icon-box" style={{ background: 'var(--warning-light)', color: 'var(--warning)' }}>
-                  <Calendar size={22} />
+                  <div className="stat-tile-label">Statutory Attendance Debarment Risk</div>
                 </div>
               </div>
             )}
 
             {visibleMetrics.meanGpa && (
-              <div className="stat-card">
-                <div>
-                  <div className="stat-label">Institutional Mean GPA</div>
-                  <div className="stat-value">{summary.avgGpa || '6.92'}</div>
-                  <div className="stat-subtext">Anna Univ 10-point scale</div>
+              <div className="stat-tile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon">
+                    <GraduationCap size={18} strokeWidth={1.8} />
+                  </div>
+                  <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>10-Point Scale</span>
                 </div>
-                <div className="stat-icon-box" style={{ background: 'var(--success-light)', color: 'var(--success)' }}>
-                  <GraduationCap size={22} />
+                <div>
+                  <div className="stat-tile-num">{summary.avgGpa || '6.92'}</div>
+                  <div className="stat-tile-label">Institutional Mean CGPA</div>
                 </div>
               </div>
             )}
@@ -752,55 +760,61 @@ export default function AdminDashboard() {
             gap: '1rem',
             marginBottom: '1.25rem'
           }}>
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
-              <div>
-                <div className="stat-label">Academic Departments</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem' }}>{filteredDepartments.length} Branches</div>
-                <div className="stat-subtext">Active under {currentCollegeInfo.code}</div>
+            <div className="stat-tile">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon">
+                  <Layers size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>{currentCollegeInfo.code}</span>
               </div>
-              <div className="stat-icon-box" style={{ background: 'var(--primary-light)', color: 'var(--primary)', width: '40px', height: '40px' }}>
-                <Layers size={20} />
+              <div>
+                <div className="stat-tile-num">{filteredDepartments.length} Branches</div>
+                <div className="stat-tile-label">Academic Departments</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon">
+                  <Users size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>Active</span>
+              </div>
               <div>
-                <div className="stat-label">Enrolled Student Body</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem' }}>
+                <div className="stat-tile-num">
                   {filteredDepartments.reduce((acc, d) => acc + (d.count || 0), 0).toLocaleString()}
                 </div>
-                <div className="stat-subtext">Under active monitoring</div>
-              </div>
-              <div className="stat-icon-box" style={{ background: 'var(--success-light)', color: 'var(--success)', width: '40px', height: '40px' }}>
-                <Users size={20} />
+                <div className="stat-tile-label">Enrolled Student Body</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
-              <div>
-                <div className="stat-label">Campus Average GPA</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem' }}>
-                  {summary.avgGpa || '6.88'} <span style={{ fontSize: '0.8rem', fontWeight: '500', color: 'var(--muted)' }}>/ 10</span>
+            <div className="stat-tile">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon">
+                  <GraduationCap size={18} strokeWidth={1.8} />
                 </div>
-                <div className="stat-subtext">Across evaluated branches</div>
+                <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Evaluated</span>
               </div>
-              <div className="stat-icon-box" style={{ background: 'var(--warning-light)', color: '#B45309', width: '40px', height: '40px' }}>
-                <GraduationCap size={20} />
+              <div>
+                <div className="stat-tile-num">
+                  {summary.avgGpa || '6.88'} <span style={{ fontSize: '0.8rem', color: 'var(--mute)' }}>/ 10</span>
+                </div>
+                <div className="stat-tile-label">Campus Average GPA</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile stat-tile-warn">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon" style={{ background: '#FEE2E2', color: 'var(--red)' }}>
+                  <AlertTriangle size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-red" style={{ fontSize: '0.72rem' }}>Support</span>
+              </div>
               <div>
-                <div className="stat-label">Support Cohort Share</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem', color: 'var(--danger)' }}>
+                <div className="stat-tile-num" style={{ color: 'var(--red)' }}>
                   {filteredDepartments.reduce((acc, d) => acc + (d.highRiskCount || 0), 0).toLocaleString()}
                 </div>
-                <div className="stat-subtext" style={{ color: 'var(--danger)', fontWeight: '700' }}>
-                  Students requiring active support
-                </div>
-              </div>
-              <div className="stat-icon-box" style={{ background: 'var(--danger-light)', color: 'var(--danger)', width: '40px', height: '40px' }}>
-                <AlertTriangle size={20} />
+                <div className="stat-tile-label">Students Requiring Support</div>
               </div>
             </div>
           </div>
@@ -943,8 +957,8 @@ export default function AdminDashboard() {
 
             {/* VIEW MODE 1: EXECUTIVE TABLE VIEW */}
             {deptViewMode === 'table' ? (
-              <div className="table-container" style={{ border: 'none' }}>
-                <table className="data-table">
+              <div style={{ overflowX: 'auto' }}>
+                <table className="table">
                   <thead>
                     <tr>
                       <th style={{ width: '220px' }}>Department</th>
@@ -1637,98 +1651,93 @@ export default function AdminDashboard() {
             gap: '1rem',
             marginBottom: '1.25rem'
           }}>
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile stat-tile-warn">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon" style={{ background: '#FEE2E2', color: 'var(--red)' }}>
+                  <AlertTriangle size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-red" style={{ fontSize: '0.72rem' }}>&lt;75% Cutoff</span>
+              </div>
               <div>
-                <div className="stat-label">Total Shortage Flagged</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem', color: 'var(--danger)' }}>
+                <div className="stat-tile-num" style={{ color: 'var(--red)' }}>
                   {Number(lowAttendanceNumber).toLocaleString()}
                 </div>
-                <div className="stat-subtext" style={{ color: 'var(--danger)', fontWeight: '700' }}>
-                  Below Anna Univ 75% Cutoff
-                </div>
-              </div>
-              <div className="stat-icon-box" style={{ background: 'var(--danger-light)', color: 'var(--danger)', width: '40px', height: '40px' }}>
-                <AlertTriangle size={20} />
+                <div className="stat-tile-label">Total Shortage Flagged Below 75%</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile stat-tile-warn">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon" style={{ background: '#FEE2E2', color: '#991B1B' }}>
+                  <ShieldAlert size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-red" style={{ fontSize: '0.72rem' }}>&lt;65% Critical</span>
+              </div>
               <div>
-                <div className="stat-label">Critical Shortage (&lt;65%)</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem', color: '#991b1b' }}>
+                <div className="stat-tile-num" style={{ color: '#991B1B' }}>
                   142 Students
                 </div>
-                <div className="stat-subtext" style={{ color: '#991b1b', fontWeight: '700' }}>
-                  Non-condonable &bull; Semester repeat
-                </div>
-              </div>
-              <div className="stat-icon-box" style={{ background: '#fee2e2', color: '#991b1b', width: '40px', height: '40px' }}>
-                <ShieldAlert size={20} />
+                <div className="stat-tile-label">Critical Shortage &bull; Non-Condonable</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile stat-tile-warn">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon" style={{ background: '#FEF3C7', color: '#B45309' }}>
+                  <Calendar size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-amber" style={{ fontSize: '0.72rem' }}>65&ndash;74.9%</span>
+              </div>
               <div>
-                <div className="stat-label">Condonable Window (65&ndash;74.9%)</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem', color: '#B45309' }}>
+                <div className="stat-tile-num" style={{ color: '#B45309' }}>
                   367 Students
                 </div>
-                <div className="stat-subtext">
-                  Medical petition eligible (Clause 6.3)
-                </div>
-              </div>
-              <div className="stat-icon-box" style={{ background: 'var(--warning-light)', color: '#B45309', width: '40px', height: '40px' }}>
-                <Calendar size={20} />
+                <div className="stat-tile-label">Condonable Medical Window</div>
               </div>
             </div>
 
-            <div className="stat-card" style={{ padding: '1rem 1.25rem' }}>
+            <div className="stat-tile">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-tile-icon">
+                  <CheckCircle2 size={18} strokeWidth={1.8} />
+                </div>
+                <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>Clause 6.2</span>
+              </div>
               <div>
-                <div className="stat-label">Notices Dispatched</div>
-                <div className="stat-value" style={{ fontSize: '1.45rem', color: 'var(--success)' }}>
+                <div className="stat-tile-num" style={{ color: 'var(--green)' }}>
                   {dispatchedNotices.size} Dispatched
                 </div>
-                <div className="stat-subtext" style={{ color: 'var(--success)', fontWeight: '700' }}>
-                  Registered under Clause 6.2
-                </div>
-              </div>
-              <div className="stat-icon-box" style={{ background: 'var(--success-light)', color: 'var(--success)', width: '40px', height: '40px' }}>
-                <CheckCircle2 size={20} />
+                <div className="stat-tile-label">Parental Intimation Notices</div>
               </div>
             </div>
           </div>
 
-          {/* Anna University Statutory Regulations Reference Box */}
-          <div className="card" style={{
-            marginBottom: '1.25rem',
-            background: 'linear-gradient(135deg, rgba(93, 135, 255, 0.05) 0%, rgba(255, 255, 255, 1) 100%)',
-            border: '1px solid #dbeafe',
-            borderRadius: '12px',
-            padding: '1.25rem 1.5rem'
-          }}>
+          {/* Anna University Statutory Regulations Reference Box (Sticky Note) */}
+          <div className="sticky-note-card" style={{ marginBottom: '1.25rem' }}>
+            <div className="sticky-note-pin" />
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-              <div style={{ background: 'var(--primary)', color: '#ffffff', padding: '8px', borderRadius: '8px', display: 'flex', marginTop: '2px' }}>
+              <div style={{ background: 'var(--amber)', color: '#ffffff', padding: '8px', borderRadius: '10px', display: 'flex', marginTop: '2px' }}>
                 <ShieldCheck size={20} />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                  <h4 style={{ fontSize: '0.96rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+                  <div className="sticky-note-title" style={{ margin: 0 }}>
                     Anna University Autonomous Regulations Compliance Framework &bull; Clause 6
-                  </h4>
-                  <span className="badge badge-light-primary" style={{ fontWeight: '700' }}>Mandatory Protocol</span>
+                  </div>
+                  <span className="pill pill-amber" style={{ fontWeight: '700' }}>Mandatory Protocol</span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '0.5rem', fontSize: '0.78rem', color: 'var(--muted)', lineHeight: '1.5' }}>
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                    <strong style={{ color: 'var(--dark)', display: 'block', marginBottom: '2px' }}>Clause 6.1 &bull; 75% Minimum Rule</strong>
-                    A student who secures less than 75% aggregate attendance in any semester shall NOT be permitted to appear for End-Semester Examinations.
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '0.65rem', fontSize: '0.78rem', lineHeight: '1.5' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.75rem', borderRadius: '10px', border: '1px solid #FDE68A' }}>
+                    <strong style={{ color: '#78350F', display: 'block', marginBottom: '2px' }}>Clause 6.1 &bull; 75% Minimum Rule</strong>
+                    <span style={{ color: '#92400E' }}>A student who secures less than 75% aggregate attendance in any semester shall NOT be permitted to appear for End-Semester Examinations.</span>
                   </div>
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                    <strong style={{ color: 'var(--dark)', display: 'block', marginBottom: '2px' }}>Clause 6.2 &bull; Parental Intimation</strong>
-                    The Head of Institution &amp; faculty mentor are statutorily required to dispatch registered written notices to parents upon attendance deficit.
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.75rem', borderRadius: '10px', border: '1px solid #FDE68A' }}>
+                    <strong style={{ color: '#78350F', display: 'block', marginBottom: '2px' }}>Clause 6.2 &bull; Parental Intimation</strong>
+                    <span style={{ color: '#92400E' }}>The Head of Institution &amp; faculty mentor are statutorily required to dispatch registered written notices to parents upon attendance deficit.</span>
                   </div>
-                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                    <strong style={{ color: 'var(--dark)', display: 'block', marginBottom: '2px' }}>Clause 6.3 &bull; Medical Condonation</strong>
-                    Shortage between 65% and 74.9% may be condoned on valid medical grounds with Syndicate fee. Attendance below 65% mandates repeating the semester.
+                  <div style={{ background: 'rgba(255,255,255,0.85)', padding: '0.75rem', borderRadius: '10px', border: '1px solid #FDE68A' }}>
+                    <strong style={{ color: '#78350F', display: 'block', marginBottom: '2px' }}>Clause 6.3 &bull; Medical Condonation</strong>
+                    <span style={{ color: '#92400E' }}>Shortage between 65% and 74.9% may be condoned on valid medical grounds with Syndicate fee. Attendance below 65% mandates repeating semester.</span>
                   </div>
                 </div>
               </div>
@@ -1855,8 +1864,8 @@ export default function AdminDashboard() {
             </div>
 
             {/* Spacious, Structured Data Table */}
-            <div className="table-container" style={{ border: 'none' }}>
-              <table className="data-table">
+            <div style={{ overflowX: 'auto' }}>
+              <table className="table">
                 <thead>
                   <tr>
                     <th style={{ width: '240px' }}>Student Dossier</th>

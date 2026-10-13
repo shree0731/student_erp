@@ -539,57 +539,54 @@ export default function MentorDashboard() {
               </div>
             </div>
 
-            {/* 3 Spike Wave Stat Cards */}
+            {/* 3 Stat Tiles */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.85rem' }}>
               
-              {/* Card 1: Royal Blue */}
-              <div className="spike-stat-card" style={{ background: 'linear-gradient(135deg, #5d87ff, #4570ea)' }}>
-                <div className="spike-stat-card-wave" />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#ffffff', color: '#5d87ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>
-                    <Users size={17} />
+              {/* Card 1: Assigned Mentees */}
+              <div className="stat-tile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon">
+                    <Users size={18} strokeWidth={1.8} />
                   </div>
-                  <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px', fontWeight: '700' }}>
+                  <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>
                     100% Monitored
                   </span>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.65rem', fontWeight: '800', lineHeight: 1.1 }}>{mentees.length}</div>
-                  <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Assigned Mentees &bull; CSE Cohort</div>
+                  <div className="stat-tile-num">{mentees.length}</div>
+                  <div className="stat-tile-label">Assigned Mentees &bull; CSE Cohort</div>
                 </div>
               </div>
 
-              {/* Card 2: Cyan Teal */}
-              <div className="spike-stat-card" style={{ background: 'linear-gradient(135deg, #49beff, #00acc1)' }}>
-                <div className="spike-stat-card-wave" />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#ffffff', color: '#00acc1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>
-                    <Calendar size={17} />
+              {/* Card 2: Faculty Counseling Sessions */}
+              <div className="stat-tile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon">
+                    <Calendar size={18} strokeWidth={1.8} />
                   </div>
-                  <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px', fontWeight: '700' }}>
+                  <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>
                     {interventions.length} Logged
                   </span>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.65rem', fontWeight: '800', lineHeight: 1.1 }}>{interventions.length} Sessions</div>
-                  <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Faculty Mentoring Interventions</div>
+                  <div className="stat-tile-num">{interventions.length} Sessions</div>
+                  <div className="stat-tile-label">Faculty Mentoring Interventions</div>
                 </div>
               </div>
 
-              {/* Card 3: Deep Blue Warning */}
-              <div className="spike-stat-card" style={{ background: 'linear-gradient(135deg, #1376f8, #0056b3)' }}>
-                <div className="spike-stat-card-wave" />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#ffffff', color: '#1376f8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>
-                    <AlertTriangle size={17} />
+              {/* Card 3: Attendance Threshold Warning */}
+              <div className="stat-tile stat-tile-warn">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon" style={{ background: '#FEE2E2', color: 'var(--red)' }}>
+                    <AlertTriangle size={18} strokeWidth={1.8} />
                   </div>
-                  <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px', fontWeight: '700' }}>
+                  <span className="pill pill-red" style={{ fontSize: '0.72rem' }}>
                     Action Due
                   </span>
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.65rem', fontWeight: '800', lineHeight: 1.1 }}>{lowAttendanceStudents.length} Students</div>
-                  <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Below 75% Attendance Threshold</div>
+                  <div className="stat-tile-num" style={{ color: 'var(--red)' }}>{lowAttendanceStudents.length} Students</div>
+                  <div className="stat-tile-label">Below 75% Statutory Attendance Threshold</div>
                 </div>
               </div>
 
@@ -597,139 +594,215 @@ export default function MentorDashboard() {
 
           </div>
 
-          {/* Row 2: Priority Attention Cards (Only students who actually need attention!) */}
-          <div className="card" style={{ marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.1rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--dark)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <BellRing size={18} color="var(--danger)" />
-                  <span>Priority Action Required: Mentees Needing Attention</span>
-                </h3>
-                <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: '2px 0 0' }}>
-                  Students flagged by the XGBoost early-warning model for low attendance or high backlogs
-                </p>
+          {/* Row 2: Priority Attention Cards (Sticky Note) + Meeting Requests (Pink Bulletin) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            
+            {/* Sticky Note: Immediate Attention Students */}
+            <div className="sticky-note-card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="sticky-note-pin" />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div>
+                  <div className="sticky-note-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <BellRing size={16} color="var(--amber)" />
+                    <span>Immediate Action: Mentees Needing Attention</span>
+                  </div>
+                  <p style={{ fontSize: '0.76rem', color: '#92400E', margin: '2px 0 0' }}>
+                    Flagged by XGBoost model for low attendance or high backlogs
+                  </p>
+                </div>
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => setActiveTab('roster')}
+                  style={{ fontSize: '0.74rem', color: '#78350F', background: 'rgba(255,255,255,0.6)' }}
+                >
+                  <span>Full Roster</span>
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+
+              {/* 2 Focused Mentee Cards inside Sticky Note */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.85rem', flex: 1 }}>
+                
+                {/* Mentee 1: Vimal */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.88)',
+                  border: '1px solid #FDE68A',
+                  borderRadius: '14px',
+                  padding: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <div>
+                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>Vimal Rajagopalan</div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>STU_EEC_CSE_Y4_0350 &bull; Year 4</div>
+                      </div>
+                      <span className="pill pill-amber" style={{ fontSize: '0.7rem' }}>Medium Risk</span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginBottom: '0.65rem', fontSize: '0.76rem' }}>
+                      <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+                        <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Attendance</div>
+                        <div style={{ fontWeight: '800', color: 'var(--red)', fontSize: '0.88rem' }}>67.7% (&lt;75%)</div>
+                      </div>
+                      <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+                        <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Arrears</div>
+                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.88rem' }}>10 Courses</div>
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '0.72rem', color: '#991B1B', marginBottom: '0.75rem', background: '#FEE2E2', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                      ⚠️ <strong>AU 75% Rule Alert:</strong> 7.3% deficit from exam eligibility.
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.45rem' }}>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0350')}
+                      style={{ flex: 1, fontSize: '0.74rem' }}
+                    >
+                      <span>Diagnostic</span>
+                      <ArrowUpRight size={12} />
+                    </button>
+                    <button
+                      className="btn btn-outline btn-sm"
+                      onClick={() => {
+                        setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0350' }));
+                        setShowLogModal(true);
+                      }}
+                      style={{ fontSize: '0.74rem' }}
+                    >
+                      Log Counseling
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mentee 2: Prajwal */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.88)',
+                  border: '1px solid #FDE68A',
+                  borderRadius: '14px',
+                  padding: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <div>
+                        <div style={{ fontWeight: '800', color: 'var(--ink)', fontSize: '0.92rem' }}>Prajwal Gowda</div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--mute)' }}>STU_EEC_CSE_Y4_0331 &bull; Year 4</div>
+                      </div>
+                      <span className="pill pill-amber" style={{ fontSize: '0.7rem' }}>Medium Risk</span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginBottom: '0.65rem', fontSize: '0.76rem' }}>
+                      <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+                        <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Attendance</div>
+                        <div style={{ fontWeight: '800', color: 'var(--green)', fontSize: '0.88rem' }}>76.3% (Safe)</div>
+                      </div>
+                      <div style={{ background: '#FFFBEB', padding: '0.45rem', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+                        <div style={{ color: '#92400E', fontSize: '0.68rem' }}>Arrears</div>
+                        <div style={{ fontWeight: '800', color: 'var(--red)', fontSize: '0.88rem' }}>22 Courses</div>
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '0.72rem', color: '#92400E', marginBottom: '0.75rem', background: '#FEF3C7', padding: '0.35rem 0.55rem', borderRadius: '6px' }}>
+                      📌 <strong>Academic Alert:</strong> Severe backlog accumulation across semesters.
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.45rem' }}>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0331')}
+                      style={{ flex: 1, fontSize: '0.74rem' }}
+                    >
+                      <span>Diagnostic</span>
+                      <ArrowUpRight size={12} />
+                    </button>
+                    <button
+                      className="btn btn-outline btn-sm"
+                      onClick={() => {
+                        setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0331' }));
+                        setShowLogModal(true);
+                      }}
+                      style={{ fontSize: '0.74rem' }}
+                    >
+                      Log Counseling
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Pink Bulletin: Meeting Requests & Crisis Escalations */}
+            <div className="pink-bulletin-card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="pink-bulletin-pin" />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                <div className="pink-bulletin-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Clock size={16} color="var(--primary)" />
+                  <span>Meeting Requests</span>
+                </div>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <span className="pill pill-purple" style={{ fontSize: '0.68rem' }}>
+                    {meetingRequests.filter(r => r.status === 'new').length} New
+                  </span>
+                  {meetingRequests.filter(r => r.urgency === 'urgent').length > 0 && (
+                    <span className="pill pill-red" style={{ fontSize: '0.68rem' }}>
+                      {meetingRequests.filter(r => r.urgency === 'urgent').length} Urgent
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                {meetingRequests.slice(0, 3).map((req) => (
+                  <div key={req.request_id || req._id} style={{
+                    background: 'rgba(255,255,255,0.88)',
+                    border: '1px solid #FBCFE8',
+                    borderRadius: '12px',
+                    padding: '0.75rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: '800', fontSize: '0.8rem', color: 'var(--ink)' }}>{req.student_id}</span>
+                      <span className={`pill ${req.status === 'new' ? 'pill-amber' : req.status === 'scheduled' ? 'pill-purple' : 'pill-green'}`} style={{ fontSize: '0.65rem' }}>
+                        {req.status}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#831843', lineHeight: '1.3' }}>
+                      {req.reason_short}
+                    </div>
+                  </div>
+                ))}
+
+                {meetingRequests.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '1.5rem 0', color: 'var(--mute)', fontSize: '0.78rem' }}>
+                    No pending meeting requests from mentees
+                  </div>
+                )}
               </div>
 
               <button
                 className="btn btn-outline btn-sm"
-                onClick={() => setActiveTab('roster')}
-                style={{ fontSize: '0.76rem', gap: '0.35rem' }}
+                onClick={() => {
+                  setInterventionSubView('meetings');
+                  setActiveTab('interventions');
+                }}
+                style={{ marginTop: '0.75rem', width: '100%', fontSize: '0.74rem', background: 'rgba(255,255,255,0.7)' }}
               >
-                <span>View Full Roster ({mentees.length})</span>
-                <ChevronRight size={14} />
+                <span>Manage All Meeting Requests</span>
+                <ArrowRight size={13} />
               </button>
             </div>
 
-            {/* 2 Focused Priority Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1rem' }}>
-              
-              {/* Mentee 1: Vimal */}
-              <div style={{
-                background: 'var(--bg-body)',
-                border: '1px solid var(--danger-light)',
-                borderRadius: '12px',
-                padding: '1.1rem',
-                borderLeft: '4px solid var(--danger)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
-                  <div>
-                    <div style={{ fontWeight: '800', color: 'var(--dark)', fontSize: '0.95rem' }}>Vimal Rajagopalan</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>STU_EEC_CSE_Y4_0350 &bull; CSE Year 4 (Hosteller)</div>
-                  </div>
-                  <span className="badge badge-light-warning">Medium Risk</span>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.85rem', fontSize: '0.78rem' }}>
-                  <div style={{ background: '#ffffff', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                    <div style={{ color: 'var(--muted)', fontSize: '0.7rem' }}>Attendance</div>
-                    <div style={{ fontWeight: '800', color: 'var(--danger)', fontSize: '0.92rem' }}>67.7% (&lt;75%)</div>
-                  </div>
-                  <div style={{ background: '#ffffff', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                    <div style={{ color: 'var(--muted)', fontSize: '0.7rem' }}>Arrears</div>
-                    <div style={{ fontWeight: '800', color: 'var(--dark)', fontSize: '0.92rem' }}>10 Courses</div>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '0.75rem', color: 'var(--dark)', marginBottom: '0.85rem', background: 'var(--danger-light)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
-                  ⚠️ <strong>AU 75% Rule Alert:</strong> 7.3% deficit from statutory semester exam eligibility.
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0350')}
-                    style={{ flex: 1, fontSize: '0.76rem' }}
-                  >
-                    <span>Diagnostic Profile</span>
-                    <ArrowUpRight size={13} />
-                  </button>
-                  <button
-                    className="btn btn-outline btn-sm"
-                    onClick={() => {
-                      setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0350' }));
-                      setShowLogModal(true);
-                    }}
-                    style={{ fontSize: '0.76rem' }}
-                  >
-                    Log Counseling
-                  </button>
-                </div>
-              </div>
-
-              {/* Mentee 2: Prajwal */}
-              <div style={{
-                background: 'var(--bg-body)',
-                border: '1px solid var(--warning-light)',
-                borderRadius: '12px',
-                padding: '1.1rem',
-                borderLeft: '4px solid var(--warning)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
-                  <div>
-                    <div style={{ fontWeight: '800', color: 'var(--dark)', fontSize: '0.95rem' }}>Prajwal Gowda</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>STU_EEC_CSE_Y4_0331 &bull; CSE Year 4 (Day Scholar)</div>
-                  </div>
-                  <span className="badge badge-light-warning">Medium Risk</span>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.85rem', fontSize: '0.78rem' }}>
-                  <div style={{ background: '#ffffff', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                    <div style={{ color: 'var(--muted)', fontSize: '0.7rem' }}>Attendance</div>
-                    <div style={{ fontWeight: '800', color: 'var(--success)', fontSize: '0.92rem' }}>76.3% (Safe)</div>
-                  </div>
-                  <div style={{ background: '#ffffff', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                    <div style={{ color: 'var(--muted)', fontSize: '0.7rem' }}>Arrears</div>
-                    <div style={{ fontWeight: '800', color: 'var(--danger)', fontSize: '0.92rem' }}>22 Courses</div>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '0.75rem', color: 'var(--dark)', marginBottom: '0.85rem', background: 'var(--warning-light)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
-                  📌 <strong>Academic Alert:</strong> Severe backlog accumulation across 4 semesters.
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => navigate('/mentor/student/STU_EEC_CSE_Y4_0331')}
-                    style={{ flex: 1, fontSize: '0.76rem' }}
-                  >
-                    <span>Diagnostic Profile</span>
-                    <ArrowUpRight size={13} />
-                  </button>
-                  <button
-                    className="btn btn-outline btn-sm"
-                    onClick={() => {
-                      setNewLog(prev => ({ ...prev, studentId: 'STU_EEC_CSE_Y4_0331' }));
-                      setShowLogModal(true);
-                    }}
-                    style={{ fontSize: '0.76rem' }}
-                  >
-                    Log Counseling
-                  </button>
-                </div>
-              </div>
-
-            </div>
           </div>
 
           {/* Row 3: Cohort Statutory Compliance Summary Meter */}
@@ -853,7 +926,7 @@ export default function MentorDashboard() {
 
             {/* Table */}
             <div style={{ overflowX: 'auto' }}>
-              <table className="spike-table">
+              <table className="table">
                 <thead>
                   <tr>
                     <th style={{ minWidth: '180px' }}>Student</th>
@@ -1229,7 +1302,7 @@ export default function MentorDashboard() {
 
               {/* Interventions Table */}
               <div style={{ overflowX: 'auto' }}>
-                <table className="spike-table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Record ID</th>
@@ -1314,7 +1387,7 @@ export default function MentorDashboard() {
               </div>
               <div>
                 <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
-                  Spike Academic Retention Copilot
+                  Baymate Academic Retention Copilot
                 </h3>
                 <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: 0 }}>
                   Informed by Anna University 75% Attendance Statutes &amp; live XGBoost inference
@@ -1405,17 +1478,8 @@ export default function MentorDashboard() {
           MODAL: LOG COUNSELING SESSION
           ===================================================================== */}
       {showLogModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.45)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 100,
-          padding: '1rem'
-        }}>
-          <div className="card" style={{ maxWidth: '520px', width: '100%', padding: '1.75rem' }}>
+        <div className="dialog-backdrop">
+          <div className="dialog-card" style={{ maxWidth: '520px', padding: '1.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
                 Log Mentoring Intervention

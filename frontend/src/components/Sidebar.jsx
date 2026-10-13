@@ -10,15 +10,13 @@ import {
   ShieldAlert,
   Sparkles,
   BookOpen,
-  GraduationCap,
-  ShieldCheck,
-  FileText,
-  Clock
+  LogOut
 } from 'lucide-react';
 
 export default function Sidebar() {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
   const { collapsed } = useSidebar();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const user = currentUser || {
@@ -30,151 +28,111 @@ export default function Sidebar() {
   const queryParams = new URLSearchParams(location.search);
   const currentTab = queryParams.get('tab') || 'overview';
 
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('erp_active_user');
+      if (logout) logout();
+    } catch {}
+    navigate('/login');
+  };
+
   return (
-    <aside className={`app-sidebar ${collapsed ? 'collapsed' : ''}`}>
-      {/* Brand Header */}
-      <div className="sidebar-header">
-        <div style={{
-          width: '38px',
-          height: '38px',
-          borderRadius: '10px',
-          background: 'var(--primary-light)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--primary)',
-          flexShrink: 0
-        }}>
-          <Rocket size={22} />
-        </div>
-        {!collapsed && (
-          <div>
-            <span className="sidebar-logo-text">ERP</span>
-          </div>
-        )}
+    <aside className={`floating-rail ${collapsed ? 'collapsed' : ''}`} aria-label="Main Navigation">
+      {/* Top Logo Tile */}
+      <div className="rail-logo-tile" title="ERP System">
+        <Rocket size={22} fill="none" strokeWidth={1.8} />
       </div>
 
-      {/* Nav Menu */}
-      <nav className="sidebar-nav">
-        
-        {/* Section: MENTOR SECTIONS */}
+      {/* Nav Items */}
+      <nav className="rail-nav">
+        {/* Mentor Role Links */}
         {activeRole === 'mentor' && (
           <>
-            {!collapsed && <div className="sidebar-section-title">MENTOR SECTIONS</div>}
-
             <NavLink
               to="/mentor/dashboard?tab=overview"
-              title="Executive Overview"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'overview' ? 'active' : ''}`}
+              data-t="Overview"
+              aria-label="Overview"
+              className={`rail-item ${location.pathname === '/mentor/dashboard' && currentTab === 'overview' ? 'active' : ''}`}
             >
-              <LayoutDashboard size={18} />
-              {!collapsed && <span>Overview</span>}
+              <LayoutDashboard size={20} />
             </NavLink>
 
             <NavLink
               to="/mentor/dashboard?tab=roster"
-              title="Mentee Roster & Risk Directory"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'roster' ? 'active' : ''}`}
+              data-t="Mentee Roster"
+              aria-label="Mentee Roster"
+              className={`rail-item ${location.pathname === '/mentor/dashboard' && currentTab === 'roster' ? 'active' : ''}`}
             >
-              <Users size={18} />
-              {!collapsed && <span>Mentee Roster</span>}
+              <Users size={20} />
             </NavLink>
 
             <NavLink
               to="/mentor/dashboard?tab=interventions"
-              title="Interventions & Meeting Requests"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && (currentTab === 'interventions' || currentTab === 'meetings') ? 'active' : ''}`}
+              data-t="Interventions & Meetings"
+              aria-label="Interventions & Meetings"
+              className={`rail-item ${location.pathname === '/mentor/dashboard' && (currentTab === 'interventions' || currentTab === 'meetings') ? 'active' : ''}`}
             >
-              <ShieldAlert size={18} />
-              {!collapsed && <span>Interventions &amp; Meetings</span>}
+              <ShieldAlert size={20} />
             </NavLink>
 
             <NavLink
               to="/mentor/dashboard?tab=ai"
-              title="AI Retention Copilot"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'ai' ? 'active' : ''}`}
+              data-t="AI Retention Copilot"
+              aria-label="AI Retention Copilot"
+              className={`rail-item ${location.pathname === '/mentor/dashboard' && currentTab === 'ai' ? 'active' : ''}`}
             >
-              <Sparkles size={18} />
-              {!collapsed && <span>AI Retention Copilot</span>}
-            </NavLink>
-
-            {!collapsed && (
-              <>
-                <div className="sidebar-section-title" style={{ marginTop: '1rem' }}>COMPLIANCE WATCH</div>
-
-                <div style={{ padding: '0.65rem 0.85rem', background: 'var(--bg-body)', borderRadius: '10px', border: '1px solid var(--border)', margin: '0 0.25rem 0.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--dark)' }}>AU 75% Rule</span>
-                    <span className="badge badge-light-warning" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>2 Alerts</span>
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--muted)', lineHeight: '1.3' }}>
-                    14 / 16 mentees currently in safe attendance zone.
-                  </div>
-                </div>
-              </>
-            )}
-          </>
-        )}
-
-        {/* Section: ADMIN */}
-        {activeRole === 'admin' && (
-          <>
-            {!collapsed && <div className="sidebar-section-title">ADMINISTRATION</div>}
-            <NavLink
-              to="/admin/dashboard"
-              title="Institutional Overview"
-              className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`}
-            >
-              <BarChart3 size={18} />
-              {!collapsed && <span>Institutional Overview</span>}
+              <Sparkles size={20} />
             </NavLink>
           </>
         )}
 
-        {/* Section: STUDENT */}
+        {/* Student Role Links */}
         {activeRole === 'student' && (
           <>
-            {!collapsed && <div className="sidebar-section-title">ACADEMICS</div>}
             <NavLink
               to="/student/dashboard"
-              title="My Academic Portal"
-              className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`}
+              data-t="My Academic Portal"
+              aria-label="My Academic Portal"
+              className={({ isActive }) => `rail-item ${isActive ? 'active' : ''}`}
             >
-              <LayoutDashboard size={18} />
-              {!collapsed && <span>My Academic Portal</span>}
+              <LayoutDashboard size={20} />
             </NavLink>
+
             <NavLink
               to="/student/marks"
-              title="Subject Marks & CIA"
-              className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`}
+              data-t="Subject Marks & CIA"
+              aria-label="Subject Marks & CIA"
+              className={({ isActive }) => `rail-item ${isActive ? 'active' : ''}`}
             >
-              <BookOpen size={18} />
-              {!collapsed && <span>Subject Marks &amp; CIA</span>}
+              <BookOpen size={20} />
             </NavLink>
           </>
         )}
 
-        {/* Footer Info Box */}
-        {!collapsed && (
-          <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-            <div style={{
-              background: 'var(--primary-light)',
-              padding: '0.85rem',
-              borderRadius: '12px',
-              border: '1px solid var(--primary-border)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', fontWeight: '700', color: 'var(--primary)', marginBottom: '0.2rem' }}>
-                <ShieldCheck size={15} />
-                <span>Baymate Connected</span>
-              </div>
-              <p style={{ fontSize: '0.7rem', color: 'var(--muted)', lineHeight: '1.35' }}>
-                XGBoost ML microservice &amp; Gemini advisor connected with 45ms live inference.
-              </p>
-            </div>
-          </div>
+        {/* Admin Role Links */}
+        {activeRole === 'admin' && (
+          <>
+            <NavLink
+              to="/admin/dashboard"
+              data-t="Institutional Overview"
+              aria-label="Institutional Overview"
+              className={({ isActive }) => `rail-item ${isActive ? 'active' : ''}`}
+            >
+              <BarChart3 size={20} />
+            </NavLink>
+          </>
         )}
-
       </nav>
+
+      {/* Bottom Pinned Logout Button in Red */}
+      <button
+        className="rail-logout"
+        onClick={handleLogout}
+        data-t="Log Out"
+        aria-label="Log Out of ERP"
+      >
+        <LogOut size={20} fill="none" strokeWidth={1.8} />
+      </button>
     </aside>
   );
 }

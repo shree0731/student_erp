@@ -1,14 +1,18 @@
 {
   "allowedNewFiles": [],
   "allowedModifiedFiles": [
-    { "file": "src/App.jsx", "reason": "baymate character chat widget" },
-    { "file": "src/components/ChatbotWidget.jsx", "reason": "baymate character icon" },
-    { "file": "src/components/Navbar.jsx", "reason": "rename" },
-    { "file": "src/components/Sidebar.jsx", "reason": "rename" },
-    { "file": "src/pages/public/LoginPage.jsx", "reason": "rename" },
-    { "file": "src/pages/student/StudentDashboard.jsx", "reason": "persist meeting request to backend for mentor bell notification" },
-    { "file": "src/services/api.js", "reason": "add createMeetingRequest and getNotifications endpoints" },
-    { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "model risk factors in roster and removed academic analytics" }
+    { "file": "src/App.jsx", "reason": "light-purple redesign & remove unused landing page" },
+    { "file": "src/components/ChatbotWidget.jsx", "reason": "light-purple redesign & adjustable launcher" },
+    { "file": "src/components/Navbar.jsx", "reason": "light-purple redesign & greeting header" },
+    { "file": "src/components/Sidebar.jsx", "reason": "light-purple redesign & floating rail" },
+    { "file": "src/pages/public/LoginPage.jsx", "reason": "light-purple redesign & decorative layers" },
+    { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "light-purple redesign & sticky note action list" },
+    { "file": "src/pages/mentor/StudentDetail.jsx", "reason": "light-purple redesign & sticky notes" },
+    { "file": "src/pages/student/StudentDashboard.jsx", "reason": "light-purple redesign & sticky notes" },
+    { "file": "src/pages/student/StudentMarks.jsx", "reason": "light-purple redesign & cards" },
+    { "file": "src/pages/admin/AdminDashboard.jsx", "reason": "light-purple redesign & sticky notes" },
+    { "file": "src/components/ParentAlertModal.jsx", "reason": "light-purple redesign & dialogs" },
+    { "file": "src/services/api.js", "reason": "add createMeetingRequest and getNotifications endpoints" }
   ],
   "allowedElements": []
 }

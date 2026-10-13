@@ -83,23 +83,23 @@ export default function StudentDetail() {
     <div className="page-body">
       {/* Back Link */}
       <div style={{ marginBottom: '1.25rem' }}>
-        <Link to="/mentor/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: '#4f46e5', fontWeight: '600' }}>
+        <Link to="/mentor/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '700' }}>
           <ArrowLeft size={16} /> Back to Mentee Risk Board
         </Link>
       </div>
 
       {/* Header Banner */}
-      <div className="card" style={{ marginBottom: '1.75rem', background: '#ffffff' }}>
+      <div className="card" style={{ marginBottom: '1.75rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-              <h1 style={{ fontSize: '1.6rem', fontWeight: '800' }}>{student.student_name}</h1>
+              <h1 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--ink)', margin: 0 }}>{student.student_name}</h1>
               {student.dropout_risk_label === 'High' ? (
-                <span className="badge badge-high"><AlertTriangle size={14} /> High Dropout Risk</span>
+                <span className="pill pill-red"><AlertTriangle size={13} /> High Dropout Risk</span>
               ) : student.dropout_risk_label === 'Medium' ? (
-                <span className="badge badge-medium">Medium Risk</span>
+                <span className="pill pill-amber"><Clock size={13} /> Medium Risk</span>
               ) : (
-                <span className="badge badge-low"><CheckCircle2 size={14} /> Good Standing (Low Risk)</span>
+                <span className="pill pill-green"><CheckCircle2 size={13} /> Good Standing</span>
               )}
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
@@ -332,56 +332,60 @@ export default function StudentDetail() {
       </div>
 
       {/* KPI Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Cumulative GPA</div>
-            <div className="stat-value">{student.overall_gpa} <span style={{ fontSize: '1rem', color: '#94a3b8' }}>/ 10</span></div>
-            <div className="stat-subtext">Credit weighted</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.75rem' }}>
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <GraduationCap size={18} strokeWidth={1.8} />
+            </div>
+            <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Academics</span>
           </div>
-          <div style={{ background: '#e0e7ff', padding: '12px', borderRadius: '12px' }}>
-            <GraduationCap size={22} color="#4f46e5" />
+          <div>
+            <div className="stat-tile-num">{student.overall_gpa} <span style={{ fontSize: '0.9rem', color: 'var(--mute)' }}>/ 10</span></div>
+            <div className="stat-tile-label">Cumulative GPA &bull; Credit Weighted</div>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Attendance Record</div>
-            <div className="stat-value" style={{ color: student.attendance_pct < 75 ? '#dc2626' : '#059669' }}>
-              {student.attendance_pct}%
+        <div className={`stat-tile ${student.attendance_pct < 75 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={student.attendance_pct < 75 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <Clock size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">
-              {student.low_attendance_flag === 1 ? '⚠️ Below 75% examination limit' : 'Meets attendance criteria'}
-            </div>
+            <span className={`pill ${student.attendance_pct < 75 ? 'pill-red' : 'pill-green'}`} style={{ fontSize: '0.72rem' }}>
+              {student.attendance_pct < 75 ? '<75% Alert' : 'Good Standing'}
+            </span>
           </div>
-          <div style={{ background: student.attendance_pct < 75 ? '#fee2e2' : '#dcfce7', padding: '12px', borderRadius: '12px' }}>
-            <Calendar size={22} color={student.attendance_pct < 75 ? '#dc2626' : '#059669'} />
+          <div>
+            <div className="stat-tile-num" style={student.attendance_pct < 75 ? { color: 'var(--red)' } : {}}>{student.attendance_pct}%</div>
+            <div className="stat-tile-label">{student.low_attendance_flag === 1 ? 'Below 75% Statutory Exam Cutoff' : 'Meets Statutory Attendance'}</div>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Active Backlogs</div>
-            <div className="stat-value" style={{ color: student.backlogs_count > 0 ? '#dc2626' : '#059669' }}>
-              {student.backlogs_count}
+        <div className={`stat-tile ${student.backlogs_count > 0 ? 'stat-tile-warn' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon" style={student.backlogs_count > 0 ? { background: '#FEE2E2', color: 'var(--red)' } : {}}>
+              <AlertTriangle size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">{student.arrears_cleared} cleared in previous attempts</div>
+            <span className={`pill ${student.backlogs_count > 0 ? 'pill-amber' : 'pill-green'}`} style={{ fontSize: '0.72rem' }}>
+              {student.backlogs_count > 0 ? `${student.backlogs_count} Arrears` : 'Clean Record'}
+            </span>
           </div>
-          <div style={{ background: student.backlogs_count > 0 ? '#fee2e2' : '#dcfce7', padding: '12px', borderRadius: '12px' }}>
-            <AlertTriangle size={22} color={student.backlogs_count > 0 ? '#dc2626' : '#059669'} />
+          <div>
+            <div className="stat-tile-num" style={student.backlogs_count > 0 ? { color: 'var(--red)' } : {}}>{student.backlogs_count}</div>
+            <div className="stat-tile-label">{student.arrears_cleared} cleared in past exam cycles</div>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div>
-            <div className="stat-label">Identified Weak Courses</div>
-            <div className="stat-value" style={{ color: weakSubjects.length > 0 ? '#dc2626' : '#059669' }}>
-              {weakSubjects.length}
+        <div className="stat-tile">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div className="stat-tile-icon">
+              <FileText size={18} strokeWidth={1.8} />
             </div>
-            <div className="stat-subtext">In Semester {recentSem}</div>
+            <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Sem {recentSem}</span>
           </div>
-          <div style={{ background: '#fee2e2', padding: '12px', borderRadius: '12px' }}>
-            <FileText size={22} color="#dc2626" />
+          <div>
+            <div className="stat-tile-num" style={weakSubjects.length > 0 ? { color: 'var(--amber)' } : {}}>{weakSubjects.length}</div>
+            <div className="stat-tile-label">Identified Weak Courses in Sem {recentSem}</div>
           </div>
         </div>
       </div>
@@ -392,31 +396,37 @@ export default function StudentDetail() {
         {/* Attendance Trajectory */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: '700' }}>6-Month Attendance Trajectory</h3>
-            <span className="badge badge-outline">Monthly Trend</span>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--ink)', margin: 0 }}>6-Month Attendance Trajectory</h3>
+            <span className="pill pill-purple">Monthly Trend</span>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '1.25rem' }}>
-            Mentors use this trend to distinguish temporary illness from sustained disengagement.
+          <p style={{ fontSize: '0.82rem', color: 'var(--mute)', marginBottom: '1.25rem' }}>
+            Distinguishes temporary illness from sustained disengagement across semester terms.
           </p>
 
-          <div className="chart-bar-container">
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '180px', gap: '0.75rem', padding: '0 0.5rem' }}>
             {trendData.map((val, idx) => {
               const heightPct = Math.max(10, Math.min(100, (val / 100) * 100));
               const isLow = val < 75.0;
               return (
-                <div key={idx} className="chart-bar-col">
-                  <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isLow ? '#dc2626' : '#475569', marginBottom: '4px' }}>
+                <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+                  <div style={{ fontSize: '0.74rem', fontWeight: '800', color: isLow ? 'var(--red)' : 'var(--ink)', marginBottom: '6px' }}>
                     {val}%
                   </div>
-                  <div
-                    className="chart-bar"
-                    style={{
-                      height: `${heightPct}%`,
-                      backgroundColor: isLow ? '#ef4444' : '#4f46e5'
-                    }}
-                  />
-                  <div className="chart-label">{months[idx]}</div>
+                  {/* Subtle track background */}
+                  <div style={{ width: '100%', maxWidth: '32px', height: '130px', background: 'var(--soft)', borderRadius: '10px', display: 'flex', alignItems: 'flex-end', overflow: 'hidden', padding: '2px' }}>
+                    <div
+                      style={{
+                        width: '100%',
+                        height: `${heightPct}%`,
+                        background: isLow ? 'linear-gradient(180deg, #F87171, #EF4444)' : 'linear-gradient(180deg, #9333EA, #7C3AED)',
+                        borderRadius: '8px',
+                        transition: 'height 0.4s ease'
+                      }}
+                      title={`${months[idx]}: ${val}%`}
+                    />
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--mute)', marginTop: '6px', fontWeight: '600' }}>{months[idx]}</div>
                 </div>
               );
             })}
@@ -487,20 +497,20 @@ export default function StudentDetail() {
 
       {/* Weak Subjects Table for Most Recent Semester */}
       <div className="card" style={{ padding: '0', overflow: 'hidden', marginBottom: '1.75rem' }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e2e8f0', background: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: '700' }}>
-              Semester {recentSem} Course Performance & Weak Subject Diagnostic
+            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--ink)', margin: 0 }}>
+              Semester {recentSem} Course Performance &amp; Weak Subject Diagnostic
             </h3>
-            <p style={{ fontSize: '0.8rem', color: '#64748b' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--mute)', margin: '2px 0 0' }}>
               Enables the mentor to identify exactly which courses require tutoring or re-examination support.
             </p>
           </div>
-          <span className="badge badge-outline">Semester {recentSem}</span>
+          <span className="pill pill-purple">Semester {recentSem}</span>
         </div>
 
-        <div className="table-container" style={{ border: 'none' }}>
-          <table className="data-table">
+        <div style={{ overflowX: 'auto' }}>
+          <table className="table">
             <thead>
               <tr>
                 <th>Subject Name</th>
