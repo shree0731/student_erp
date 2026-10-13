@@ -970,4 +970,145 @@ button {
   align-items: center;
 }
 
+/* =====================================================================
+   Fluttering Butterflies Effect (ERP Login Page)
+   ===================================================================== */
+.butterfly {
+  position: fixed;
+  pointer-events: none;
+  z-index: 20;
+  filter: drop-shadow(0 6px 14px rgba(217, 119, 6, 0.45));
+  will-change: transform;
+}
+
+.butterfly-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wing {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+}
+
+.left-wing {
+  animation: flutter-left 0.16s ease-in-out infinite alternate;
+}
+
+.right-wing {
+  animation: flutter-right 0.16s ease-in-out infinite alternate;
+}
+
+@keyframes flutter-left {
+  0% {
+    transform: rotateY(0deg) scaleX(1);
+  }
+  100% {
+    transform: rotateY(68deg) scaleX(0.2);
+  }
+}
+
+@keyframes flutter-right {
+  0% {
+    transform: rotateY(0deg) scaleX(1);
+  }
+  100% {
+    transform: rotateY(-68deg) scaleX(0.2);
+  }
+}
+
+/* Butterfly 1: Upper-left open background */
+.butterfly.b1 {
+  top: 22%;
+  left: 3.5%;
+  width: 62px;
+  height: 62px;
+  animation: fly-b1 12s ease-in-out infinite;
+}
+
+/* Butterfly 2: Upper-right open background by cyan blob */
+.butterfly.b2 {
+  top: 14%;
+  right: 4%;
+  width: 56px;
+  height: 56px;
+  animation: fly-b2 16s ease-in-out infinite 1.2s;
+}
+
+/* Butterfly 3: Lower-left open background by coral blob */
+.butterfly.b3 {
+  bottom: 14%;
+  left: 4.5%;
+  width: 50px;
+  height: 50px;
+  animation: fly-b3 14s ease-in-out infinite 0.6s;
+}
+
+@keyframes fly-b1 {
+  0% {
+    transform: translate(0, 0) rotate(10deg);
+  }
+  25% {
+    transform: translate(25px, -35px) rotate(22deg);
+  }
+  50% {
+    transform: translate(45px, 15px) rotate(4deg);
+  }
+  75% {
+    transform: translate(15px, 40px) rotate(-8deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(10deg);
+  }
+}
+
+@keyframes fly-b2 {
+  0% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+  25% {
+    transform: translate(-30px, 35px) rotate(-24deg);
+  }
+  50% {
+    transform: translate(-45px, -15px) rotate(-5deg);
+  }
+  75% {
+    transform: translate(-15px, -40px) rotate(10deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+}
+
+@keyframes fly-b3 {
+  0% {
+    transform: translate(0, 0) rotate(8deg);
+  }
+  25% {
+    transform: translate(30px, -40px) rotate(-10deg);
+  }
+  50% {
+    transform: translate(45px, -15px) rotate(15deg);
+  }
+  75% {
+    transform: translate(20px, 25px) rotate(22deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .left-wing,
+  .right-wing,
+  .butterfly.b1,
+  .butterfly.b2,
+  .butterfly.b3 {
+    animation: none !important;
+  }
+}
+
+
 

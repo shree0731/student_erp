@@ -16,7 +16,7 @@ const { checkEnv } = require('./scripts/check-env');
 function assertConfig() {
   const result = checkEnv(process.env, { exitOnError: process.env.NODE_ENV !== 'test', silent: false });
   if (!result.valid) {
-    throw new Error(`FATAL SECURITY ERROR: InSightERP configuration invalid: ${result.errors.join('; ')}`);
+    throw new Error(`FATAL SECURITY ERROR: ERP configuration invalid: ${result.errors.join('; ')}`);
   }
 }
 

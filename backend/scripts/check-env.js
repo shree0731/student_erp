@@ -1,5 +1,5 @@
 /**
- * InSightERP Backend Environment Integrity Checker
+ * ERP Backend Environment Integrity Checker
  * Verifies that all required environment variables are present, sufficiently secure,
  * and not set to insecure default placeholders.
  */
@@ -46,7 +46,7 @@ function checkEnv(env = process.env, options = { exitOnError: true, silent: fals
 
   // 1b. APP_DB_ROLE
   if (env.APP_DB_ROLE && env.APP_DB_ROLE !== 'erp') {
-    errors.push(`APP_DB_ROLE must be 'erp' for InSightERP backend (found: '${env.APP_DB_ROLE}').`);
+    errors.push(`APP_DB_ROLE must be 'erp' for ERP backend (found: '${env.APP_DB_ROLE}').`);
   }
 
   // 2. JWT_SECRET
@@ -100,7 +100,7 @@ function checkEnv(env = process.env, options = { exitOnError: true, silent: fals
 
   if (!isValid && !options.silent) {
     console.error('\n' + '='.repeat(80));
-    console.error('CRITICAL CONFIGURATION ERROR (InSightERP Backend)');
+    console.error('CRITICAL CONFIGURATION ERROR (ERP Backend)');
     console.error('='.repeat(80));
     console.error('The server cannot start due to missing or insecure environment configuration:');
     errors.forEach(err => console.error(`  - ${err}`));
@@ -119,7 +119,7 @@ function checkEnv(env = process.env, options = { exitOnError: true, silent: fals
 
 if (require.main === module) {
   checkEnv(process.env, { exitOnError: true, silent: false });
-  console.log('✓ InSightERP environment configuration verified successfully.');
+  console.log('✓ ERP environment configuration verified successfully.');
 }
 
 module.exports = {

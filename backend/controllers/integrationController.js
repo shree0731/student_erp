@@ -54,6 +54,7 @@ async function resolveMentorInfo(studentId) {
 const inMemoryRequests = new Map();
 
 exports.inMemoryRequests = inMemoryRequests;
+exports.resolveMentorInfo = resolveMentorInfo;
 
 exports.ingestMeetingRequest = async (req, res) => {
   const parseResult = ingestMeetingSchema.safeParse(req.body);

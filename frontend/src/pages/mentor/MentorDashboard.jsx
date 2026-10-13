@@ -65,13 +65,83 @@ const INITIAL_INTERVENTIONS = [
   }
 ];
 
+// Model Explainability Helper: Derives the specific points why the model flagged a student as at risk
+function getRiskFactors(student) {
+  if (!student) return [];
+  const factors = [];
+
+  const att = Number(student.attendance_pct);
+  const backlogs = Number(student.backlogs_count || 0);
+  const gpa = Number(student.overall_gpa || 0);
+  const meetings = Number(student.mentor_meetings_attended || 0);
+  const distance = Number(student.distance_from_home_km || 0);
+  const isDayScholar = student.hosteller === 0;
+
+  // Calculate attendance decay if monthly trend is present
+  let decay = 0;
+  if (Array.isArray(student.monthly_attendance_trend) && student.monthly_attendance_trend.length >= 2) {
+    const t = student.monthly_attendance_trend;
+    decay = Number(t[0]) - Number(t[t.length - 1]);
+  }
+
+  // 1. Attendance Shortage
+  if (att < 65) {
+    factors.push(`Critical attendance deficit: ${att}% (severe detention risk below 75% cutoff)`);
+  } else if (att < 75) {
+    factors.push(`Low attendance: ${att}% is below statutory 75% semester exam eligibility`);
+  }
+
+  // 2. Attendance Decay Trend
+  if (decay >= 8) {
+    factors.push(`Rapid attendance decay: dropped ${decay.toFixed(1)}% across recent months`);
+  }
+
+  // 3. Arrear Backlogs
+  if (backlogs >= 15) {
+    factors.push(`High backlog accumulation: ${backlogs} uncleared arrear courses across semesters`);
+  } else if (backlogs >= 5) {
+    factors.push(`Multiple arrear backlogs: ${backlogs} subjects requiring remedial clearance`);
+  } else if (backlogs >= 1) {
+    factors.push(`${backlogs} active backlog subject(s) pending remedial clearance`);
+  }
+
+  // 4. Low Cumulative GPA
+  if (gpa > 0 && gpa < 3.0) {
+    factors.push(`Severe academic distress: Cumulative GPA is ${gpa.toFixed(2)}/10`);
+  } else if (gpa > 0 && gpa < 6.0) {
+    factors.push(`Low cumulative GPA: ${gpa.toFixed(2)}/10 below satisfactory clearance threshold`);
+  }
+
+  // 5. Mentor Guidance Contact
+  if (meetings <= 1 && (student.dropout_risk_label === 'High' || student.dropout_risk_label === 'Medium')) {
+    factors.push(`Minimal advisory contact: attended only ${meetings} mentor guidance session(s)`);
+  }
+
+  // 6. Commute Strain
+  if (isDayScholar && distance >= 30) {
+    factors.push(`Daily commute strain: ${distance} km travel distance from college`);
+  }
+
+  // Model fallback if specific thresholds did not trigger
+  if (factors.length === 0) {
+    if (student.dropout_risk_label === 'High') {
+      factors.push(`Multivariate model risk score (${student.dropout_risk_score || 'High'}) flags early departure probability`);
+    } else if (student.dropout_risk_label === 'Medium') {
+      factors.push(`Moderate vulnerability flagged based on semester performance trajectory`);
+    }
+  }
+
+  return factors;
+}
+
 export default function MentorDashboard() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Active Section Tab (overview, roster, analytics, interventions, ai)
-  const activeTab = searchParams.get('tab') || 'overview';
+  // Active Section Tab (overview, roster, interventions, meetings, ai)
+  const tabParam = searchParams.get('tab') || 'overview';
+  const activeTab = tabParam === 'analytics' ? 'roster' : tabParam;
   const setActiveTab = (tab) => {
     setSearchParams({ tab });
   };
@@ -133,6 +203,15 @@ export default function MentorDashboard() {
       console.error('Error updating meeting request status:', err);
     }
   };
+
+  // Merged Interventions & Meeting Requests Sub-View ('all', 'meetings', 'logs')
+  const [interventionSubView, setInterventionSubView] = useState(() => tabParam === 'meetings' ? 'meetings' : 'all');
+
+  useEffect(() => {
+    if (tabParam === 'meetings') {
+      setInterventionSubView('meetings');
+    }
+  }, [tabParam]);
 
   // Modal to Log Counseling
   const [showLogModal, setShowLogModal] = useState(searchParams.get('action') === 'log');
@@ -677,10 +756,13 @@ export default function MentorDashboard() {
 
               <button
                 className="btn btn-outline btn-sm"
-                onClick={() => setActiveTab('analytics')}
+                onClick={() => {
+                  setSelectedRisk('ATTN_ALERT');
+                  setActiveTab('roster');
+                }}
                 style={{ fontSize: '0.76rem' }}
               >
-                <span>View Attendance Analytics</span>
+                <span>View Attendance Alerts</span>
                 <ArrowRight size={13} />
               </button>
             </div>
@@ -774,8 +856,9 @@ export default function MentorDashboard() {
               <table className="spike-table">
                 <thead>
                   <tr>
-                    <th>Student</th>
-                    <th>Risk Assessment</th>
+                    <th style={{ minWidth: '180px' }}>Student</th>
+                    <th style={{ minWidth: '115px' }}>Risk Assessment</th>
+                    <th style={{ minWidth: '280px' }}>Model Flagged Reasons (Why at Risk)</th>
                     <th>Attendance</th>
                     <th>Backlogs</th>
                     <th>Living Mode</th>
@@ -785,13 +868,13 @@ export default function MentorDashboard() {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>
+                      <td colSpan="7" style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>
                         Loading assigned mentees...
                       </td>
                     </tr>
                   ) : filteredMentees.length === 0 ? (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>
+                      <td colSpan="7" style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>
                         No students match the current filter criteria.
                       </td>
                     </tr>
@@ -841,6 +924,30 @@ export default function MentorDashboard() {
                             <span className="badge badge-light-success">
                               <CheckCircle2 size={12} /> Low Risk
                             </span>
+                          )}
+                        </td>
+
+                        {/* Model Flagged Reasons (Why at Risk) Column */}
+                        <td style={{ maxWidth: '320px', padding: '0.75rem 1rem' }}>
+                          {s.dropout_risk_label === 'High' || s.dropout_risk_label === 'Medium' || s.attendance_pct < 75 || s.backlogs_count > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', fontWeight: '800', textTransform: 'uppercase', color: s.dropout_risk_label === 'High' ? 'var(--danger)' : 'var(--warning)', letterSpacing: '0.03em' }}>
+                                <AlertTriangle size={11} />
+                                <span>Model Risk Drivers ({getRiskFactors(s).length}):</span>
+                              </div>
+                              <ul style={{ margin: 0, paddingLeft: '1.05rem', listStyleType: 'disc', fontSize: '0.74rem', lineHeight: '1.4', color: 'var(--dark)' }}>
+                                {getRiskFactors(s).map((reason, idx) => (
+                                  <li key={idx} style={{ marginBottom: '2px', color: idx === 0 && s.dropout_risk_label === 'High' ? 'var(--danger)' : 'var(--dark)' }}>
+                                    {reason}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', color: 'var(--success)', fontWeight: '600' }}>
+                              <CheckCircle2 size={13} color="var(--success)" />
+                              <span>Good Standing &bull; No adverse risk drivers</span>
+                            </div>
                           )}
                         </td>
 
@@ -923,335 +1030,273 @@ export default function MentorDashboard() {
       )}
 
       {/* =====================================================================
-          SECTION 3: ACADEMIC & ATTENDANCE ANALYTICS (Charts & Trajectories)
+          SECTION 3: UNIFIED INTERVENTIONS & MEETING REQUESTS
           ===================================================================== */}
-      {activeTab === 'analytics' && (
+      {(activeTab === 'interventions' || activeTab === 'meetings') && (
         <div className="fade-in">
-          {/* 2 Main Visual Analytics Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-            
-            {/* Profit & Expenses Styled Grouped Bar Chart */}
-            <div className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+          {/* Top Control Bar with Sub-filter Pills and Log Button */}
+          <div className="card" style={{ marginBottom: '1.25rem', padding: '1rem 1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <ShieldAlert size={20} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
+                      Interventions &amp; Mentee Meeting Requests
+                    </h3>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '2px 0 0' }}>
+                      Unified mentee guidance hub — handle incoming student meeting requests, crisis escalations, and official counseling records.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {/* Sub-view switcher pills */}
+                <div style={{ display: 'flex', background: 'var(--bg-body)', padding: '3px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+                  <button
+                    className={`btn btn-sm ${interventionSubView === 'all' ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setInterventionSubView('all')}
+                    style={{ fontSize: '0.76rem', padding: '0.35rem 0.75rem', borderRadius: '7px' }}
+                  >
+                    All Records
+                  </button>
+                  <button
+                    className={`btn btn-sm ${interventionSubView === 'meetings' ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setInterventionSubView('meetings')}
+                    style={{ fontSize: '0.76rem', padding: '0.35rem 0.75rem', borderRadius: '7px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <Clock size={13} />
+                    <span>Meeting Requests</span>
+                    {meetingRequests.filter(r => r.status === 'new').length > 0 && (
+                      <span className="badge badge-light-danger" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
+                        {meetingRequests.filter(r => r.status === 'new').length}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    className={`btn btn-sm ${interventionSubView === 'logs' ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setInterventionSubView('logs')}
+                    style={{ fontSize: '0.76rem', padding: '0.35rem 0.75rem', borderRadius: '7px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <FileText size={13} />
+                    <span>Counseling Logs ({interventions.length})</span>
+                  </button>
+                </div>
+
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => setShowLogModal(true)}
+                  style={{ gap: '0.4rem' }}
+                >
+                  <PlusCircle size={15} />
+                  <span>Log New Counseling Session</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 1. Student Meeting & Crisis Requests */}
+          {(interventionSubView === 'all' || interventionSubView === 'meetings') && (
+            <div className="card" style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--dark)', margin: 0 }}>
-                    Cohort Academic Health &amp; Attendance Trends
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--dark)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Clock size={17} color="var(--primary)" />
+                    <span>Mentee Meeting &amp; Crisis Requests</span>
                   </h3>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: '2px 0 0' }}>
-                    6-Month longitudinal progression across internal tests and attendance
+                  <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '0.2rem 0 0' }}>
+                    Requests dispatched via the AI Intervention Chatbot and Student Portal. Crisis escalations are flagged urgent.
                   </p>
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.76rem', fontWeight: '600' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ width: '9px', height: '9px', borderRadius: '2px', background: 'var(--primary)' }} />
-                    <span>Attendance %</span>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span className="badge badge-light-primary" style={{ fontSize: '0.8rem' }}>
+                    {meetingRequests.filter(r => r.status === 'new').length} New
                   </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ width: '9px', height: '9px', borderRadius: '2px', background: 'var(--danger)' }} />
-                    <span>CIA Exam Scaled</span>
+                  <span className="badge badge-light-danger" style={{ fontSize: '0.8rem' }}>
+                    {meetingRequests.filter(r => r.urgency === 'urgent').length} Urgent
                   </span>
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: '1.5rem', alignItems: 'center' }}>
-                
-                {/* SVG Grouped Column Chart */}
-                <div style={{ height: '210px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', paddingBottom: '25px', position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 0, right: 0, top: '20%', height: '1px', background: 'var(--border)' }} />
-                  <div style={{ position: 'absolute', left: 0, right: 0, top: '50%', height: '1px', background: 'var(--border)' }} />
-                  <div style={{ position: 'absolute', left: 0, right: 0, top: '80%', height: '1px', background: 'var(--border)' }} />
-
-                  {[
-                    { month: 'Month 1', att: 84, cia: 75 },
-                    { month: 'Month 2', att: 82, cia: 78 },
-                    { month: 'Month 3', att: 79, cia: 72 },
-                    { month: 'Month 4', att: 81, cia: 80 },
-                    { month: 'Month 5', att: 83, cia: 82 },
-                    { month: 'Month 6', att: 81, cia: 79 },
-                  ].map((bar, idx) => (
-                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', zIndex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '150px' }}>
-                        <div
-                          style={{
-                            width: '14px',
-                            height: `${(bar.att / 100) * 150}px`,
-                            background: 'var(--primary)',
-                            borderRadius: '4px 4px 0 0',
-                            transition: 'height 0.6s ease'
-                          }}
-                          title={`Attendance: ${bar.att}%`}
-                        />
-                        <div
-                          style={{
-                            width: '14px',
-                            height: `${(bar.cia / 100) * 150}px`,
-                            background: 'var(--danger)',
-                            borderRadius: '4px 4px 0 0',
-                            transition: 'height 0.6s ease'
-                          }}
-                          title={`CIA Average: ${bar.cia}%`}
-                        />
-                      </div>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: '600' }}>{bar.month}</span>
-                    </div>
-                  ))}
+              {meetingRequests.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2.5rem 0', color: 'var(--muted)' }}>
+                  <Clock size={32} style={{ margin: '0 auto 0.5rem', opacity: 0.5 }} />
+                  <p style={{ fontWeight: '600', margin: 0, fontSize: '0.9rem' }}>No meeting requests recorded</p>
+                  <span style={{ fontSize: '0.78rem' }}>New requests from your assigned mentees will appear here automatically.</span>
                 </div>
-
-                {/* Right Legend Side Items */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '1px solid var(--border)', paddingLeft: '1.25rem' }}>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--danger-light)', color: 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Award size={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)' }}>
-                        {avgGpa} / 10
-                      </div>
-                      <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
-                        Mean Cohort GPA
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--secondary-light)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <TrendingUp size={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)' }}>
-                        {avgAttendance}%
-                      </div>
-                      <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
-                        Cohort Attendance
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--success-light)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <CheckCircle2 size={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)' }}>
-                        100%
-                      </div>
-                      <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
-                        Safe Cohort Retention
-                      </div>
-                    </div>
-                  </div>
-
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="table" style={{ width: '100%', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ background: 'var(--bg-body)', textAlign: 'left' }}>
+                        <th style={{ padding: '0.75rem 1rem' }}>Priority &amp; Category</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Student ID</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Reason</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Status</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Submitted</th>
+                        <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {meetingRequests.map((req) => {
+                        const isCrisis = req.category === 'crisis' || req.urgency === 'urgent';
+                        return (
+                          <tr key={req.request_id || req._id} style={{ borderBottom: '1px solid var(--border)', background: isCrisis ? '#fff5f5' : '#ffffff' }}>
+                            <td style={{ padding: '0.75rem 1rem' }}>
+                              <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                                {isCrisis && (
+                                  <span className="badge badge-light-danger" style={{ fontSize: '0.7rem' }}>
+                                    URGENT CRISIS
+                                  </span>
+                                )}
+                                <span className={`badge ${req.category === 'academic' ? 'badge-light-warning' : 'badge-light-primary'}`} style={{ fontSize: '0.7rem', textTransform: 'capitalize' }}>
+                                  {req.category}
+                                </span>
+                              </div>
+                            </td>
+                            <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
+                              {req.student_id}
+                            </td>
+                            <td style={{ padding: '0.75rem 1rem', maxWidth: '280px', color: 'var(--dark)' }}>
+                              {req.reason_short}
+                            </td>
+                            <td style={{ padding: '0.75rem 1rem' }}>
+                              <span className={`badge ${req.status === 'resolved' ? 'badge-light-success' : req.status === 'scheduled' ? 'badge-light-primary' : req.status === 'acknowledged' ? 'badge-light-warning' : 'badge-light-danger'}`} style={{ textTransform: 'capitalize', fontSize: '0.72rem' }}>
+                                {req.status}
+                              </span>
+                            </td>
+                            <td style={{ padding: '0.75rem 1rem', color: 'var(--muted)', fontSize: '0.76rem' }}>
+                              {req.createdAt ? new Date(req.createdAt).toLocaleDateString() : 'Recent'}
+                            </td>
+                            <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
+                              <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
+                                {req.status === 'new' && (
+                                  <button
+                                    className="btn btn-outline btn-sm"
+                                    onClick={() => handleUpdateMeetingStatus(req.request_id, 'acknowledged')}
+                                    style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                  >
+                                    Acknowledge
+                                  </button>
+                                )}
+                                {req.status !== 'resolved' && req.status !== 'cancelled' && (
+                                  <>
+                                    <button
+                                      className="btn btn-outline btn-sm"
+                                      onClick={() => handleUpdateMeetingStatus(req.request_id, 'scheduled')}
+                                      style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                    >
+                                      Schedule
+                                    </button>
+                                    <button
+                                      className="btn btn-primary btn-sm"
+                                      onClick={() => handleUpdateMeetingStatus(req.request_id, 'resolved')}
+                                      style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
+                                    >
+                                      Resolve
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-
-              </div>
+              )}
             </div>
+          )}
 
-            {/* Attendance Compliance Spline Chart */}
-            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--dark)', margin: 0 }}>
-                    Attendance Compliance Trajectory
+          {/* 2. Faculty Mentoring & Intervention Records */}
+          {(interventionSubView === 'all' || interventionSubView === 'logs') && (
+            <div className="card" style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--dark)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <FileText size={17} color="var(--primary)" />
+                    <span>Faculty Mentoring &amp; Intervention Records</span>
                   </h3>
-                  <span className="badge badge-light-success">Anna Univ 75% Rule</span>
-                </div>
-                <p style={{ fontSize: '0.78rem', color: 'var(--muted)', margin: 0 }}>
-                  Tracking compliance against semester detention threshold
-                </p>
-              </div>
-
-              {/* SVG Smooth Sine/Spline Area Curve */}
-              <div style={{ margin: '1rem 0' }}>
-                <svg width="100%" height="110" viewBox="0 0 300 110" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="splineGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#5d87ff" stopOpacity="0.35" />
-                      <stop offset="100%" stopColor="#5d87ff" stopOpacity="0.0" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Statutory 75% dashed line */}
-                  <line x1="0" y1="45" x2="300" y2="45" stroke="#fa896b" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <text x="5" y="40" fill="#fa896b" fontSize="9" fontWeight="700">75% AU Statutory Threshold</text>
-
-                  {/* Shaded Area */}
-                  <path
-                    d="M 0 65 Q 40 30, 80 50 T 160 40 T 240 25 T 300 30 L 300 110 L 0 110 Z"
-                    fill="url(#splineGradient)"
-                  />
-
-                  {/* Line Curve */}
-                  <path
-                    d="M 0 65 Q 40 30, 80 50 T 160 40 T 240 25 T 300 30"
-                    fill="none"
-                    stroke="#5d87ff"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </div>
-
-              {/* Bottom Badge */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.85rem', borderTop: '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--dark)' }}>81.4% Overall Average</span>
-                </div>
-                <span className="badge badge-light-primary">+2.1% Safe Margin</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Additional Analytics: Dropout Vulnerability Drivers */}
-          <div className="card">
-            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--dark)', marginBottom: '0.35rem' }}>
-              XGBoost Early Warning Risk Factors (CSE Cohort)
-            </h3>
-            <p style={{ fontSize: '0.78rem', color: 'var(--muted)', marginBottom: '1.25rem' }}>
-              Weightage of features driving dropout probability across semester assessments
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-              <div style={{ background: 'var(--bg-body)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700' }}>Semester Attendance Drop</span>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--danger)' }}>38.4% impact</span>
-                </div>
-                <div className="progress-container">
-                  <div className="progress-fill" style={{ width: '38.4%', background: 'var(--danger)' }} />
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: '0.4rem' }}>
-                  Primary catalyst for exam detention &amp; disconnection
+                  <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '2px 0 0' }}>
+                    Official counseling audit trail, parental intimation records, and remedial clinic assignments
+                  </p>
                 </div>
               </div>
 
-              <div style={{ background: 'var(--bg-body)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700' }}>Backlog Count Accumulation</span>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--warning)' }}>28.6% impact</span>
-                </div>
-                <div className="progress-container">
-                  <div className="progress-fill" style={{ width: '28.6%', background: 'var(--warning)' }} />
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: '0.4rem' }}>
-                  High arrear load triggers academic fatigue
-                </div>
-              </div>
-
-              <div style={{ background: 'var(--bg-body)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700' }}>CIA Internal Test Performance</span>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--primary)' }}>21.2% impact</span>
-                </div>
-                <div className="progress-container">
-                  <div className="progress-fill" style={{ width: '21.2%', background: 'var(--primary)' }} />
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: '0.4rem' }}>
-                  Leading indicator for end-semester GPA
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =====================================================================
-          SECTION 4: INTERVENTIONS & COUNSELING LOGS
-          ===================================================================== */}
-      {activeTab === 'interventions' && (
-        <div className="fade-in">
-          <div className="card" style={{ marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
-                  Faculty Mentoring &amp; Intervention Records
-                </h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '2px 0 0' }}>
-                  Official counseling audit trail, parental intimation records, and remedial clinic assignments
-                </p>
-              </div>
-
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => setShowLogModal(true)}
-                style={{ gap: '0.4rem' }}
-              >
-                <PlusCircle size={15} />
-                <span>Log New Counseling Session</span>
-              </button>
-            </div>
-
-            {/* Interventions Table */}
-            <div style={{ overflowX: 'auto' }}>
-              <table className="spike-table">
-                <thead>
-                  <tr>
-                    <th>Record ID</th>
-                    <th>Mentee</th>
-                    <th>Category</th>
-                    <th>Action Taken</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {interventions.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <span style={{ fontWeight: '700', fontSize: '0.78rem', color: 'var(--primary)' }}>
-                          {item.id}
-                        </span>
-                      </td>
-
-                      <td>
-                        <div>
-                          <div style={{ fontWeight: '700', color: 'var(--dark)', fontSize: '0.86rem' }}>
-                            {item.studentName}
-                          </div>
-                          <div style={{ fontSize: '0.73rem', color: 'var(--muted)' }}>
-                            {item.studentId}
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>
-                        <span className="badge badge-light-primary" style={{ fontSize: '0.74rem' }}>
-                          {item.category}
-                        </span>
-                      </td>
-
-                      <td>
-                        <div style={{ maxWidth: '320px' }}>
-                          <div style={{ fontSize: '0.82rem', color: 'var(--dark)', fontWeight: '600' }}>
-                            {item.actionTaken}
-                          </div>
-                          {item.notes && (
-                            <div style={{ fontSize: '0.73rem', color: 'var(--muted)', marginTop: '2px' }}>
-                              {item.notes}
-                            </div>
-                          )}
-                        </div>
-                      </td>
-
-                      <td>
-                        <span className={`badge ${item.status === 'Resolved' ? 'badge-light-success' : 'badge-light-warning'}`} style={{ fontSize: '0.74rem' }}>
-                          {item.status}
-                        </span>
-                      </td>
-
-                      <td>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
-                          {item.date}
-                        </span>
-                      </td>
+              {/* Interventions Table */}
+              <div style={{ overflowX: 'auto' }}>
+                <table className="spike-table">
+                  <thead>
+                    <tr>
+                      <th>Record ID</th>
+                      <th>Mentee</th>
+                      <th>Category</th>
+                      <th>Action Taken</th>
+                      <th>Status</th>
+                      <th>Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {interventions.map((item) => (
+                      <tr key={item.id}>
+                        <td>
+                          <span style={{ fontWeight: '700', fontSize: '0.78rem', color: 'var(--primary)' }}>
+                            {item.id}
+                          </span>
+                        </td>
+
+                        <td>
+                          <div>
+                            <div style={{ fontWeight: '700', color: 'var(--dark)', fontSize: '0.86rem' }}>
+                              {item.studentName}
+                            </div>
+                            <div style={{ fontSize: '0.73rem', color: 'var(--muted)' }}>
+                              {item.studentId}
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <span className="badge badge-light-primary" style={{ fontSize: '0.74rem' }}>
+                            {item.category}
+                          </span>
+                        </td>
+
+                        <td>
+                          <div style={{ maxWidth: '320px' }}>
+                            <div style={{ fontSize: '0.82rem', color: 'var(--dark)', fontWeight: '600' }}>
+                              {item.actionTaken}
+                            </div>
+                            {item.notes && (
+                              <div style={{ fontSize: '0.73rem', color: 'var(--muted)', marginTop: '2px' }}>
+                                {item.notes}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+
+                        <td>
+                          <span className={`badge ${item.status === 'Resolved' ? 'badge-light-success' : 'badge-light-warning'}`} style={{ fontSize: '0.74rem' }}>
+                            {item.status}
+                          </span>
+                        </td>
+
+                        <td>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
+                            {item.date}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -1355,122 +1400,6 @@ export default function MentorDashboard() {
         </div>
       )}
 
-      {/* =====================================================================
-          SECTION 6: MEETING REQUESTS & ESCALATIONS
-          ===================================================================== */}
-      {activeTab === 'meetings' && (
-        <div className="fade-in">
-          <div className="card" style={{ marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
-                  Student Meeting &amp; Crisis Requests
-                </h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '0.2rem 0 0' }}>
-                  Requests dispatched via the AI Intervention Chatbot and Student Portal. Crisis escalations are flagged urgent.
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <span className="badge badge-light-primary" style={{ fontSize: '0.8rem' }}>
-                  {meetingRequests.filter(r => r.status === 'new').length} New
-                </span>
-                <span className="badge badge-light-danger" style={{ fontSize: '0.8rem' }}>
-                  {meetingRequests.filter(r => r.urgency === 'urgent').length} Urgent
-                </span>
-              </div>
-            </div>
-
-            {meetingRequests.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--muted)' }}>
-                <Clock size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.5 }} />
-                <p style={{ fontWeight: '600', margin: 0 }}>No meeting requests recorded</p>
-                <span style={{ fontSize: '0.8rem' }}>New requests from your assigned mentees will appear here automatically.</span>
-              </div>
-            ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table className="table" style={{ width: '100%', fontSize: '0.82rem' }}>
-                  <thead>
-                    <tr style={{ background: 'var(--bg-body)', textAlign: 'left' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>Priority &amp; Category</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Student ID</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Reason</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Status</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Submitted</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {meetingRequests.map((req) => {
-                      const isCrisis = req.category === 'crisis' || req.urgency === 'urgent';
-                      return (
-                        <tr key={req.request_id || req._id} style={{ borderBottom: '1px solid var(--border)', background: isCrisis ? '#fff5f5' : '#ffffff' }}>
-                          <td style={{ padding: '0.75rem 1rem' }}>
-                            <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
-                              {isCrisis && (
-                                <span className="badge badge-light-danger" style={{ fontSize: '0.7rem' }}>
-                                  URGENT CRISIS
-                                </span>
-                              )}
-                              <span className={`badge ${req.category === 'academic' ? 'badge-light-warning' : 'badge-light-primary'}`} style={{ fontSize: '0.7rem', textTransform: 'capitalize' }}>
-                                {req.category}
-                              </span>
-                            </div>
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
-                            {req.student_id}
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem', maxWidth: '280px', color: 'var(--dark)' }}>
-                            {req.reason_short}
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem' }}>
-                            <span className={`badge ${req.status === 'resolved' ? 'badge-light-success' : req.status === 'scheduled' ? 'badge-light-primary' : req.status === 'acknowledged' ? 'badge-light-warning' : 'badge-light-danger'}`} style={{ textTransform: 'capitalize', fontSize: '0.72rem' }}>
-                              {req.status}
-                            </span>
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem', color: 'var(--muted)', fontSize: '0.76rem' }}>
-                            {req.createdAt ? new Date(req.createdAt).toLocaleDateString() : 'Recent'}
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
-                            <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
-                              {req.status === 'new' && (
-                                <button
-                                  className="btn btn-outline btn-sm"
-                                  onClick={() => handleUpdateMeetingStatus(req.request_id, 'acknowledged')}
-                                  style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
-                                >
-                                  Acknowledge
-                                </button>
-                              )}
-                              {req.status !== 'resolved' && req.status !== 'cancelled' && (
-                                <>
-                                  <button
-                                    className="btn btn-outline btn-sm"
-                                    onClick={() => handleUpdateMeetingStatus(req.request_id, 'scheduled')}
-                                    style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
-                                  >
-                                    Schedule
-                                  </button>
-                                  <button
-                                    className="btn btn-primary btn-sm"
-                                    onClick={() => handleUpdateMeetingStatus(req.request_id, 'resolved')}
-                                    style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
-                                  >
-                                    Resolve
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* =====================================================================
           MODAL: LOG COUNSELING SESSION

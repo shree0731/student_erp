@@ -42,6 +42,169 @@ const handleChatbotRequest = async (req, res) => {
       targetStudentId = req.user.linkedId;
     }
 
+    // Special handling for Mentor role:
+    if (req.user && req.user.role === 'mentor' && !targetStudentId) {
+      const mentorId = req.user.linkedId;
+      const lowerMsg = (message || '').toLowerCase();
+
+      // 1. Fetch mentor's mentees
+      let mentees = [];
+      if (getDBStatus()) {
+        mentees = await Student.find({ mentor_id: mentorId }).sort({ dropout_risk_score: -1 });
+      }
+      if (!mentees || mentees.length === 0) {
+        const allStudents = await csvProvider.getStudentsData();
+        mentees = allStudents.filter(s => s.mentor_id === mentorId || s.mentor?.id === mentorId);
+      }
+
+      // 2. Fetch mentor's meeting requests
+      let meetings = [];
+      if (getDBStatus()) {
+        const MeetingRequest = require('../models/MeetingRequest');
+        meetings = await MeetingRequest.find({ mentor_id: mentorId }).sort({ urgency: -1, createdAt: -1 });
+      } else {
+        const { inMemoryRequests } = require('../controllers/integrationController');
+        meetings = Array.from(inMemoryRequests.values()).filter(r => r.mentor_id === mentorId);
+      }
+
+      // Build student name map for meetings
+      const nameMap = new Map();
+      mentees.forEach(m => nameMap.set(m.student_id, m.student_name));
+
+      // CASE A: Schedule & Upcoming Meetings
+      if (/(meeting|schedule|upcoming|appointment|calendar|slot)/i.test(lowerMsg)) {
+        const scheduled = meetings.filter(m => m.status === 'scheduled' || m.scheduled_at);
+        const pending = meetings.filter(m => m.status === 'new' || m.status === 'acknowledged');
+
+        let reply = `### 📅 Faculty Mentorship Schedule & Meetings\n\n`;
+        if (scheduled.length > 0) {
+          reply += `**Confirmed Upcoming Meetings (${scheduled.length}):**\n`;
+          scheduled.forEach((m, idx) => {
+            const stu = m.student_name || nameMap.get(m.student_id) || m.student_id;
+            const dateStr = m.scheduled_at ? new Date(m.scheduled_at).toLocaleDateString() : 'Upcoming Tutorial Hour';
+            reply += `${idx + 1}. **${stu}** (${m.student_id}) — ${dateStr}\n   *Topic*: ${m.reason_short}\n`;
+          });
+          reply += `\n`;
+        } else {
+          reply += `You currently have **no confirmed meetings scheduled** for today.\n\n`;
+        }
+
+        if (pending.length > 0) {
+          reply += `**⏳ Pending Mentee Requests Awaiting Your Confirmation (${pending.length}):**\n`;
+          pending.forEach((m, idx) => {
+            const stu = m.student_name || nameMap.get(m.student_id) || m.student_id;
+            const urgencyIcon = m.urgency === 'urgent' ? '🚨 **URGENT**' : '📌 Normal';
+            reply += `${idx + 1}. **${stu}** (${m.student_id}) — ${urgencyIcon}: ${m.reason_short}\n`;
+          });
+          reply += `\n*Action*: You can confirm time slots directly in the **Meetings** tab or through your notification bell 🔔.`;
+        } else {
+          reply += `There are **no pending meeting requests** awaiting review.`;
+        }
+
+        return res.json({
+          reply,
+          source: 'faculty_copilot',
+          disclaimer: 'AI academic assistant. Grounded in faculty mentorship roster and meeting schedule records.'
+        });
+      }
+
+      // CASE B: Students needing help & support / Attendance < 75% / High Risk / Arrears
+      if (/(help|support|attendance|75%|<75|low attendance|risk|high risk|backlog|arrear|struggling|deficit|failing)/i.test(lowerMsg)) {
+        const lowAtt = mentees.filter(m => Number(m.attendance_pct) < 75 || m.low_attendance_flag === 1);
+        const highRisk = mentees.filter(m => m.dropout_risk_label === 'High');
+
+        let reply = `### 🚨 Mentees Requiring Immediate Support & Intervention\n\n`;
+
+        if (lowAtt.length > 0) {
+          reply += `**⚠️ Attendance Deficit (<75% Anna University Cutoff - ${lowAtt.length} Students):**\n`;
+          lowAtt.forEach((m, idx) => {
+            reply += `${idx + 1}. **${m.student_name}** (${m.student_id}) — Attendance: **${m.attendance_pct}%** ⚠️ | Arrears: **${m.backlogs_count || 0}** | Risk: **${m.dropout_risk_label || 'Moderate'}**\n`;
+          });
+          reply += `\n`;
+        } else {
+          reply += `✅ All mentees in your cohort currently meet or exceed the 75% attendance threshold.\n\n`;
+        }
+
+        if (highRisk.length > 0) {
+          reply += `**🚩 High Dropout Risk Students (${highRisk.length} Students):**\n`;
+          highRisk.forEach((m, idx) => {
+            reply += `- **${m.student_name}** (${m.student_id}) — GPA: ${m.overall_gpa || 'N/A'}, Backlogs: ${m.backlogs_count || 0}, Attendance: ${m.attendance_pct}%\n`;
+          });
+          reply += `\n`;
+        }
+
+        reply += `**Recommended Advisory Steps:**\n`;
+        reply += `1. **Schedule Remedial Sessions**: Coordinate compensatory tutorial or lab hours.\n`;
+        reply += `2. **Log Counseling**: Click **Log Counseling** in the top navigation bar to record an intervention.\n`;
+        reply += `3. **Parent Alert**: For students <70% attendance, consider issuing an official notification via the Student Details page.`;
+
+        return res.json({
+          reply,
+          source: 'faculty_copilot',
+          disclaimer: 'AI academic assistant. Grounded in faculty mentorship roster and meeting schedule records.'
+        });
+      }
+
+      // CASE C: Cohort Summary / Reporting / Overview
+      if (/(summary|cohort|report|overview|roster|all students|statistic|count)/i.test(lowerMsg)) {
+        const total = mentees.length;
+        const high = mentees.filter(m => m.dropout_risk_label === 'High').length;
+        const med = mentees.filter(m => m.dropout_risk_label === 'Medium').length;
+        const low = mentees.filter(m => m.dropout_risk_label === 'Low' || !m.dropout_risk_label).length;
+        const lowAtt = mentees.filter(m => Number(m.attendance_pct) < 75 || m.low_attendance_flag === 1).length;
+        const pendingMtr = meetings.filter(m => m.status === 'new').length;
+
+        const reply = `### 📊 Cohort Health & Mentorship Report\n\n` +
+          `**Faculty Mentor:** ${req.user.name || 'Professor'}\n` +
+          `**Total Assigned Mentees:** **${total}**\n\n` +
+          `**Dropout Risk Breakdown:**\n` +
+          `- 🔴 High Risk: **${high}** students\n` +
+          `- 🟡 Medium Risk: **${med}** students\n` +
+          `- 🟢 Low Risk: **${low}** students\n\n` +
+          `**Key Alerts:**\n` +
+          `- ⚠️ **${lowAtt}** students below the 75% attendance cutoff\n` +
+          `- 📬 **${pendingMtr}** pending meeting requests in your inbox\n\n` +
+          `You can filter the full roster by risk or branch under the **Roster** tab.`;
+
+        return res.json({
+          reply,
+          source: 'faculty_copilot',
+          disclaimer: 'AI academic assistant. Grounded in faculty mentorship roster and meeting schedule records.'
+        });
+      }
+
+      // CASE D: How to schedule / General faculty guidance
+      if (/(schedule|counseling|how to|log session|action)/i.test(lowerMsg)) {
+        const reply = `### 💡 How to Manage Mentees & Counseling Sessions\n\n` +
+          `1. **Log a Counseling Session:** Click the **Log Counseling** button in the top navigation bar or go to the **Interventions** tab. Choose the student, intervention type, and notes.\n` +
+          `2. **Review Student Meeting Requests:** Click the **Meetings** tab or the **Notification Bell 🔔** in the top bar to review new requests, acknowledge them, or schedule an upcoming tutorial slot.\n` +
+          `3. **Student Alerts:** When you confirm or schedule a meeting, an instant notification is sent to the student's dashboard bell icon.`;
+
+        return res.json({
+          reply,
+          source: 'faculty_copilot',
+          disclaimer: 'AI academic assistant. Grounded in faculty mentorship roster and meeting schedule records.'
+        });
+      }
+
+      // Default mentor greeting
+      const total = mentees.length;
+      const lowAtt = mentees.filter(m => Number(m.attendance_pct) < 75 || m.low_attendance_flag === 1).length;
+      const reply = `Hello Professor ${req.user.name ? req.user.name.split(' ').slice(-1)[0] : 'Faculty'}! 👋\n\n` +
+        `I am monitoring your cohort of **${total} assigned mentees**. Currently, **${lowAtt} student(s)** have an attendance deficit below 75%.\n\n` +
+        `You can ask me:\n` +
+        `- *"Which students need urgent help or have <75% attendance?"*\n` +
+        `- *"What are my upcoming meetings and schedule?"*\n` +
+        `- *"Give me a cohort summary report"*\n` +
+        `- *"How do I log a counseling session?"*`;
+
+      return res.json({
+        reply,
+        source: 'faculty_copilot',
+        disclaimer: 'AI academic assistant. Grounded in faculty mentorship roster and meeting schedule records.'
+      });
+    }
+
     let context = student_context || {};
 
     if (targetStudentId && (!context.student_name || !context.attendance_pct)) {
@@ -153,9 +316,11 @@ router.get('/health', (req, res) => {
 // --- 7. Service-Authenticated Integrations ---
 router.post('/integrations/meeting-requests', serviceKeyAuth, integrationController.ingestMeetingRequest);
 
-// --- 8. Role-Scoped Meeting Requests ---
+// --- 8. Role-Scoped Meeting Requests & Notifications ---
+router.post('/meeting-requests', requireAuth, meetingRequestController.createMeetingRequest);
 router.get('/meeting-requests', requireAuth, meetingRequestController.getMeetingRequests);
 router.get('/meeting-requests/my', requireAuth, meetingRequestController.getMyMeetingRequests);
 router.patch('/meeting-requests/:requestId/status', requireAuth, meetingRequestController.updateMeetingRequestStatus);
+router.get('/notifications', requireAuth, meetingRequestController.getNotifications);
 
 module.exports = router;

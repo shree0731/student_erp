@@ -1,6 +1,9 @@
+const crypto = require('crypto');
 const MeetingRequest = require('../models/MeetingRequest');
+const Student = require('../models/Student');
+const csvProvider = require('../utils/csvDataProvider');
 const { getDBStatus } = require('../config/db');
-const { inMemoryRequests } = require('./integrationController');
+const { inMemoryRequests, resolveMentorInfo } = require('./integrationController');
 
 /**
  * GET /api/meeting-requests
@@ -142,7 +145,14 @@ exports.updateMeetingRequestStatus = async (req, res) => {
 
       if (status) meeting.status = status;
       if (mentor_note !== undefined) meeting.mentor_note = mentor_note;
-      if (scheduled_at !== undefined) meeting.scheduled_at = scheduled_at ? new Date(scheduled_at) : null;
+      if (scheduled_at !== undefined) {
+        meeting.scheduled_at = scheduled_at ? new Date(scheduled_at) : null;
+      } else if (status === 'scheduled' && !meeting.scheduled_at) {
+        const nextDay = new Date();
+        nextDay.setDate(nextDay.getDate() + 1);
+        nextDay.setHours(15, 30, 0, 0);
+        meeting.scheduled_at = nextDay;
+      }
 
       await meeting.save();
 
@@ -169,7 +179,14 @@ exports.updateMeetingRequestStatus = async (req, res) => {
 
     if (status) meeting.status = status;
     if (mentor_note !== undefined) meeting.mentor_note = mentor_note;
-    if (scheduled_at !== undefined) meeting.scheduled_at = scheduled_at ? new Date(scheduled_at) : null;
+    if (scheduled_at !== undefined) {
+      meeting.scheduled_at = scheduled_at ? new Date(scheduled_at) : null;
+    } else if (status === 'scheduled' && !meeting.scheduled_at) {
+      const nextDay = new Date();
+      nextDay.setDate(nextDay.getDate() + 1);
+      nextDay.setHours(15, 30, 0, 0);
+      meeting.scheduled_at = nextDay;
+    }
     meeting.updatedAt = new Date();
 
     return res.json({
@@ -180,5 +197,248 @@ exports.updateMeetingRequestStatus = async (req, res) => {
   } catch (err) {
     console.error('[UpdateMeetingRequestStatus Error]', err);
     return res.status(500).json({ error: 'Failed to update meeting request' });
+  }
+};
+
+/**
+ * POST /api/meeting-requests
+ * Authenticated endpoint for students or mentors to create meeting requests.
+ */
+exports.createMeetingRequest = async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const { student_id, mentor_id, college_id, category, urgency, reason_short, scheduled_at, mentor_note } = req.body;
+  const requestId = crypto.randomUUID();
+
+  let effectiveStudentId = user.role === 'student' ? user.linkedId : (student_id || user.linkedId);
+  let effectiveMentorId = mentor_id;
+  let effectiveCollegeId = college_id || 'C101';
+  let initialStatus = 'new';
+  let initialScheduledAt = null;
+
+  // Mentor creating a session directly with a mentee
+  if (user.role === 'mentor') {
+    effectiveMentorId = user.linkedId;
+    if (student_id) effectiveStudentId = student_id;
+    initialStatus = scheduled_at ? 'scheduled' : 'new';
+    initialScheduledAt = scheduled_at ? new Date(scheduled_at) : null;
+  }
+
+  // Auto-resolve mentor if not supplied
+  if (!effectiveMentorId) {
+    try {
+      const resolved = await resolveMentorInfo(effectiveStudentId);
+      effectiveMentorId = resolved.mentorId;
+    } catch (e) {
+      effectiveMentorId = 'FAC_EEC_CSE_001';
+    }
+  }
+
+  // Auto-resolve student name
+  let studentName = '';
+  try {
+    if (getDBStatus()) {
+      const stu = await Student.findOne({ student_id: effectiveStudentId });
+      if (stu) studentName = stu.student_name;
+    }
+    if (!studentName) {
+      const list = await csvProvider.getStudentsData();
+      const stu = list.find(s => s.student_id === effectiveStudentId);
+      if (stu) studentName = stu.student_name;
+    }
+  } catch (e) {}
+
+  const validCategory = ['meeting', 'academic', 'crisis'].includes(category) ? category : 'meeting';
+  const validUrgency = ['normal', 'urgent'].includes(urgency) ? urgency : (category === 'crisis' ? 'urgent' : 'normal');
+
+  try {
+    if (getDBStatus()) {
+      const record = await MeetingRequest.create({
+        request_id: requestId,
+        student_id: effectiveStudentId,
+        student_name: studentName,
+        mentor_id: effectiveMentorId,
+        college_id: effectiveCollegeId,
+        category: validCategory,
+        urgency: validUrgency,
+        reason_short: (reason_short || 'Guidance Consultation').slice(0, 200),
+        status: initialStatus,
+        scheduled_at: initialScheduledAt,
+        mentor_note: mentor_note || ''
+      });
+      return res.status(201).json({ success: true, data: record });
+    }
+
+    // In-memory mode
+    const record = {
+      request_id: requestId,
+      student_id: effectiveStudentId,
+      student_name: studentName,
+      mentor_id: effectiveMentorId,
+      college_id: effectiveCollegeId,
+      category: validCategory,
+      urgency: validUrgency,
+      reason_short: (reason_short || 'Guidance Consultation').slice(0, 200),
+      status: initialStatus,
+      scheduled_at: initialScheduledAt,
+      mentor_note: mentor_note || '',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    inMemoryRequests.set(requestId, record);
+    return res.status(201).json({ success: true, data: record });
+  } catch (err) {
+    console.error('[CreateMeetingRequest Error]', err);
+    return res.status(500).json({ error: 'Failed to create meeting request' });
+  }
+};
+
+/**
+ * GET /api/notifications
+ * Returns live notification items for the authenticated user:
+ * - For Mentors: Student meeting requests (new & urgent) + mentees with <75% attendance.
+ * - For Students: Meeting confirmations & status updates from faculty mentor.
+ */
+exports.getNotifications = async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const notifications = [];
+
+    if (user.role === 'mentor') {
+      // 1. Fetch meeting requests assigned to this mentor
+      let meetings = [];
+      if (getDBStatus()) {
+        meetings = await MeetingRequest.find({ mentor_id: user.linkedId }).sort({ urgency: -1, createdAt: -1 });
+      } else {
+        meetings = Array.from(inMemoryRequests.values()).filter(r => r.mentor_id === user.linkedId);
+        meetings.sort((a, b) => {
+          if (a.urgency === 'urgent' && b.urgency !== 'urgent') return -1;
+          if (b.urgency === 'urgent' && a.urgency !== 'urgent') return 1;
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+      }
+
+      // 2. Fetch mentor's mentees
+      let mentees = [];
+      if (getDBStatus()) {
+        mentees = await Student.find({ mentor_id: user.linkedId });
+      } else {
+        const allStudents = await csvProvider.getStudentsData();
+        mentees = allStudents.filter(s => s.mentor_id === user.linkedId || s.mentor?.id === user.linkedId);
+      }
+      const studentNameMap = new Map();
+      mentees.forEach(s => studentNameMap.set(s.student_id, s.student_name));
+
+      // Meeting request notifications
+      for (const req of meetings) {
+        const stuName = req.student_name || studentNameMap.get(req.student_id) || req.student_id;
+        if (req.status === 'new') {
+          notifications.push({
+            id: `meet-new-${req.request_id}`,
+            type: 'meeting_request',
+            category: req.category,
+            title: req.urgency === 'urgent' ? '🚨 Urgent Meeting Request' : '📅 New Meeting Request',
+            message: `${stuName} requested guidance: "${req.reason_short}"`,
+            timestamp: req.createdAt,
+            urgency: req.urgency,
+            status: req.status,
+            link: '/mentor/dashboard?tab=meetings',
+            requestId: req.request_id
+          });
+        } else if (req.status === 'scheduled') {
+          notifications.push({
+            id: `meet-sched-${req.request_id}`,
+            type: 'meeting_scheduled',
+            category: req.category,
+            title: '📅 Confirmed Meeting Session',
+            message: `Session with ${stuName} scheduled for ${req.scheduled_at ? new Date(req.scheduled_at).toLocaleDateString() : 'tutorial hour'}.`,
+            timestamp: req.updatedAt || req.createdAt,
+            urgency: req.urgency,
+            status: req.status,
+            link: '/mentor/dashboard?tab=meetings',
+            requestId: req.request_id
+          });
+        }
+      }
+
+      // Attendance deficit alerts (<75%)
+      for (const s of mentees) {
+        if (Number(s.attendance_pct) < 75 || s.low_attendance_flag === 1) {
+          notifications.push({
+            id: `att-alert-${s.student_id}`,
+            type: 'attendance_alert',
+            title: '⚠️ Attendance Deficit (<75%)',
+            message: `${s.student_name} (${s.student_id}) attendance dropped to ${s.attendance_pct}%. Immediate remedial action recommended.`,
+            timestamp: s.updatedAt || new Date(),
+            urgency: 'urgent',
+            link: '/mentor/dashboard?tab=roster&filter=risk'
+          });
+        }
+      }
+    } else if (user.role === 'student') {
+      // Student notifications
+      let meetings = [];
+      if (getDBStatus()) {
+        meetings = await MeetingRequest.find({ student_id: user.linkedId }).sort({ updatedAt: -1, createdAt: -1 });
+      } else {
+        meetings = Array.from(inMemoryRequests.values()).filter(r => r.student_id === user.linkedId);
+        meetings.sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+      }
+
+      for (const req of meetings) {
+        if (req.status === 'scheduled') {
+          const timeStr = req.scheduled_at
+            ? new Date(req.scheduled_at).toLocaleDateString() + ' ' + new Date(req.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'Upcoming Department Tutorial Hour';
+          notifications.push({
+            id: `stu-sched-${req.request_id}`,
+            type: 'meeting_scheduled',
+            title: '✅ Meeting Confirmed by Mentor',
+            message: `Your faculty mentor scheduled your meeting for ${timeStr}.${req.mentor_note ? ' Note: ' + req.mentor_note : ''}`,
+            timestamp: req.updatedAt || req.createdAt,
+            urgency: 'normal',
+            status: 'scheduled',
+            link: '/student/dashboard'
+          });
+        } else if (req.status === 'acknowledged') {
+          notifications.push({
+            id: `stu-ack-${req.request_id}`,
+            type: 'meeting_acknowledged',
+            title: '📋 Meeting Request Acknowledged',
+            message: `Your faculty mentor acknowledged your request: "${req.reason_short}". Time slot confirmation in progress.`,
+            timestamp: req.updatedAt || req.createdAt,
+            urgency: 'normal',
+            status: 'acknowledged',
+            link: '/student/dashboard'
+          });
+        } else if (req.status === 'new') {
+          notifications.push({
+            id: `stu-new-${req.request_id}`,
+            type: 'meeting_pending',
+            title: '⏳ Meeting Request Sent',
+            message: `Your guidance request "${req.reason_short}" was forwarded to your faculty mentor.`,
+            timestamp: req.createdAt,
+            urgency: req.urgency,
+            status: 'new',
+            link: '/student/dashboard'
+          });
+        }
+      }
+    }
+
+    return res.json({
+      total: notifications.length,
+      data: notifications
+    });
+  } catch (err) {
+    console.error('[GetNotifications Error]', err);
+    return res.status(500).json({ error: 'Failed to retrieve notifications' });
   }
 };

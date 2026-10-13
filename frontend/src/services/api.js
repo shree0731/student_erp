@@ -138,7 +138,14 @@ export const api = {
     return await request('/colleges');
   },
 
-  // Meeting Requests
+  // Meeting Requests & Notifications
+  createMeetingRequest: async (payload) => {
+    return await request('/meeting-requests', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
   getMeetingRequests: async () => {
     return await request('/meeting-requests');
   },
@@ -152,6 +159,10 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(payload)
     });
+  },
+
+  getNotifications: async () => {
+    return await request('/notifications');
   },
 
   // Health

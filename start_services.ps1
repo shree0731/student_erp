@@ -1,6 +1,6 @@
-# PowerShell Startup Script for InSightERP
+# PowerShell Startup Script for ERP
 Write-Host "===============================================================================" -ForegroundColor Cyan
-Write-Host "  INSIGHT ERP: ACADEMIC RETENTION & MANAGEMENT ECOSYSTEM" -ForegroundColor Green
+Write-Host "  ERP: ACADEMIC RETENTION & MANAGEMENT ECOSYSTEM" -ForegroundColor Green
 Write-Host "===============================================================================" -ForegroundColor Cyan
 Write-Host "  1. ERP Backend (Node.js/Express) : http://localhost:5000" -ForegroundColor Yellow
 Write-Host "  2. ERP Frontend (React / Vite)   : http://localhost:5173" -ForegroundColor Yellow
@@ -23,4 +23,4 @@ Start-Sleep -Seconds 3
 Write-Host "Opening http://localhost:5173 in default browser..." -ForegroundColor Cyan
 Start-Process "http://localhost:5173"
 
-Write-Host "InSightERP services started successfully!" -ForegroundColor Green
+Write-Host "ERP services started successfully!" -ForegroundColor Green

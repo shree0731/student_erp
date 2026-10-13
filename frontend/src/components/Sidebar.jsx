@@ -49,7 +49,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <div>
-            <span className="sidebar-logo-text">Spike ERP</span>
+            <span className="sidebar-logo-text">ERP</span>
           </div>
         )}
       </div>
@@ -81,30 +81,12 @@ export default function Sidebar() {
             </NavLink>
 
             <NavLink
-              to="/mentor/dashboard?tab=analytics"
-              title="Academic & Attendance Analytics"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'analytics' ? 'active' : ''}`}
-            >
-              <BarChart3 size={18} />
-              {!collapsed && <span>Academic Analytics</span>}
-            </NavLink>
-
-            <NavLink
               to="/mentor/dashboard?tab=interventions"
-              title="Interventions & Counseling Logs"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'interventions' ? 'active' : ''}`}
+              title="Interventions & Meeting Requests"
+              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && (currentTab === 'interventions' || currentTab === 'meetings') ? 'active' : ''}`}
             >
               <ShieldAlert size={18} />
-              {!collapsed && <span>Interventions &amp; Logs</span>}
-            </NavLink>
-
-            <NavLink
-              to="/mentor/dashboard?tab=meetings"
-              title="Meeting & Guidance Requests"
-              className={`nav-link-item ${location.pathname === '/mentor/dashboard' && currentTab === 'meetings' ? 'active' : ''}`}
-            >
-              <Clock size={18} />
-              {!collapsed && <span>Meeting Requests</span>}
+              {!collapsed && <span>Interventions &amp; Meetings</span>}
             </NavLink>
 
             <NavLink
@@ -183,7 +165,7 @@ export default function Sidebar() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', fontWeight: '700', color: 'var(--primary)', marginBottom: '0.2rem' }}>
                 <ShieldCheck size={15} />
-                <span>Spike AI Connected</span>
+                <span>Baymate Connected</span>
               </div>
               <p style={{ fontSize: '0.7rem', color: 'var(--muted)', lineHeight: '1.35' }}>
                 XGBoost ML microservice &amp; Gemini advisor connected with 45ms live inference.

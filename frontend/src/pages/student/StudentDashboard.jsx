@@ -95,8 +95,34 @@ export default function StudentDashboard() {
     loadStudentData();
   }, [currentUser?.id]);
 
-  const handleMeetingSubmit = (e) => {
+  const handleMeetingSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const reasonLabel = meetingReason === 'attendance'
+        ? 'Compensatory Lab & Attendance Recovery'
+        : meetingReason === 'backlogs'
+        ? 'Arrear Course Clearance & Study Plan'
+        : meetingReason === 'cia'
+        ? 'Internal Assessment (CIA) Consultation'
+        : 'General Academic Counseling';
+
+      await api.createMeetingRequest({
+        student_id: student?.student_id || currentUser?.linkedId || currentUser?.id,
+        mentor_id: student?.mentor_id || student?.mentor?.id,
+        category: (meetingReason === 'attendance' || meetingReason === 'backlogs' || meetingReason === 'cia') ? 'academic' : 'meeting',
+        urgency: (student?.dropout_risk_label === 'High' || (student?.attendance_pct && student.attendance_pct < 75)) ? 'urgent' : 'normal',
+        reason_short: `${reasonLabel}${meetingNotes ? ' - ' + meetingNotes : ''}`
+      });
+
+      // Refresh student's meeting request list immediately
+      const refreshed = await api.getMyMeetingRequests();
+      if (refreshed && refreshed.data) {
+        setMyMeetingRequests(refreshed.data);
+      }
+    } catch (err) {
+      console.warn('Could not post meeting request to ERP:', err.message);
+    }
+
     setMeetingSubmitted(true);
     setTimeout(() => {
       setShowMeetingModal(false);

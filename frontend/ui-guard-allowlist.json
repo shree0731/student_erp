@@ -1,0 +1,14 @@
+{
+  "allowedNewFiles": [],
+  "allowedModifiedFiles": [
+    { "file": "src/App.jsx", "reason": "baymate character chat widget" },
+    { "file": "src/components/ChatbotWidget.jsx", "reason": "baymate character icon" },
+    { "file": "src/components/Navbar.jsx", "reason": "rename" },
+    { "file": "src/components/Sidebar.jsx", "reason": "rename" },
+    { "file": "src/pages/public/LoginPage.jsx", "reason": "rename" },
+    { "file": "src/pages/student/StudentDashboard.jsx", "reason": "persist meeting request to backend for mentor bell notification" },
+    { "file": "src/services/api.js", "reason": "add createMeetingRequest and getNotifications endpoints" },
+    { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "model risk factors in roster and removed academic analytics" }
+  ],
+  "allowedElements": []
+}

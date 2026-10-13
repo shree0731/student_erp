@@ -1,8 +1,8 @@
-# PowerShell Test Runner for InSightERP (FSD)
+# PowerShell Test Runner for ERP (FSD)
 $ErrorActionPreference = "Stop"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host " RUNNING ALL VERIFICATION TESTS: INSIGHT ERP (FSD)" -ForegroundColor Cyan
+Write-Host " RUNNING ALL VERIFICATION TESTS: ERP (FSD)" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 # 1. Backend Express Tests (Auth, Ownership, Feature Parity, Chat Proxy)

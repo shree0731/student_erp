@@ -2,7 +2,7 @@
 set -e
 
 echo "=========================================================="
-echo " RUNNING ALL VERIFICATION TESTS: INSIGHT ERP (FSD)"
+echo " RUNNING ALL VERIFICATION TESTS: ERP (FSD)"
 echo "=========================================================="
 
 echo -e "\n[1/2] Running Backend Jest Suite (Auth, Parity, Proxy)..."

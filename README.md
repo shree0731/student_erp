@@ -1,6 +1,8 @@
-# InSightERP: Academic Student Retention & Early Warning Ecosystem
+# ERP: Academic Student Retention & Early Warning Ecosystem
 
-InSightERP is an enterprise academic management platform integrated with an explainable machine learning early-warning engine to prevent undergraduate student dropout across engineering departments.
+Baymate is the AI platform (risk model, explanations and chatbot). The ERP is the college system that connects to it through Baymate's API.
+
+ERP is an enterprise academic management platform integrated with an explainable machine learning early-warning engine to prevent undergraduate student dropout across engineering departments.
 
 ---
 

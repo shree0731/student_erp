@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth, SAMPLE_PERSONAS } from '../../context/AuthContext';
 import {
@@ -23,13 +23,16 @@ export default function LoginPage() {
   const { login } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
-  const initialCollege = queryParams.get('college') || 'C101';
+  const roleParam = queryParams.get('role');
+  const initialPersonaKey = roleParam === 'student' ? 'student-high' : (roleParam === 'admin' ? 'admin' : 'mentor');
+  const initialPersona = SAMPLE_PERSONAS[initialPersonaKey] || SAMPLE_PERSONAS['mentor'];
+  const initialCollege = queryParams.get('college') || initialPersona?.collegeId || 'C101';
 
   const [college, setCollege] = useState(initialCollege);
-  const [identifier, setIdentifier] = useState('FAC_EEC_CSE_001');
+  const [identifier, setIdentifier] = useState(initialPersona?.username || initialPersona?.id || 'mentor');
   const [password, setPassword] = useState('DemoPass@2026');
   const [rememberDevice, setRememberDevice] = useState(true);
-  const [activePersona, setActivePersona] = useState('mentor');
+  const [activePersona, setActivePersona] = useState(initialPersonaKey);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -43,6 +46,18 @@ export default function LoginPage() {
     setIdentifier(persona.username || persona.id);
     setPassword('DemoPass@2026');
   };
+
+  // Synchronize persona pre-fill when URL query param changes
+  useEffect(() => {
+    const role = new URLSearchParams(location.search).get('role');
+    if (role === 'student') {
+      handleQuickFill('student-high');
+    } else if (role === 'mentor') {
+      handleQuickFill('mentor');
+    } else if (role === 'admin') {
+      handleQuickFill('admin');
+    }
+  }, [location.search]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -80,6 +95,48 @@ export default function LoginPage() {
       <div className="auth-blob auth-blob-top" />
       <div className="auth-blob auth-blob-bottom" />
 
+      {/* Butterfly 1 */}
+      <div className="butterfly b1">
+        <svg className="butterfly-svg" viewBox="0 0 100 100">
+          <g className="wing left-wing">
+            <path d="M50,50 C30,20 5,25 20,55 C10,70 20,90 45,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <g className="wing right-wing">
+            <path d="M50,50 C70,20 95,25 80,55 C90,70 80,90 55,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <ellipse cx="50" cy="52" rx="3" ry="12" fill="#78350F" />
+          <circle cx="50" cy="42" r="4" fill="#78350F" />
+        </svg>
+      </div>
+
+      {/* Butterfly 2 */}
+      <div className="butterfly b2">
+        <svg className="butterfly-svg" viewBox="0 0 100 100">
+          <g className="wing left-wing">
+            <path d="M50,50 C30,20 5,25 20,55 C10,70 20,90 45,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <g className="wing right-wing">
+            <path d="M50,50 C70,20 95,25 80,55 C90,70 80,90 55,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <ellipse cx="50" cy="52" rx="3" ry="12" fill="#78350F" />
+          <circle cx="50" cy="42" r="4" fill="#78350F" />
+        </svg>
+      </div>
+
+      {/* Butterfly 3 */}
+      <div className="butterfly b3">
+        <svg className="butterfly-svg" viewBox="0 0 100 100">
+          <g className="wing left-wing">
+            <path d="M50,50 C30,20 5,25 20,55 C10,70 20,90 45,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <g className="wing right-wing">
+            <path d="M50,50 C70,20 95,25 80,55 C90,70 80,90 55,65" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          </g>
+          <ellipse cx="50" cy="52" rx="3" ry="12" fill="#78350F" />
+          <circle cx="50" cy="42" r="4" fill="#78350F" />
+        </svg>
+      </div>
+
       {/* Main Centered 2-Column Card */}
       <div className="auth-card fade-in">
         
@@ -102,10 +159,10 @@ export default function LoginPage() {
             </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--dark)', lineHeight: 1.15, letterSpacing: '-0.02em' }}>
-                Spike Admin
+                ERP
               </div>
               <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: '600' }}>
-                Academic ERP Consortium
+                College ERP
               </div>
             </div>
           </div>
@@ -236,7 +293,7 @@ export default function LoginPage() {
           {/* Header */}
           <div>
             <h2 style={{ fontSize: '1.45rem', fontWeight: '800', color: 'var(--dark)', margin: '0 0 0.2rem', letterSpacing: '-0.02em' }}>
-              Welcome to Spike Admin
+              Welcome to ERP
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--muted)', margin: '0 0 0.9rem' }}>
               Your Unified Academic Intervention Dashboard

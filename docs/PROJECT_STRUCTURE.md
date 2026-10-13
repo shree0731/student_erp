@@ -1,4 +1,4 @@
-# Project Structure: InSightERP (Student Retention & Intervention System)
+# Project Structure: ERP (Student Retention & Intervention System)
 
 ```
 FSD/

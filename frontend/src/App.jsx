@@ -44,9 +44,14 @@ function MainLayout({ children }) {
       <div className="main-content">
         <Navbar />
         {children}
-        {/* Academic Advisor Chatbot strictly for students */}
-        {currentUser?.role === 'student' && (
-          <ChatbotWidget studentId={currentUser?.linkedId || currentUser?.id} studentName={currentUser?.name} />
+        {/* Baymate Academic Advisor Chatbot */}
+        {currentUser && (
+          <ChatbotWidget
+            studentId={currentUser?.role === 'student' ? (currentUser?.linkedId || currentUser?.id) : null}
+            studentName={currentUser?.name}
+            role={currentUser?.role}
+            user={currentUser}
+          />
         )}
       </div>
     </div>
@@ -59,8 +64,8 @@ export default function App() {
       <SidebarProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Landing Page */}
-            <Route path="/" element={<LandingPage />} />
+            {/* Redirect root directly to operational ERP login */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
             {/* Authentication Portal */}
             <Route path="/login" element={<LoginPage />} />

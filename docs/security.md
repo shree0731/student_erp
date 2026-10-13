@@ -1,7 +1,7 @@
-# Security Architecture & Threat Model: InSightERP (FSD)
+# Security Architecture & Threat Model: ERP (FSD)
 
 ## 1. Authentication & Authorization Model
-InSightERP implements a defense-in-depth security model separating client, API gateway, and backend services.
+ERP implements a defense-in-depth security model separating client, API gateway, and backend services.
 
 ### User Roles & Permissions
 1. **Student (`student`)**:
