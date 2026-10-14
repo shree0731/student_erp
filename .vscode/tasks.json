@@ -1,0 +1,96 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. ML Engine (FastAPI :8001)",
+      "type": "shell",
+      "command": "python -m uvicorn app.main:app --host 127.0.0.1 --port 8001",
+      "options": {
+        "cwd": "${workspaceFolder}/../ai-dropout-prediction/ml-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "ecosystem",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "2. AI Gateway (Express :5001)",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/../ai-dropout-prediction/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "ecosystem",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "3. AI Frontend (Vite :5174)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/../ai-dropout-prediction/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "ecosystem",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "4. ERP Backend (Express :5000)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "ecosystem",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "5. ERP Frontend (Vite :5173)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "ecosystem",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🚀 Start All Services (ERP + AI Ecosystem)",
+      "dependsOn": [
+        "1. ML Engine (FastAPI :8001)",
+        "2. AI Gateway (Express :5001)",
+        "3. AI Frontend (Vite :5174)",
+        "4. ERP Backend (Express :5000)",
+        "5. ERP Frontend (Vite :5173)"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
