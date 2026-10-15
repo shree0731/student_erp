@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth, SAMPLE_PERSONAS } from '../../context/AuthContext';
+import { api } from '../../services/api';
 import {
   Rocket,
   GraduationCap,
@@ -63,7 +64,7 @@ export default function LoginPage() {
   useEffect(() => {
     const role = new URLSearchParams(location.search).get('role');
     if (role === 'student') {
-      handleQuickFill('student-high');
+      handleQuickFill('student');
     } else if (role === 'mentor') {
       handleQuickFill('mentor');
     } else if (role === 'admin') {
@@ -503,19 +504,11 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickFill('student-high')}
-                className={`pill ${activePersona === 'student-high' ? 'pill-high' : 'badge-light-secondary'}`}
+                onClick={() => handleQuickFill('student')}
+                className={`pill ${activePersona === 'student' ? 'pill-scheduled' : 'badge-light-secondary'}`}
                 style={{ cursor: 'pointer', border: '1px solid var(--line)', fontSize: '0.74rem' }}
               >
-                High-Risk Mentee
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickFill('student-safe')}
-                className={`pill ${activePersona === 'student-safe' ? 'pill-low' : 'badge-light-secondary'}`}
-                style={{ cursor: 'pointer', border: '1px solid var(--line)', fontSize: '0.74rem' }}
-              >
-                Safe Mentee
+                Student
               </button>
               <button
                 type="button"

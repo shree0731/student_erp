@@ -18,6 +18,8 @@ import {
   Sparkles,
   Mail
 } from 'lucide-react';
+import ParentAlertModal from '../../components/ParentAlertModal';
+
 export default function StudentDetail() {
   const { id } = useParams();
   const [student, setStudent] = useState(null);

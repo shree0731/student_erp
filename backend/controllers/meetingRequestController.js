@@ -35,6 +35,18 @@ exports.getMeetingRequests = async (req, res) => {
         urgency: -1,
         createdAt: -1
       });
+      // Populate student_name if missing on older records
+      const missingStudentIds = [...new Set(requests.filter(r => !r.student_name).map(r => r.student_id))];
+      if (missingStudentIds.length > 0) {
+        const studentDocs = await Student.find({ student_id: { $in: missingStudentIds } }).select('student_id student_name');
+        const nameMap = new Map(studentDocs.map(s => [s.student_id, s.student_name]));
+        for (const req of requests) {
+          if (!req.student_name && nameMap.has(req.student_id)) {
+            req.student_name = nameMap.get(req.student_id);
+          }
+        }
+      }
+
       const total = requests.length;
       const newCount = requests.filter(r => r.status === 'new').length;
       const acknowledged = requests.filter(r => r.status === 'acknowledged').length;
@@ -71,6 +83,18 @@ exports.getMeetingRequests = async (req, res) => {
       if (b.urgency === 'urgent' && a.urgency !== 'urgent') return 1;
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
+
+    // Populate student_name if missing
+    const missingIds = [...new Set(requests.filter(r => !r.student_name).map(r => r.student_id))];
+    if (missingIds.length > 0) {
+      const studentList = await csvProvider.getStudentsData();
+      const csvNameMap = new Map(studentList.map(s => [s.student_id, s.student_name]));
+      for (const req of requests) {
+        if (!req.student_name && csvNameMap.has(req.student_id)) {
+          req.student_name = csvNameMap.get(req.student_id);
+        }
+      }
+    }
 
     const total = requests.length;
     const newCount = requests.filter(r => r.status === 'new').length;

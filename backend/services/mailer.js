@@ -8,7 +8,7 @@ function createTransporter() {
   const port = parseInt(process.env.SMTP_PORT, 10) || 465;
   const secure = port === 465;
   const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const pass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s+/g, '') : undefined;
 
   return nodemailer.createTransport({
     host,
@@ -36,7 +36,7 @@ async function sendMail({ to, subject, text, html }) {
 
   if (isDryRun) {
     if (process.env.NODE_ENV !== 'production') {
-      console.log('[EMAIL DRY RUN]', { to, subject });
+      console.log('[EMAIL DRY RUN]', { to, subject, message: text });
     }
     return {
       messageId: `dry-run-${Date.now()}`,

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 process.env.JWT_SECRET = 'test_jwt_super_secret_for_hardening_2026';
 process.env.DEMO_PASSWORD = 'TestPassword123!';
+process.env.OTP_ENABLED = 'false';
 
 const app = require('../server');
 

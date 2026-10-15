@@ -141,6 +141,10 @@ export const api = {
     return await request(`/faculty/${facultyId}/students`);
   },
 
+  getMentorMentees: async (facultyId) => {
+    return await request(`/faculty/${facultyId}/students`);
+  },
+
   getAllFaculty: async (params = {}) => {
     const query = new URLSearchParams(params).toString();
     return await request(`/faculty?${query}`);

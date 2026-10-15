@@ -177,6 +177,7 @@ export default function MentorDashboard() {
   const [meetingRequests, setMeetingRequests] = useState([]);
   const [meetingStatusCounts, setMeetingStatusCounts] = useState({ new: 0, acknowledged: 0, scheduled: 0 });
   const [loadingMeetings, setLoadingMeetings] = useState(false);
+  const [meetingFilter, setMeetingFilter] = useState('all');
 
   const fetchMeetingRequests = async (showLoading = true) => {
     if (showLoading) setLoadingMeetings(true);
@@ -290,12 +291,13 @@ export default function MentorDashboard() {
   const loadMentorData = async () => {
     setLoading(true);
     try {
-      const mentorId = currentUser?.id || 'FAC_EEC_CSE_001';
+      const mentorId = currentUser?.linkedId || currentUser?.id || 'FAC_MIST_IT_333';
       const branch = selectedBranch !== 'ALL' ? selectedBranch : undefined;
-      const res = await api.getMentorMentees(mentorId, branch);
-      if (res && res.data) {
-        setMentees(res.data.mentees || []);
-        setMentorInfo(res.data.mentor || null);
+      const res = await api.getMentorStudents(mentorId);
+      if (res) {
+        const menteeList = Array.isArray(res.data) ? res.data : (res.data?.mentees || res.mentees || []);
+        setMentees(menteeList);
+        setMentorInfo(res.mentor || null);
       }
     } catch (err) {
       console.error('Error fetching mentor mentees:', err);
@@ -1260,6 +1262,50 @@ export default function MentorDashboard() {
                 </div>
               </div>
 
+              {/* Filter Tabs for Organization: Requested, Acknowledged, Scheduled */}
+              <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setMeetingFilter('all')}
+                  className={`btn btn-sm ${meetingFilter === 'all' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ fontSize: '0.74rem', padding: '0.3rem 0.65rem' }}
+                >
+                  All ({meetingRequests.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMeetingFilter('new')}
+                  className={`btn btn-sm ${meetingFilter === 'new' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ fontSize: '0.74rem', padding: '0.3rem 0.65rem' }}
+                >
+                  Requested ({meetingStatusCounts?.new ?? 0})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMeetingFilter('acknowledged')}
+                  className={`btn btn-sm ${meetingFilter === 'acknowledged' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ fontSize: '0.74rem', padding: '0.3rem 0.65rem' }}
+                >
+                  Acknowledged ({meetingStatusCounts?.acknowledged ?? 0})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMeetingFilter('scheduled')}
+                  className={`btn btn-sm ${meetingFilter === 'scheduled' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ fontSize: '0.74rem', padding: '0.3rem 0.65rem' }}
+                >
+                  Scheduled ({meetingStatusCounts?.scheduled ?? 0})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMeetingFilter('resolved')}
+                  className={`btn btn-sm ${meetingFilter === 'resolved' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ fontSize: '0.74rem', padding: '0.3rem 0.65rem' }}
+                >
+                  Resolved ({meetingStatusCounts?.resolved ?? 0})
+                </button>
+              </div>
+
               {meetingRequests.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2.5rem 0', color: 'var(--muted)' }}>
                   <Clock size={32} style={{ margin: '0 auto 0.5rem', opacity: 0.5 }} />
@@ -1272,16 +1318,33 @@ export default function MentorDashboard() {
                     <thead>
                       <tr style={{ background: 'var(--bg-body)', textAlign: 'left' }}>
                         <th style={{ padding: '0.75rem 1rem' }}>Priority &amp; Category</th>
-                        <th style={{ padding: '0.75rem 1rem' }}>Student ID</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Student Name &amp; ID</th>
                         <th style={{ padding: '0.75rem 1rem' }}>Reason</th>
                         <th style={{ padding: '0.75rem 1rem' }}>Status</th>
-                        <th style={{ padding: '0.75rem 1rem' }}>Submitted</th>
+                        <th style={{ padding: '0.75rem 1rem' }}>Submitted (Date &amp; Time)</th>
                         <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {meetingRequests.map((req) => {
+                      {meetingRequests
+                        .filter((req) => {
+                          if (meetingFilter === 'all') return true;
+                          if (meetingFilter === 'new') return req.status === 'new';
+                          if (meetingFilter === 'acknowledged') return req.status === 'acknowledged';
+                          if (meetingFilter === 'scheduled') return req.status === 'scheduled';
+                          if (meetingFilter === 'resolved') return req.status === 'resolved';
+                          return true;
+                        })
+                        .sort((a, b) => {
+                          const aUrgent = a.category === 'crisis' || a.urgency === 'urgent';
+                          const bUrgent = b.category === 'crisis' || b.urgency === 'urgent';
+                          if (aUrgent && !bUrgent) return -1;
+                          if (!aUrgent && bUrgent) return 1;
+                          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+                        })
+                        .map((req) => {
                         const isCrisis = req.category === 'crisis' || req.urgency === 'urgent';
+                        const studentName = req.student_name || mentees.find(m => m.student_id === req.student_id)?.student_name || 'Assigned Mentee';
                         return (
                           <tr key={req.request_id || req._id} style={{ borderBottom: '1px solid var(--border)', background: isCrisis ? '#fff5f5' : '#ffffff' }}>
                             <td style={{ padding: '0.75rem 1rem' }}>
@@ -1296,8 +1359,9 @@ export default function MentorDashboard() {
                                 </span>
                               </div>
                             </td>
-                            <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
-                              {req.student_id}
+                            <td style={{ padding: '0.75rem 1rem' }}>
+                              <div style={{ fontWeight: '700', color: 'var(--ink)' }}>{studentName}</div>
+                              <div style={{ fontSize: '0.74rem', color: 'var(--mute)' }}>{req.student_id}</div>
                             </td>
                             <td style={{ padding: '0.75rem 1rem', maxWidth: '280px', color: 'var(--dark)' }}>
                               {req.reason_short}
@@ -1307,8 +1371,15 @@ export default function MentorDashboard() {
                                 {req.status}
                               </span>
                             </td>
-                            <td style={{ padding: '0.75rem 1rem', color: 'var(--muted)', fontSize: '0.76rem' }}>
-                              {req.createdAt ? new Date(req.createdAt).toLocaleDateString() : 'Recent'}
+                            <td style={{ padding: '0.75rem 1rem', color: 'var(--muted)', fontSize: '0.76rem', whiteSpace: 'nowrap' }}>
+                              {req.createdAt ? new Date(req.createdAt).toLocaleString(undefined, {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              }) : 'Recent'}
                             </td>
                             <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                               <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
