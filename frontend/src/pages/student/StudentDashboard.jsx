@@ -47,6 +47,26 @@ export default function StudentDashboard() {
       }
     }
     loadMeetingRequests();
+
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        loadMeetingRequests();
+      }
+    }, 15000);
+
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') {
+        loadMeetingRequests();
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
   }, [currentUser?.id]);
 
   useEffect(() => {
@@ -508,7 +528,7 @@ export default function StudentDashboard() {
             </p>
           </div>
           <span className="badge badge-light-primary" style={{ fontSize: '0.75rem' }}>
-            {myMeetingRequests.length} Recorded
+            {myMeetingRequests.length} Recorded · {myMeetingRequests.filter(r => r.status === 'new').length} New · {myMeetingRequests.filter(r => r.status === 'acknowledged').length} Ack · {myMeetingRequests.filter(r => r.status === 'scheduled').length} Sched
           </span>
         </div>
 

@@ -34,9 +34,28 @@ exports.getMeetingRequests = async (req, res) => {
         urgency: -1,
         createdAt: -1
       });
+      const total = requests.length;
+      const newCount = requests.filter(r => r.status === 'new').length;
+      const acknowledged = requests.filter(r => r.status === 'acknowledged').length;
+      const scheduled = requests.filter(r => r.status === 'scheduled').length;
+      const resolved = requests.filter(r => r.status === 'resolved').length;
+      const cancelled = requests.filter(r => r.status === 'cancelled').length;
+      const urgent_open = requests.filter(r => r.urgency === 'urgent' && ['new', 'acknowledged', 'scheduled'].includes(r.status)).length;
+      const pending = newCount + acknowledged + scheduled;
+
       return res.json({
-        total: requests.length,
+        total,
         urgent_count: requests.filter(r => r.urgency === 'urgent').length,
+        status_counts: {
+          total,
+          new: newCount,
+          acknowledged,
+          scheduled,
+          resolved,
+          cancelled,
+          urgent_open,
+          pending
+        },
         data: requests
       });
     }
@@ -52,9 +71,28 @@ exports.getMeetingRequests = async (req, res) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
 
+    const total = requests.length;
+    const newCount = requests.filter(r => r.status === 'new').length;
+    const acknowledged = requests.filter(r => r.status === 'acknowledged').length;
+    const scheduled = requests.filter(r => r.status === 'scheduled').length;
+    const resolved = requests.filter(r => r.status === 'resolved').length;
+    const cancelled = requests.filter(r => r.status === 'cancelled').length;
+    const urgent_open = requests.filter(r => r.urgency === 'urgent' && ['new', 'acknowledged', 'scheduled'].includes(r.status)).length;
+    const pending = newCount + acknowledged + scheduled;
+
     return res.json({
-      total: requests.length,
+      total,
       urgent_count: requests.filter(r => r.urgency === 'urgent').length,
+      status_counts: {
+        total,
+        new: newCount,
+        acknowledged,
+        scheduled,
+        resolved,
+        cancelled,
+        urgent_open,
+        pending
+      },
       data: requests
     });
   } catch (err) {
@@ -219,15 +257,51 @@ exports.createMeetingRequest = async (req, res) => {
   let initialStatus = 'new';
   let initialScheduledAt = null;
 
-  // Mentor creating a session directly with a mentee
-  if (user.role === 'mentor') {
+  // Student creating a guidance request
+  if (user.role === 'student') {
+    effectiveStudentId = user.linkedId;
+    effectiveMentorId = null; // Always ignore mentor_id in body for students
+    effectiveCollegeId = user.collegeId || null; // Ignore college_id in body for students
+
+    try {
+      if (getDBStatus()) {
+        const stu = await Student.findOne({ student_id: effectiveStudentId });
+        if (stu) {
+          effectiveMentorId = stu.mentor_id;
+          if (stu.college_id) effectiveCollegeId = stu.college_id;
+        }
+      }
+      if (!effectiveMentorId) {
+        const list = await csvProvider.getStudentsData();
+        const stu = list.find(s => s.student_id === effectiveStudentId);
+        if (stu) {
+          effectiveMentorId = stu.mentor_id;
+          if (stu.college_id) effectiveCollegeId = stu.college_id;
+        }
+      }
+    } catch (e) {
+      console.warn('Could not resolve student mentor from DB/CSV:', e.message);
+    }
+
+    if (!effectiveMentorId) {
+      try {
+        const resolved = await resolveMentorInfo(effectiveStudentId);
+        effectiveMentorId = resolved.mentorId;
+        if (!effectiveCollegeId) effectiveCollegeId = resolved.collegeId;
+      } catch (e) {
+        effectiveMentorId = 'FAC_EEC_CSE_001';
+      }
+    }
+    if (!effectiveCollegeId) effectiveCollegeId = 'C101';
+  } else if (user.role === 'mentor') {
+    // Mentor creating a session directly with a mentee
     effectiveMentorId = user.linkedId;
     if (student_id) effectiveStudentId = student_id;
     initialStatus = scheduled_at ? 'scheduled' : 'new';
     initialScheduledAt = scheduled_at ? new Date(scheduled_at) : null;
   }
 
-  // Auto-resolve mentor if not supplied
+  // Auto-resolve mentor if not supplied for non-students
   if (!effectiveMentorId) {
     try {
       const resolved = await resolveMentorInfo(effectiveStudentId);
@@ -412,7 +486,7 @@ exports.getNotifications = async (req, res) => {
             id: `stu-ack-${req.request_id}`,
             type: 'meeting_acknowledged',
             title: '📋 Meeting Request Acknowledged',
-            message: `Your faculty mentor acknowledged your request: "${req.reason_short}". Time slot confirmation in progress.`,
+            message: `Your mentor has seen your request: "${req.reason_short}".`,
             timestamp: req.updatedAt || req.createdAt,
             urgency: 'normal',
             status: 'acknowledged',
@@ -427,6 +501,28 @@ exports.getNotifications = async (req, res) => {
             timestamp: req.createdAt,
             urgency: req.urgency,
             status: 'new',
+            link: '/student/dashboard'
+          });
+        } else if (req.status === 'resolved') {
+          notifications.push({
+            id: `stu-res-${req.request_id}`,
+            type: 'meeting_resolved',
+            title: '🎉 Meeting Completed / Resolved',
+            message: `Your guidance meeting regarding "${req.reason_short}" has been marked resolved by your mentor.${req.mentor_note ? ' Note: ' + req.mentor_note : ''}`,
+            timestamp: req.updatedAt || req.createdAt,
+            urgency: 'normal',
+            status: 'resolved',
+            link: '/student/dashboard'
+          });
+        } else if (req.status === 'cancelled') {
+          notifications.push({
+            id: `stu-can-${req.request_id}`,
+            type: 'meeting_cancelled',
+            title: '❌ Meeting Request Cancelled',
+            message: `Your guidance request "${req.reason_short}" was cancelled.${req.mentor_note ? ' Note: ' + req.mentor_note : ''}`,
+            timestamp: req.updatedAt || req.createdAt,
+            urgency: 'normal',
+            status: 'cancelled',
             link: '/student/dashboard'
           });
         }

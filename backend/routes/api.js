@@ -7,6 +7,7 @@ const adminController = require('../controllers/adminController');
 const authController = require('../controllers/authController');
 const integrationController = require('../controllers/integrationController');
 const meetingRequestController = require('../controllers/meetingRequestController');
+const mentorNoteController = require('../controllers/mentorNoteController');
 const { requireAuth, requireRole } = require('../middleware/authMiddleware');
 const { serviceKeyAuth } = require('../middleware/serviceKeyAuth');
 const { authLimiter } = require('../middleware/rateLimiter');
@@ -24,12 +25,75 @@ router.get('/students', requireAuth, studentController.getStudents);
 router.get('/students/:id', requireAuth, studentController.getStudentById);
 router.get('/students/:id/marks', requireAuth, studentController.getStudentMarks);
 
+// --- 2b. Mentor Notes Endpoints (Protected: Admin & Mentor) ---
+router.get('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.getNotes);
+router.post('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.createNote);
+router.put('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.upsertNote);
+router.delete('/students/:id/notes/:noteId', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.deleteNote);
+
 // --- 3. Faculty / Mentor Endpoints (Protected) ---
 router.get('/faculty/:id/students', requireAuth, facultyController.getMentorStudents);
 router.get('/faculty', requireAuth, facultyController.getAllFaculty);
 
 // --- 4. Admin Aggregate Endpoint (Admin Only) ---
 router.get('/admin/summary', requireAuth, requireRole('admin'), adminController.getAdminSummary);
+
+// --- 4b. ML Model Metrics Proxy (Admin & Mentor) ---
+router.get('/ml/metrics', requireAuth, requireRole('admin', 'mentor'), async (req, res) => {
+  try {
+    const raw = await aiServiceClient.getMetrics();
+    if (!raw) {
+      return res.status(503).json({
+        error: 'Service Unavailable',
+        message: 'AI prediction service metrics are currently unavailable'
+      });
+    }
+
+    const classesObj = raw.classes || {};
+    const classesList = Array.isArray(raw.classes)
+      ? raw.classes
+      : (typeof classesObj === 'object' ? Object.keys(classesObj) : ['Low', 'Medium', 'High']);
+
+    let precisionMacro = raw.precision_macro;
+    let recallMacro = raw.recall_macro;
+    if (precisionMacro == null && typeof classesObj === 'object' && !Array.isArray(classesObj)) {
+      const pVals = Object.values(classesObj).map(c => c?.precision).filter(v => typeof v === 'number');
+      if (pVals.length > 0) precisionMacro = pVals.reduce((a, b) => a + b, 0) / pVals.length;
+    }
+    if (recallMacro == null && typeof classesObj === 'object' && !Array.isArray(classesObj)) {
+      const rVals = Object.values(classesObj).map(c => c?.recall).filter(v => typeof v === 'number');
+      if (rVals.length > 0) recallMacro = rVals.reduce((a, b) => a + b, 0) / rVals.length;
+    }
+
+    let topFeatures = [];
+    if (Array.isArray(raw.top_feature_importances)) {
+      topFeatures = raw.top_feature_importances;
+    } else if (Array.isArray(raw.feature_importance)) {
+      topFeatures = raw.feature_importance.map(f => [f.feature || f.name, f.importance || f.value]);
+    }
+
+    const mapped = {
+      model_type: raw.model_name || raw.model_type || 'XGBoostClassifier',
+      accuracy: raw.accuracy != null ? Number(raw.accuracy) : null,
+      precision_macro: precisionMacro != null ? Number(precisionMacro) : null,
+      recall_macro: recallMacro != null ? Number(recallMacro) : null,
+      f1_macro: raw.f1_macro != null ? Number(raw.f1_macro) : (raw.macro_f1 != null ? Number(raw.macro_f1) : null),
+      confusion_matrix: raw.confusion_matrix || null,
+      classes: classesList,
+      top_feature_importances: topFeatures,
+      training_samples: raw.data_summary?.total_students ? (raw.data_summary.total_students - (raw.data_summary.held_out_test_set || 1840)) : (raw.training_samples || 7360),
+      test_samples: raw.data_summary?.held_out_test_set || raw.test_samples || 1840
+    };
+
+    return res.json(mapped);
+  } catch (err) {
+    console.error('[ML Metrics Route Error]', err);
+    return res.status(503).json({
+      error: 'Service Unavailable',
+      message: 'Failed to communicate with AI prediction service'
+    });
+  }
+});
 
 // --- 5. Standalone AI Academic Intervention Chatbot Endpoint (Protected) ---
 const handleChatbotRequest = async (req, res) => {

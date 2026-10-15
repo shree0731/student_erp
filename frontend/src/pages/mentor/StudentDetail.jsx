@@ -18,112 +18,16 @@ import {
   Sparkles,
   Mail
 } from 'lucide-react';
-const FALLBACK_STUDENTS = {
-  'STU_EEC_CSE_Y4_0350': {
-    student_id: 'STU_EEC_CSE_Y4_0350',
-    student_name: 'Vimal Rajagopalan',
-    department: 'CSE',
-    year_of_study: 4,
-    current_semester: 7,
-    section: 'A',
-    college_id: 'C101',
-    college_name: 'Apex Engineering College',
-    dropout_risk_label: 'Medium',
-    dropout_risk_score: 0.64,
-    attendance_pct: 67.7,
-    overall_gpa: 6.2,
-    backlogs_count: 10,
-    arrears_cleared: 3,
-    hosteller: 1,
-    distance_from_home_km: 42,
-    home_state: 'Tamil Nadu',
-    board_of_education: 'State Board (Tamil Nadu)',
-    admission_quota: 'Government',
-    cutoff_mark_200: 168,
-    first_gen_learner: 0,
-    community: 'BC',
-    mentor_meetings_attended: 2,
-    low_attendance_flag: 1,
-    monthly_attendance_trend: [82, 79, 74, 68, 65, 67.7],
-    liveRiskAssessment: {
-      source: 'live',
-      prediction: 'Medium',
-      probabilities: { Low: 0.18, Medium: 0.64, High: 0.18 },
-      top_risk_drivers: [
-        { message: 'Attendance Deficit (<75% statutory bar)', contribution: '+34%' },
-        { message: 'Cumulative Arrears (10 courses)', contribution: '+28%' },
-        { message: 'Hostel disengagement pattern in Month 3', contribution: '+12%' }
-      ],
-      recommended_interventions: [
-        'Dispatch Anna University 75% attendance shortage intimation to parents',
-        'Assign peer mentor from CSE Year 4 Toppers group',
-        'Schedule 12 compensatory lab hours before end-sem audit'
-      ]
-    }
-  },
-  'STU_EEC_CSE_Y4_0331': {
-    student_id: 'STU_EEC_CSE_Y4_0331',
-    student_name: 'Prajwal Gowda',
-    department: 'CSE',
-    year_of_study: 4,
-    current_semester: 7,
-    section: 'B',
-    college_id: 'C101',
-    college_name: 'Apex Engineering College',
-    dropout_risk_label: 'Medium',
-    dropout_risk_score: 0.58,
-    attendance_pct: 76.3,
-    overall_gpa: 5.9,
-    backlogs_count: 22,
-    arrears_cleared: 5,
-    hosteller: 0,
-    distance_from_home_km: 15,
-    home_state: 'Karnataka',
-    board_of_education: 'State Board (Karnataka)',
-    admission_quota: 'Management',
-    cutoff_mark_200: 152,
-    first_gen_learner: 1,
-    community: 'OBC',
-    mentor_meetings_attended: 1,
-    low_attendance_flag: 0,
-    monthly_attendance_trend: [78, 77, 76, 75, 76, 76.3],
-    liveRiskAssessment: {
-      source: 'live',
-      prediction: 'Medium',
-      probabilities: { Low: 0.22, Medium: 0.58, High: 0.20 },
-      top_risk_drivers: [
-        { message: 'Severe backlog accumulation (22 courses)', contribution: '+42%' },
-        { message: 'Marginal SGPA in Core Computer Science', contribution: '+18%' }
-      ],
-      recommended_interventions: [
-        'Enroll in Faculty Remedial Saturday Clinics (DS & Discrete Math)',
-        'Set target of clearing 5 arrears per semester exam cycle',
-        'Schedule monthly academic counseling review'
-      ]
-    }
-  }
-};
-
-const FALLBACK_MARKS = [
-  { semester: 6, subject_name: 'Compiler Design', subject_type: 'Theory', credits: 4, internal_exam_1_marks: 38, internal_exam_2_marks: 40, external_exam_marks: 42, total_marks: 48, grade_point: 0, grade: 'U', result: 'Arrear' },
-  { semester: 6, subject_name: 'Cloud Computing & DevOps', subject_type: 'Theory', credits: 3, internal_exam_1_marks: 44, internal_exam_2_marks: 46, external_exam_marks: 52, total_marks: 52, grade_point: 6, grade: 'E', result: 'Pass' },
-  { semester: 6, subject_name: 'Artificial Intelligence', subject_type: 'Theory', credits: 3, internal_exam_1_marks: 35, internal_exam_2_marks: 38, external_exam_marks: 40, total_marks: 44, grade_point: 0, grade: 'U', result: 'Arrear' },
-  { semester: 6, subject_name: 'Distributed Systems', subject_type: 'Theory', credits: 3, internal_exam_1_marks: 48, internal_exam_2_marks: 50, external_exam_marks: 62, total_marks: 61, grade_point: 7, grade: 'C', result: 'Pass' },
-  { semester: 6, subject_name: 'Compiler Design Lab', subject_type: 'Practical', credits: 2, internal_exam_1_marks: 55, internal_exam_2_marks: 58, external_exam_marks: 75, total_marks: 78, grade_point: 8, grade: 'A', result: 'Pass' }
-];
-
 export default function StudentDetail() {
   const { id } = useParams();
   const [student, setStudent] = useState(null);
   const [marks, setMarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isSimulated, setIsSimulated] = useState(false);
 
-  // Mentor notes state (stored in localStorage for interactive viva demonstration)
-  const [notes, setNotes] = useState(() => {
-    return localStorage.getItem(`mentor_notes_${id}`) || '1. Scheduled one-on-one academic counseling regarding attendance and semester backlog.\n2. Recommended student join department peer-tutoring sessions.';
-  });
+  // Mentor notes state (stored on server with legacy localStorage migration)
+  const [notes, setNotes] = useState('');
+  const [isNotesReadOnly, setIsNotesReadOnly] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [showParentModal, setShowParentModal] = useState(false);
   const [alertToast, setAlertToast] = useState('');
@@ -132,7 +36,6 @@ export default function StudentDetail() {
     async function loadData() {
       setLoading(true);
       setErrorMessage('');
-      setIsSimulated(false);
       try {
         const studentRes = await api.getStudentById(id);
         setStudent(studentRes.data);
@@ -141,63 +44,67 @@ export default function StudentDetail() {
           const marksRes = await api.getStudentMarks(id);
           setMarks(marksRes.data || []);
         } catch (mErr) {
-          console.warn('Could not load marks from API, using fallback marks:', mErr);
-          setMarks(FALLBACK_MARKS);
+          console.warn('Could not load marks from API:', mErr);
+          setMarks([]);
+        }
+
+        let apiLoaded = false;
+        let serverNotes = [];
+        try {
+          const notesRes = await api.getStudentNotes(id);
+          serverNotes = Array.isArray(notesRes.data) ? notesRes.data : [];
+          apiLoaded = true;
+        } catch (nErr) {
+          console.warn('Could not load notes from API:', nErr);
+          apiLoaded = false;
+        }
+
+        const legacyNote = localStorage.getItem(`mentor_notes_${id}`);
+
+        if (apiLoaded) {
+          if (serverNotes.length > 0) {
+            // Single note per student loaded back as single value
+            setNotes(serverNotes[0]?.note || '');
+            setIsNotesReadOnly(false);
+            if (legacyNote && legacyNote.trim() === (serverNotes[0]?.note || '').trim()) {
+              localStorage.removeItem(`mentor_notes_${id}`);
+            }
+          } else if (legacyNote && legacyNote.trim().length > 0) {
+            const trimmedLegacy = legacyNote.trim();
+            if (trimmedLegacy.length <= 2000) {
+              try {
+                const upserted = await api.upsertStudentNote(id, { note: trimmedLegacy });
+                if (upserted && upserted.data) {
+                  setNotes(upserted.data.note);
+                  setIsNotesReadOnly(false);
+                  localStorage.removeItem(`mentor_notes_${id}`);
+                } else {
+                  setNotes(legacyNote);
+                }
+              } catch (migErr) {
+                console.warn('Could not migrate legacy note to server:', migErr);
+                setNotes(legacyNote);
+              }
+            } else {
+              // Legacy note is over 2000 chars: keep in localStorage and show read-only until saved
+              setNotes(legacyNote);
+              setIsNotesReadOnly(true);
+            }
+          } else {
+            setNotes('');
+            setIsNotesReadOnly(false);
+          }
+        } else {
+          // If loading from API fails, fall back to showing localStorage note in text box (do not delete it)
+          if (legacyNote) {
+            setNotes(legacyNote);
+          }
         }
       } catch (err) {
         console.error('Failed to load student detail from API:', err);
-        // Resilient fallback for demonstration / unauthorized mentor cross-view
-        const fallback = FALLBACK_STUDENTS[id] || {
-          student_id: id,
-          student_name: id.replace(/_/g, ' '),
-          department: 'Engineering',
-          year_of_study: 3,
-          current_semester: 5,
-          section: 'A',
-          college_id: 'C101',
-          college_name: 'Affiliated Engineering College',
-          dropout_risk_label: 'Medium',
-          dropout_risk_score: 0.60,
-          attendance_pct: 71.4,
-          overall_gpa: 6.4,
-          backlogs_count: 5,
-          arrears_cleared: 2,
-          hosteller: 1,
-          distance_from_home_km: 24,
-          first_gen_learner: 0,
-          family_income_annual: 450000,
-          scholarship: 0,
-          community: 'OBC',
-          admission_quota: 'Government',
-          cutoff_mark_200: 172,
-          home_state: 'Tamil Nadu',
-          board_of_education: 'State Board (Tamil Nadu)',
-          mentor_meetings_attended: 2,
-          low_attendance_flag: 1,
-          monthly_attendance_trend: [82, 79, 74, 68, 65, 71.4],
-          liveRiskAssessment: {
-            source: 'fallback',
-            fallback_label: 'Medium',
-            prediction: 'Medium',
-            probabilities: { Low: 0.2, Medium: 0.6, High: 0.2 },
-            top_risk_drivers: [
-              { message: 'Attendance Deficit (<75%)', contribution: '+32%' },
-              { message: 'Active Arrears', contribution: '+24%' }
-            ],
-            recommended_interventions: [
-              'Schedule one-on-one attendance counseling',
-              'Enroll in subject tutoring clinics'
-            ]
-          }
-        };
-
-        if (fallback) {
-          setStudent(fallback);
-          setMarks(FALLBACK_MARKS);
-          setIsSimulated(true);
-        } else {
-          setErrorMessage(err.response?.data?.message || err.message || 'Unable to access student dossier');
-        }
+        setStudent(null);
+        setMarks([]);
+        setErrorMessage(err.response?.data?.message || err.message || 'Unable to access student dossier');
       } finally {
         setLoading(false);
       }
@@ -206,11 +113,21 @@ export default function StudentDetail() {
     loadData();
   }, [id]);
 
-  const handleSaveNotes = (e) => {
+  const handleSaveNotes = async (e) => {
     e.preventDefault();
-    localStorage.setItem(`mentor_notes_${id}`, notes);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2500);
+    if (!notes.trim()) return;
+    try {
+      const res = await api.upsertStudentNote(id, { note: notes.trim() });
+      if (res && res.data) {
+        setNotes(res.data.note);
+        setIsNotesReadOnly(false);
+        localStorage.removeItem(`mentor_notes_${id}`);
+        setSavedSuccess(true);
+        setTimeout(() => setSavedSuccess(false), 2500);
+      }
+    } catch (err) {
+      console.error('Failed to save mentor note to server:', err);
+    }
   };
 
   if (loading) {
@@ -274,27 +191,6 @@ export default function StudentDetail() {
         </Link>
       </div>
 
-      {/* Simulated Notice if viewing cross-cohort demo dossier */}
-      {isSimulated && (
-        <div style={{
-          background: '#FEF3C7',
-          border: '1px solid #FDE68A',
-          borderRadius: '12px',
-          padding: '0.75rem 1.1rem',
-          marginBottom: '1.25rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.6rem',
-          fontSize: '0.84rem',
-          color: '#92400E'
-        }}>
-          <Info size={16} color="#D97706" />
-          <span>
-            <strong>Simulated Demo Dossier:</strong> Live record restricted under institutional data privacy policy (student assigned to another cohort). Displaying demonstration diagnostic dossier for <strong>{student.student_id}</strong>.
-          </span>
-        </div>
-      )}
-
       {/* Header Banner */}
       <div className="card" style={{ marginBottom: '1.75rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
@@ -338,7 +234,7 @@ export default function StudentDetail() {
           const liveAssessment = student?.liveRiskAssessment;
           if (!liveAssessment) return null;
 
-          const isFallback = liveAssessment.source === 'fallback';
+          const isFallback = liveAssessment.source === 'fallback' || liveAssessment.source === 'insufficient_data';
           const prediction = liveAssessment.prediction || student.dropout_risk_label;
           const probs = liveAssessment.probabilities;
 
@@ -400,7 +296,9 @@ export default function StudentDetail() {
                         Static Baseline: {liveAssessment.fallback_label || student.dropout_risk_label} Risk
                       </span>
                       <span style={{ fontSize: '0.75rem', color: '#D97706', fontWeight: '600' }}>
-                        ⚠️ Live model unavailable &mdash; showing last known risk level
+                        {liveAssessment.source === 'insufficient_data'
+                          ? '⚠️ Not enough data — showing last known risk level'
+                          : '⚠️ Live model unavailable — showing last known risk level'}
                       </span>
                     </div>
                   )}
@@ -410,7 +308,11 @@ export default function StudentDetail() {
               {/* Fallback Notice */}
               {isFallback && (
                 <div style={{ padding: '0.75rem 1rem', background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '8px', marginBottom: '0.5rem', fontSize: '0.82rem', color: '#92400E' }}>
-                  <strong>Offline Resilient Mode:</strong> The external AI Prediction Service on port 5001 is unreachable or timed out. The mentor portal safely maintains continuity using verified baseline institutional records ({liveAssessment.fallback_label || student.dropout_risk_label} Risk).
+                  {liveAssessment.source === 'insufficient_data' ? (
+                    <span><strong>Not enough data:</strong> Insufficient academic/assessment records to generate a live model forecast. Showing baseline institutional records ({liveAssessment.fallback_label || student.dropout_risk_label} Risk).</span>
+                  ) : (
+                    <span><strong>Offline Resilient Mode:</strong> The external AI Prediction Service on port 5001 is unreachable or timed out. The mentor portal safely maintains continuity using verified baseline institutional records ({liveAssessment.fallback_label || student.dropout_risk_label} Risk).</span>
+                  )}
                 </div>
               )}
 
@@ -793,6 +695,7 @@ export default function StudentDetail() {
             style={{ width: '100%', resize: 'vertical', lineHeight: '1.6', marginBottom: '1rem' }}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
+            readOnly={isNotesReadOnly}
             placeholder="Log your counseling notes here..."
           />
 

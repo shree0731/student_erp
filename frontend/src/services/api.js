@@ -74,6 +74,31 @@ export const api = {
     return await request(`/students/${id}/marks${query}`);
   },
 
+  // Mentor Notes
+  getStudentNotes: async (id) => {
+    return await request(`/students/${id}/notes`);
+  },
+
+  createStudentNote: async (id, data) => {
+    return await request(`/students/${id}/notes`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  upsertStudentNote: async (id, data) => {
+    return await request(`/students/${id}/notes`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deleteStudentNote: async (id, noteId) => {
+    return await request(`/students/${id}/notes/${noteId}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Faculty / Mentors
   getMentorStudents: async (facultyId) => {
     return await request(`/faculty/${facultyId}/students`);
@@ -92,21 +117,7 @@ export const api = {
 
   // Model Evaluation Benchmark Metrics
   getMlMetrics: async () => {
-    return {
-      model_type: 'XGBoostClassifier',
-      accuracy: 0.9658,
-      precision_macro: 0.9421,
-      recall_macro: 0.9528,
-      f1_macro: 0.9370,
-      confusion_matrix: [
-        [1460, 42, 0],
-        [19, 163, 1],
-        [0, 1, 154]
-      ],
-      classes: ['Low', 'Medium', 'High'],
-      training_samples: 7360,
-      test_samples: 1840
-    };
+    return await request('/ml/metrics');
   },
 
   // Standalone AI Academic Intervention Chatbot

@@ -8,8 +8,10 @@
  */
 
 const Student = require('../models/Student');
+const MeetingRequest = require('../models/MeetingRequest');
 const { getDBStatus } = require('../config/db');
 const csvProvider = require('../utils/csvDataProvider');
+const { inMemoryRequests } = require('./integrationController');
 
 const ANONYMIZED_COLLEGE_NAMES = {
   C101: 'Apex Engineering College',
@@ -130,6 +132,19 @@ const getAdminSummary = async (req, res) => {
         totalBacklogs: 0
       };
 
+      const meetMatch = collegeId ? { college_id: collegeId } : {};
+      const meetingDocs = await MeetingRequest.find(meetMatch);
+      const meetingRequestsStats = {
+        total: meetingDocs.length,
+        pending: meetingDocs.filter(m => ['new', 'acknowledged', 'scheduled'].includes(m.status)).length,
+        new: meetingDocs.filter(m => m.status === 'new').length,
+        acknowledged: meetingDocs.filter(m => m.status === 'acknowledged').length,
+        scheduled: meetingDocs.filter(m => m.status === 'scheduled').length,
+        resolved: meetingDocs.filter(m => m.status === 'resolved').length,
+        cancelled: meetingDocs.filter(m => m.status === 'cancelled').length,
+        urgent_open: meetingDocs.filter(m => m.urgency === 'urgent' && ['new', 'acknowledged', 'scheduled'].includes(m.status)).length
+      };
+
       return res.json({
         source: 'mongodb_aggregation_pipeline',
         summary: {
@@ -137,8 +152,11 @@ const getAdminSummary = async (req, res) => {
           avgGpa: Number(overall.avgGpa.toFixed(2)),
           avgAttendance: Number(overall.avgAttendance.toFixed(1)),
           lowAttendanceCount: overall.lowAttendanceCount,
-          totalBacklogs: overall.totalBacklogs
+          totalLowAttendance: overall.lowAttendanceCount,
+          totalBacklogs: overall.totalBacklogs,
+          meeting_requests: meetingRequestsStats
         },
+        meeting_requests: meetingRequestsStats,
         byRiskLabel: aggResult.byRiskLabel,
         byDepartment: aggResult.byDepartment.map(d => ({
           ...d,
@@ -260,6 +278,19 @@ const getAdminSummary = async (req, res) => {
       .sort((a, b) => b.count - a.count)
       .map(h => ({ _id: h._id, count: h.count, highRiskCount: h.high }));
 
+    let memDocs = Array.from(inMemoryRequests.values());
+    if (collegeId) memDocs = memDocs.filter(m => m.college_id === collegeId);
+    const meetingRequestsStats = {
+      total: memDocs.length,
+      pending: memDocs.filter(m => ['new', 'acknowledged', 'scheduled'].includes(m.status)).length,
+      new: memDocs.filter(m => m.status === 'new').length,
+      acknowledged: memDocs.filter(m => m.status === 'acknowledged').length,
+      scheduled: memDocs.filter(m => m.status === 'scheduled').length,
+      resolved: memDocs.filter(m => m.status === 'resolved').length,
+      cancelled: memDocs.filter(m => m.status === 'cancelled').length,
+      urgent_open: memDocs.filter(m => m.urgency === 'urgent' && ['new', 'acknowledged', 'scheduled'].includes(m.status)).length
+    };
+
     return res.json({
       source: 'csv_dataset_aggregation',
       summary: {
@@ -267,8 +298,11 @@ const getAdminSummary = async (req, res) => {
         avgGpa: Number(avgGpa.toFixed(2)),
         avgAttendance: Number(avgAttendance.toFixed(1)),
         lowAttendanceCount,
-        totalBacklogs
+        totalLowAttendance: lowAttendanceCount,
+        totalBacklogs,
+        meeting_requests: meetingRequestsStats
       },
+      meeting_requests: meetingRequestsStats,
       byRiskLabel,
       byDepartment,
       byCollege,

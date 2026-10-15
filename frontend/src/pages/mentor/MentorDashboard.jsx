@@ -175,24 +175,48 @@ export default function MentorDashboard() {
 
   // Meeting & Crisis Requests List
   const [meetingRequests, setMeetingRequests] = useState([]);
+  const [meetingStatusCounts, setMeetingStatusCounts] = useState({ new: 0, acknowledged: 0, scheduled: 0 });
   const [loadingMeetings, setLoadingMeetings] = useState(false);
 
-  const fetchMeetingRequests = async () => {
-    setLoadingMeetings(true);
+  const fetchMeetingRequests = async (showLoading = true) => {
+    if (showLoading) setLoadingMeetings(true);
     try {
       const res = await api.getMeetingRequests();
       if (res && res.data) {
         setMeetingRequests(res.data);
       }
+      if (res && res.status_counts) {
+        setMeetingStatusCounts(res.status_counts);
+      }
     } catch (err) {
       console.warn('Could not load meeting requests:', err.message);
     } finally {
-      setLoadingMeetings(false);
+      if (showLoading) setLoadingMeetings(false);
     }
   };
 
   useEffect(() => {
-    fetchMeetingRequests();
+    fetchMeetingRequests(true);
+
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchMeetingRequests(false);
+      }
+    }, 15000);
+
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') {
+        fetchMeetingRequests(false);
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
   }, []);
 
   const handleUpdateMeetingStatus = async (requestId, newStatus) => {
@@ -792,7 +816,7 @@ export default function MentorDashboard() {
                 </div>
                 <div style={{ display: 'flex', gap: '4px' }}>
                   <span className="pill pill-purple" style={{ fontSize: '0.68rem' }}>
-                    {meetingRequests.filter(r => r.status === 'new').length} New
+                    {meetingStatusCounts?.new ?? 0} New · {meetingStatusCounts?.acknowledged ?? 0} Ack · {meetingStatusCounts?.scheduled ?? 0} Sched
                   </span>
                   {meetingRequests.filter(r => r.urgency === 'urgent').length > 0 && (
                     <span className="pill pill-red" style={{ fontSize: '0.68rem' }}>
@@ -1228,7 +1252,7 @@ export default function MentorDashboard() {
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   <span className="badge badge-light-primary" style={{ fontSize: '0.8rem' }}>
-                    {meetingRequests.filter(r => r.status === 'new').length} New
+                    {meetingStatusCounts?.new ?? 0} New · {meetingStatusCounts?.acknowledged ?? 0} Ack · {meetingStatusCounts?.scheduled ?? 0} Sched
                   </span>
                   <span className="badge badge-light-danger" style={{ fontSize: '0.8rem' }}>
                     {meetingRequests.filter(r => r.urgency === 'urgent').length} Urgent

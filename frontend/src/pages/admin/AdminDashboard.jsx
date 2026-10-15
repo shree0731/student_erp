@@ -41,112 +41,7 @@ const COLLEGE_DIRECTORY = {
   C104: { name: 'Sahyadri Deemed University', code: 'C104', campusType: 'Deemed University Campus' }
 };
 
-// College-specific fallback data (EEC C101: 2,600 students)
-const FALLBACK_C101_DATA = {
-  summary: {
-    totalStudents: 2600,
-    avgGpa: 6.92,
-    avgAttendance: 83.5,
-    lowAttendanceCount: 98,
-    totalLowAttendance: 98,
-    totalBacklogs: 680
-  },
-  byRiskLabel: [
-    { _id: 'Low', count: 2125 },
-    { _id: 'Medium', count: 256 },
-    { _id: 'High', count: 219 }
-  ],
-  byDepartment: [
-    { _id: 'CSE', count: 400, avgGpa: 6.95, avgAttendance: 84.2, highRiskCount: 32, medRiskCount: 38, lowRiskCount: 330 },
-    { _id: 'IT', count: 320, avgGpa: 6.88, avgAttendance: 83.6, highRiskCount: 26, medRiskCount: 32, lowRiskCount: 262 },
-    { _id: 'ECE', count: 280, avgGpa: 6.84, avgAttendance: 82.9, highRiskCount: 24, medRiskCount: 28, lowRiskCount: 228 },
-    { _id: 'AIDS', count: 260, avgGpa: 6.98, avgAttendance: 83.4, highRiskCount: 21, medRiskCount: 25, lowRiskCount: 214 },
-    { _id: 'AIML', count: 250, avgGpa: 6.92, avgAttendance: 83.1, highRiskCount: 20, medRiskCount: 24, lowRiskCount: 206 },
-    { _id: 'EEE', count: 220, avgGpa: 6.82, avgAttendance: 82.7, highRiskCount: 19, medRiskCount: 22, lowRiskCount: 179 },
-    { _id: 'Cyber Security', count: 210, avgGpa: 6.89, avgAttendance: 83.3, highRiskCount: 18, medRiskCount: 21, lowRiskCount: 171 },
-    { _id: 'Mechanical', count: 190, avgGpa: 6.81, avgAttendance: 82.5, highRiskCount: 17, medRiskCount: 20, lowRiskCount: 153 },
-    { _id: 'CSD', count: 160, avgGpa: 6.90, avgAttendance: 83.5, highRiskCount: 14, medRiskCount: 16, lowRiskCount: 130 },
-    { _id: 'CSBS', count: 150, avgGpa: 6.88, avgAttendance: 83.2, highRiskCount: 13, medRiskCount: 15, lowRiskCount: 122 },
-    { _id: 'Civil', count: 120, avgGpa: 6.79, avgAttendance: 82.1, highRiskCount: 11, medRiskCount: 13, lowRiskCount: 96 },
-    { _id: 'Robotics', count: 50, avgGpa: 6.94, avgAttendance: 83.8, highRiskCount: 4, medRiskCount: 5, lowRiskCount: 41 }
-  ],
-  byYear: [
-    { year: 1, count: 650, avgGpa: 7.02, highRiskCount: 46 },
-    { year: 2, count: 650, avgGpa: 6.85, highRiskCount: 62 },
-    { year: 3, count: 650, avgGpa: 6.89, highRiskCount: 58 },
-    { year: 4, count: 650, avgGpa: 6.92, highRiskCount: 53 }
-  ]
-};
 
-const FALLBACK_CONSOLIDATED_DATA = {
-  summary: {
-    totalStudents: 9200,
-    avgGpa: 6.85,
-    avgAttendance: 82.4,
-    lowAttendanceCount: 350,
-    totalLowAttendance: 350,
-    totalBacklogs: 2400
-  },
-  byRiskLabel: [
-    { _id: 'Low', count: 7512 },
-    { _id: 'Medium', count: 913 },
-    { _id: 'High', count: 775 }
-  ],
-  byDepartment: [
-    { _id: 'CSE', count: 1416, avgGpa: 6.88, avgAttendance: 83.1, highRiskCount: 120, medRiskCount: 140, lowRiskCount: 1156 },
-    { _id: 'IT', count: 1105, avgGpa: 6.82, avgAttendance: 82.5, highRiskCount: 93, medRiskCount: 110, lowRiskCount: 902 },
-    { _id: 'ECE', count: 951, avgGpa: 6.79, avgAttendance: 81.8, highRiskCount: 80, medRiskCount: 95, lowRiskCount: 776 },
-    { _id: 'AIDS', count: 886, avgGpa: 6.91, avgAttendance: 82.2, highRiskCount: 75, medRiskCount: 88, lowRiskCount: 723 },
-    { _id: 'AIML', count: 869, avgGpa: 6.87, avgAttendance: 82.0, highRiskCount: 73, medRiskCount: 87, lowRiskCount: 709 },
-    { _id: 'EEE', count: 754, avgGpa: 6.80, avgAttendance: 81.5, highRiskCount: 63, medRiskCount: 75, lowRiskCount: 616 },
-    { _id: 'Cyber Security', count: 738, avgGpa: 6.85, avgAttendance: 82.1, highRiskCount: 62, medRiskCount: 74, lowRiskCount: 602 },
-    { _id: 'Mechanical', count: 679, avgGpa: 6.78, avgAttendance: 81.4, highRiskCount: 57, medRiskCount: 68, lowRiskCount: 554 },
-    { _id: 'CSD', count: 564, avgGpa: 6.86, avgAttendance: 82.3, highRiskCount: 47, medRiskCount: 56, lowRiskCount: 461 },
-    { _id: 'CSBS', count: 527, avgGpa: 6.84, avgAttendance: 82.0, highRiskCount: 44, medRiskCount: 53, lowRiskCount: 430 },
-    { _id: 'Civil', count: 441, avgGpa: 6.76, avgAttendance: 81.2, highRiskCount: 37, medRiskCount: 44, lowRiskCount: 360 },
-    { _id: 'Robotics', count: 180, avgGpa: 6.90, avgAttendance: 82.5, highRiskCount: 15, medRiskCount: 18, lowRiskCount: 147 },
-    { _id: 'Automobile', count: 90, avgGpa: 6.82, avgAttendance: 81.8, highRiskCount: 9, medRiskCount: 5, lowRiskCount: 76 }
-  ],
-  byCollege: [
-    { college_id: 'C101', college_name: 'Apex Engineering College', count: 2600, avgGpa: 6.92, avgAttendance: 83.5, highRiskCount: 219 },
-    { college_id: 'C102', college_name: 'Kavery Residential Institute of Technology', count: 2400, avgGpa: 6.78, avgAttendance: 81.2, highRiskCount: 202 },
-    { college_id: 'C103', college_name: 'Modern Institute of Science & Technology', count: 2200, avgGpa: 6.82, avgAttendance: 82.0, highRiskCount: 185 },
-    { college_id: 'C104', college_name: 'Sahyadri Deemed University', count: 2000, avgGpa: 6.85, avgAttendance: 82.8, highRiskCount: 169 }
-  ],
-  byYear: [
-    { year: 1, count: 2300, avgGpa: 6.95, highRiskCount: 168 },
-    { year: 2, count: 2300, avgGpa: 6.78, highRiskCount: 216 },
-    { year: 3, count: 2300, avgGpa: 6.82, highRiskCount: 204 },
-    { year: 4, count: 2300, avgGpa: 6.85, highRiskCount: 187 }
-  ]
-};
-
-const FALLBACK_ML_METRICS = {
-  model_type: 'XGBoostClassifier',
-  accuracy: 0.9354,
-  precision_macro: 0.8916,
-  precision_weighted: 0.9354,
-  recall_macro: 0.8916,
-  recall_weighted: 0.9354,
-  f1_macro: 0.8916,
-  f1_weighted: 0.9354,
-  confusion_matrix: [
-    [936, 21, 0],
-    [21, 183, 26],
-    [0, 25, 228]
-  ],
-  classes: ['Low', 'Medium', 'High'],
-  top_feature_importances: [
-    ['backlogs_count', 0.6404],
-    ['internal_exam_avg', 0.1140],
-    ['assignment_avg', 0.0875],
-    ['mentor_meetings_attended', 0.0335],
-    ['attendance_pct', 0.0233],
-    ['department_AIDS', 0.0144]
-  ],
-  training_samples: 5760,
-  test_samples: 1440
-};
 
 // Sample detention-risk cohort for statutory parental intimation action
 const SAMPLE_DETENTION_STUDENTS = [
@@ -174,7 +69,8 @@ export default function AdminDashboard() {
     totalStudents: true,
     highRisk: true,
     attendanceAlerts: true,
-    meanGpa: true
+    meanGpa: true,
+    meetingRequests: true
   });
 
   // Department Table Column Filters & View Mode
@@ -275,15 +171,15 @@ export default function AdminDashboard() {
     }, 450);
   };
 
-  const [summaryData, setSummaryData] = useState(defaultCollege === 'C101' ? FALLBACK_C101_DATA : FALLBACK_CONSOLIDATED_DATA);
-  const [mlMetrics, setMlMetrics] = useState(FALLBACK_ML_METRICS);
+  const [summaryData, setSummaryData] = useState(null);
+  const [mlMetrics, setMlMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadData() {
-      setLoading(true);
+    async function loadData(showLoading = true) {
+      if (showLoading) setLoading(true);
       try {
         const [sumRes, mlRes] = await Promise.allSettled([
           api.getAdminSummary(selectedCollege),
@@ -295,29 +191,46 @@ export default function AdminDashboard() {
         if (sumRes.status === 'fulfilled' && sumRes.value && sumRes.value.summary) {
           setSummaryData(sumRes.value);
         } else {
-          setSummaryData(selectedCollege === 'C101' ? FALLBACK_C101_DATA : FALLBACK_CONSOLIDATED_DATA);
+          setSummaryData(null);
         }
 
         if (mlRes.status === 'fulfilled' && mlRes.value && mlRes.value.accuracy) {
           setMlMetrics(mlRes.value);
         } else {
-          setMlMetrics(FALLBACK_ML_METRICS);
+          setMlMetrics(null);
         }
       } catch (err) {
         console.error('Failed to load admin data:', err);
         if (isMounted) {
-          setSummaryData(selectedCollege === 'C101' ? FALLBACK_C101_DATA : FALLBACK_CONSOLIDATED_DATA);
-          setMlMetrics(FALLBACK_ML_METRICS);
+          setSummaryData(null);
+          setMlMetrics(null);
         }
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted && showLoading) setLoading(false);
       }
     }
 
-    loadData();
+    loadData(true);
+
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        loadData(false);
+      }
+    }, 15000);
+
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') {
+        loadData(false);
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
 
     return () => {
       isMounted = false;
+      clearInterval(intervalId);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
     };
   }, [selectedCollege]);
 
@@ -327,22 +240,22 @@ export default function AdminDashboard() {
     campusType: selectedCollege ? 'Affiliated Institution' : 'Multi-Campus Consortium'
   };
 
-  const data = summaryData || (selectedCollege === 'C101' ? FALLBACK_C101_DATA : FALLBACK_CONSOLIDATED_DATA);
+  const data = summaryData || {};
   const summary = data.summary || {};
   const byRiskLabel = Array.isArray(data.byRiskLabel) ? data.byRiskLabel : [];
   const byDepartment = Array.isArray(data.byDepartment) ? data.byDepartment : [];
   const byYear = Array.isArray(data.byYear) ? data.byYear : [];
 
-  const totalStudents = summary.totalStudents || (selectedCollege === 'C101' ? 2600 : 9200);
-  const highRiskObj = byRiskLabel.find(r => r._id === 'High') || { count: selectedCollege === 'C101' ? 219 : 775 };
-  const medRiskObj = byRiskLabel.find(r => r._id === 'Medium') || { count: selectedCollege === 'C101' ? 256 : 913 };
-  const lowRiskObj = byRiskLabel.find(r => r._id === 'Low') || { count: selectedCollege === 'C101' ? 2125 : 7512 };
+  const totalStudents = summary.totalStudents || 0;
+  const highRiskObj = byRiskLabel.find(r => r._id === 'High') || { count: 0 };
+  const medRiskObj = byRiskLabel.find(r => r._id === 'Medium') || { count: 0 };
+  const lowRiskObj = byRiskLabel.find(r => r._id === 'Low') || { count: 0 };
 
-  const highPct = totalStudents ? ((highRiskObj.count / totalStudents) * 100).toFixed(1) : '8.4';
-  const medPct = totalStudents ? ((medRiskObj.count / totalStudents) * 100).toFixed(1) : '9.8';
-  const lowPct = totalStudents ? ((lowRiskObj.count / totalStudents) * 100).toFixed(1) : '81.8';
+  const highPct = totalStudents ? ((highRiskObj.count / totalStudents) * 100).toFixed(1) : '0.0';
+  const medPct = totalStudents ? ((medRiskObj.count / totalStudents) * 100).toFixed(1) : '0.0';
+  const lowPct = totalStudents ? ((lowRiskObj.count / totalStudents) * 100).toFixed(1) : '0.0';
 
-  const lowAttendanceNumber = summary.totalLowAttendance ?? summary.lowAttendanceCount ?? (selectedCollege === 'C101' ? 98 : 350);
+  const lowAttendanceNumber = summary.totalLowAttendance ?? summary.lowAttendanceCount ?? 0;
 
   // Process and sort departments by search and sort criteria
   const filteredDepartments = [...byDepartment]
@@ -571,6 +484,22 @@ export default function AdminDashboard() {
             >
               Mean CGPA
             </button>
+
+            <button
+              type="button"
+              onClick={() => setVisibleMetrics({ ...visibleMetrics, meetingRequests: !visibleMetrics.meetingRequests })}
+              style={{
+                fontSize: '0.72rem',
+                fontWeight: '700',
+                padding: '4px 8px',
+                borderRadius: '6px',
+                border: visibleMetrics.meetingRequests ? '1px solid var(--primary)' : '1px solid var(--border)',
+                background: visibleMetrics.meetingRequests ? 'var(--primary-light)' : '#ffffff',
+                color: visibleMetrics.meetingRequests ? 'var(--primary)' : 'var(--muted)'
+              }}
+            >
+              Meeting Requests
+            </button>
           </div>
         )}
 
@@ -644,8 +573,26 @@ export default function AdminDashboard() {
                   <span className="pill pill-green" style={{ fontSize: '0.72rem' }}>10-Point Scale</span>
                 </div>
                 <div>
-                  <div className="stat-tile-num">{summary.avgGpa || '6.92'}</div>
+                  <div className="stat-tile-num">{summary.avgGpa != null ? summary.avgGpa : '—'}</div>
                   <div className="stat-tile-label">Institutional Mean CGPA</div>
+                </div>
+              </div>
+            )}
+
+            {visibleMetrics.meetingRequests && (
+              <div className="stat-tile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div className="stat-tile-icon">
+                    <Calendar size={18} strokeWidth={1.8} />
+                  </div>
+                  <span className="pill pill-purple" style={{ fontSize: '0.72rem' }}>Mentoring</span>
+                </div>
+                <div>
+                  <div className="stat-tile-num">{summary.meeting_requests?.pending ?? 0}</div>
+                  <div className="stat-tile-label">Pending Meeting Requests</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+                    {summary.meeting_requests?.new ?? 0} New · {summary.meeting_requests?.acknowledged ?? 0} Ack · {summary.meeting_requests?.scheduled ?? 0} Sched
+                  </div>
                 </div>
               </div>
             )}
@@ -1231,15 +1178,17 @@ export default function AdminDashboard() {
               <div style={{ padding: '1rem', background: 'var(--primary-light)', borderRadius: '12px', border: '1px solid var(--primary-border)' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--primary)', textTransform: 'uppercase' }}>Overall Accuracy</div>
                 <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--primary)', marginTop: '0.2rem' }}>
-                  {((mlMetrics.accuracy || 0.9354) * 100).toFixed(2)}%
+                  {mlMetrics?.accuracy != null ? `${(mlMetrics.accuracy * 100).toFixed(2)}%` : '—'}
                 </div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>On 1,440 test samples</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+                  {mlMetrics?.test_samples != null ? `On ${mlMetrics.test_samples.toLocaleString()} test samples` : 'On test samples'}
+                </div>
               </div>
 
               <div style={{ padding: '1rem', background: 'var(--bg-body)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--muted)', textTransform: 'uppercase' }}>Macro Precision</div>
                 <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--dark)', marginTop: '0.2rem' }}>
-                  {((mlMetrics.precision_macro || 0.8916) * 100).toFixed(2)}%
+                  {mlMetrics?.precision_macro != null ? `${(mlMetrics.precision_macro * 100).toFixed(2)}%` : '—'}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Across Low, Med, High</div>
               </div>
@@ -1247,7 +1196,7 @@ export default function AdminDashboard() {
               <div style={{ padding: '1rem', background: 'var(--bg-body)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--muted)', textTransform: 'uppercase' }}>Macro Recall</div>
                 <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--dark)', marginTop: '0.2rem' }}>
-                  {((mlMetrics.recall_macro || 0.8916) * 100).toFixed(2)}%
+                  {mlMetrics?.recall_macro != null ? `${(mlMetrics.recall_macro * 100).toFixed(2)}%` : '—'}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Detection coverage</div>
               </div>
@@ -1255,7 +1204,7 @@ export default function AdminDashboard() {
               <div style={{ padding: '1rem', background: 'var(--bg-body)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--muted)', textTransform: 'uppercase' }}>Macro F1-Score</div>
                 <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--primary)', marginTop: '0.2rem' }}>
-                  {((mlMetrics.f1_macro || 0.8916) * 100).toFixed(2)}%
+                  {mlMetrics?.f1_macro != null ? `${(mlMetrics.f1_macro * 100).toFixed(2)}%` : '—'}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Harmonic balance</div>
               </div>
@@ -1271,14 +1220,16 @@ export default function AdminDashboard() {
                 <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--dark)', margin: 0 }}>
                   3x3 Confusion Matrix
                 </h3>
-                <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>1,440 Test Students</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+                  {mlMetrics?.test_samples != null ? `${mlMetrics.test_samples.toLocaleString()} Test Students` : '—'}
+                </span>
               </div>
 
               <p style={{ fontSize: '0.8rem', color: 'var(--muted)', marginBottom: '1rem' }}>
                 Rows show actual ground truth; columns show XGBoost model predictions.
               </p>
 
-              {Array.isArray(mlMetrics.confusion_matrix) && (
+              {Array.isArray(mlMetrics?.confusion_matrix) ? (
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.82rem' }}>
                     <thead>
@@ -1320,6 +1271,8 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 </div>
+              ) : (
+                <div style={{ padding: '1.5rem', textAlign: 'center', color: 'var(--muted)', fontSize: '0.85rem' }}>Evaluation metrics unavailable</div>
               )}
 
               <div style={{ marginTop: '0.75rem', fontSize: '0.74rem', color: 'var(--muted)', lineHeight: '1.4' }}>
@@ -1340,7 +1293,7 @@ export default function AdminDashboard() {
                 Relative impact of academic, behavioral, and attendance parameters on student retention forecasts.
               </p>
 
-              {Array.isArray(mlMetrics.top_feature_importances) && (
+              {Array.isArray(mlMetrics?.top_feature_importances) ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {mlMetrics.top_feature_importances.map(([featName, imp], idx) => {
                     const cleanName = String(featName)
@@ -1362,6 +1315,8 @@ export default function AdminDashboard() {
                     );
                   })}
                 </div>
+              ) : (
+                <div style={{ padding: '1.5rem', textAlign: 'center', color: 'var(--muted)', fontSize: '0.85rem' }}>Feature importances unavailable</div>
               )}
             </div>
 
