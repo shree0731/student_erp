@@ -23,7 +23,7 @@ const COLLEGES = [
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, completeLogin } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
   const roleParam = queryParams.get('role');
@@ -38,6 +38,13 @@ export default function LoginPage() {
   const [activePersona, setActivePersona] = useState(initialPersonaKey);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // OTP Step states
+  const [otpStep, setOtpStep] = useState(false);
+  const [challengeId, setChallengeId] = useState('');
+  const [emailHint, setEmailHint] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [resendStatus, setResendStatus] = useState('');
 
   const isDemoMode = import.meta.env.VITE_DEMO_MODE !== 'false';
 
@@ -72,6 +79,15 @@ export default function LoginPage() {
     try {
       const result = await login(identifier, password);
 
+      if (result && result.otp_required) {
+        setChallengeId(result.challenge_id);
+        setEmailHint(result.email_hint || '');
+        setOtpStep(true);
+        setOtpCode('');
+        setErrorMsg('');
+        return;
+      }
+
       if (result && result.success) {
         const user = result.user;
         if (user.role === 'student') {
@@ -92,6 +108,57 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setLoading(true);
+
+    try {
+      const res = await api.verifyOtp({
+        challenge_id: challengeId,
+        code: otpCode.trim(),
+        username: identifier.trim()
+      });
+
+      if (res && res.token && res.user) {
+        completeLogin(res);
+        const user = res.user;
+        if (user.role === 'student') {
+          navigate('/student/dashboard');
+        } else if (user.role === 'mentor') {
+          navigate('/mentor/dashboard');
+        } else if (user.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/mentor/dashboard');
+        }
+      } else {
+        setErrorMsg(res?.message || 'Verification failed. Please check code.');
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Invalid verification code');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setErrorMsg('');
+    try {
+      await api.resendOtp({ challenge_id: challengeId });
+      setResendStatus('Verification code resent successfully.');
+      setTimeout(() => setResendStatus(''), 4000);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to resend code');
+    }
+  };
+
+  const handleBackToLogin = () => {
+    setOtpStep(false);
+    setOtpCode('');
+    setErrorMsg('');
   };
 
   return (
@@ -259,92 +326,158 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* College Selector */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
-              Institution / Affiliated College
-            </label>
-            <div style={{ position: 'relative' }}>
-              <select
-                value={college}
-                onChange={(e) => setCollege(e.target.value)}
-                className="select-control"
-                style={{ width: '100%', paddingLeft: '2.4rem' }}
+        {otpStep ? (
+          <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--ink)', fontWeight: '600', marginBottom: '0.35rem' }}>
+                Two-Factor Security Verification
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--mute)', lineHeight: 1.4 }}>
+                Enter the 6-digit code sent to <strong style={{ color: 'var(--ink)' }}>{emailHint}</strong>
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
+                Verification Code
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                  className="input-control"
+                  style={{ width: '100%', paddingLeft: '2.4rem', letterSpacing: '4px', fontSize: '1.05rem', fontWeight: '700' }}
+                  placeholder="123456"
+                  autoFocus
+                  required
+                />
+                <ShieldCheck size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              </div>
+            </div>
+
+            {resendStatus && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--green)', fontWeight: '600' }}>
+                {resendStatus}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '0.75rem', marginTop: '0.25rem', fontSize: '0.92rem' }}
+            >
+              {loading ? 'Verifying...' : 'Verify'}
+              <ArrowRight size={16} />
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+              <button
+                type="button"
+                onClick={handleBackToLogin}
+                style={{ color: 'var(--mute)', fontWeight: '600', cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}
               >
-                {COLLEGES.map(c => (
-                  <option key={c.code} value={c.code}>{c.name}</option>
-                ))}
-              </select>
-              <Building2 size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                ← Back
+              </button>
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}
+              >
+                Resend code
+              </button>
             </div>
-          </div>
-
-          {/* Identifier Input */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
-              Username / Faculty or Student ID
-            </label>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="text"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                className="input-control"
-                style={{ width: '100%', paddingLeft: '2.4rem' }}
-                placeholder="e.g. mentor, FAC_EEC_CSE_001, student"
-                required
-              />
-              <User size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+          </form>
+        ) : (
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* College Selector */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
+                Institution / Affiliated College
+              </label>
+              <div style={{ position: 'relative' }}>
+                <select
+                  value={college}
+                  onChange={(e) => setCollege(e.target.value)}
+                  className="select-control"
+                  style={{ width: '100%', paddingLeft: '2.4rem' }}
+                >
+                  {COLLEGES.map(c => (
+                    <option key={c.code} value={c.code}>{c.name}</option>
+                  ))}
+                </select>
+                <Building2 size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              </div>
             </div>
-          </div>
 
-          {/* Password Input */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
-              Password
-            </label>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input-control"
-                style={{ width: '100%', paddingLeft: '2.4rem' }}
-                placeholder="••••••••"
-                required
-              />
-              <Lock size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+            {/* Identifier Input */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
+                Username / Faculty or Student ID
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  className="input-control"
+                  style={{ width: '100%', paddingLeft: '2.4rem' }}
+                  placeholder="e.g. mentor, FAC_EEC_CSE_001, student"
+                  required
+                />
+                <User size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              </div>
             </div>
-          </div>
 
-          {/* Remember Device Checkbox */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', cursor: 'pointer', color: 'var(--mute)' }}>
-              <input
-                type="checkbox"
-                checked={rememberDevice}
-                onChange={(e) => setRememberDevice(e.target.checked)}
-                style={{ accentColor: 'var(--primary)' }}
-              />
-              <span>Remember this device</span>
-            </label>
-            <span style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}>
-              Need assistance?
-            </span>
-          </div>
+            {/* Password Input */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: '700', color: 'var(--ink)', marginBottom: '0.35rem' }}>
+                Password
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-control"
+                  style={{ width: '100%', paddingLeft: '2.4rem' }}
+                  placeholder="••••••••"
+                  required
+                />
+                <Lock size={16} color="var(--mute)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              </div>
+            </div>
 
-          {/* Full-Width Primary Sign In Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-primary"
-            style={{ width: '100%', padding: '0.75rem', marginTop: '0.25rem', fontSize: '0.92rem' }}
-          >
-            {loading ? 'Authenticating...' : 'Sign In to Portal'}
-            <ArrowRight size={16} />
-          </button>
-        </form>
+            {/* Remember Device Checkbox */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', cursor: 'pointer', color: 'var(--mute)' }}>
+                <input
+                  type="checkbox"
+                  checked={rememberDevice}
+                  onChange={(e) => setRememberDevice(e.target.checked)}
+                  style={{ accentColor: 'var(--primary)' }}
+                />
+                <span>Remember this device</span>
+              </label>
+              <span style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}>
+                Need assistance?
+              </span>
+            </div>
+
+            {/* Full-Width Primary Sign In Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '0.75rem', marginTop: '0.25rem', fontSize: '0.92rem' }}
+            >
+              {loading ? 'Authenticating...' : 'Sign In to Portal'}
+              <ArrowRight size={16} />
+            </button>
+          </form>
+        )}
 
         {/* Demo Accounts Panel (shown if VITE_DEMO_MODE !== 'false') */}
         {isDemoMode && (

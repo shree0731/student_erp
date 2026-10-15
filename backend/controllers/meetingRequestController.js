@@ -4,6 +4,7 @@ const Student = require('../models/Student');
 const csvProvider = require('../utils/csvDataProvider');
 const { getDBStatus } = require('../config/db');
 const { inMemoryRequests, resolveMentorInfo } = require('./integrationController');
+const notificationDispatcher = require('../services/notificationDispatcher');
 
 /**
  * GET /api/meeting-requests
@@ -194,6 +195,30 @@ exports.updateMeetingRequestStatus = async (req, res) => {
 
       await meeting.save();
 
+      if (['acknowledged', 'scheduled', 'resolved', 'cancelled'].includes(status)) {
+        let bodyText = `Your mentor updated your meeting request status to: ${status}.`;
+        if (status === 'acknowledged') {
+          bodyText = 'Your mentor has seen your request.';
+        } else if (status === 'scheduled') {
+          const timeStr = meeting.scheduled_at ? new Date(meeting.scheduled_at).toLocaleString() : 'the scheduled time';
+          bodyText = `Your mentor has scheduled your meeting for: ${timeStr}.`;
+        } else if (status === 'resolved') {
+          bodyText = 'Your meeting request has been resolved.';
+        } else if (status === 'cancelled') {
+          bodyText = 'Your meeting request has been cancelled.';
+        }
+
+        notificationDispatcher.dispatchBackground({
+          event_type: 'meeting_status_changed',
+          student_id: meeting.student_id,
+          mentor_id: meeting.mentor_id,
+          college_id: meeting.college_id,
+          subject: `Meeting Request Status Update: ${status.toUpperCase()}`,
+          body_text: bodyText,
+          idempotency_key: `mr-${meeting.request_id}-${status}`
+        });
+      }
+
       return res.json({
         success: true,
         message: 'Meeting request updated',
@@ -226,6 +251,30 @@ exports.updateMeetingRequestStatus = async (req, res) => {
       meeting.scheduled_at = nextDay;
     }
     meeting.updatedAt = new Date();
+
+    if (['acknowledged', 'scheduled', 'resolved', 'cancelled'].includes(status)) {
+      let bodyText = `Your mentor updated your meeting request status to: ${status}.`;
+      if (status === 'acknowledged') {
+        bodyText = 'Your mentor has seen your request.';
+      } else if (status === 'scheduled') {
+        const timeStr = meeting.scheduled_at ? new Date(meeting.scheduled_at).toLocaleString() : 'the scheduled time';
+        bodyText = `Your mentor has scheduled your meeting for: ${timeStr}.`;
+      } else if (status === 'resolved') {
+        bodyText = 'Your meeting request has been resolved.';
+      } else if (status === 'cancelled') {
+        bodyText = 'Your meeting request has been cancelled.';
+      }
+
+      notificationDispatcher.dispatchBackground({
+        event_type: 'meeting_status_changed',
+        student_id: meeting.student_id,
+        mentor_id: meeting.mentor_id,
+        college_id: meeting.college_id,
+        subject: `Meeting Request Status Update: ${status.toUpperCase()}`,
+        body_text: bodyText,
+        idempotency_key: `mr-${meeting.request_id}-${status}`
+      });
+    }
 
     return res.json({
       success: true,
@@ -343,6 +392,18 @@ exports.createMeetingRequest = async (req, res) => {
         scheduled_at: initialScheduledAt,
         mentor_note: mentor_note || ''
       });
+      if (user.role === 'student') {
+        notificationDispatcher.dispatchBackground({
+          event_type: 'meeting_request_created',
+          student_id: record.student_id,
+          mentor_id: record.mentor_id,
+          college_id: record.college_id,
+          subject: `New Meeting Request from Student (${record.student_id})`,
+          body_text: `Student ${record.student_name || record.student_id} has requested a mentoring consultation. Reason: ${record.reason_short}. Urgency: ${record.urgency}.`,
+          idempotency_key: `mr-new-${record.request_id}`
+        });
+      }
+
       return res.status(201).json({ success: true, data: record });
     }
 
@@ -363,6 +424,19 @@ exports.createMeetingRequest = async (req, res) => {
       updatedAt: new Date()
     };
     inMemoryRequests.set(requestId, record);
+
+    if (user.role === 'student') {
+      notificationDispatcher.dispatchBackground({
+        event_type: 'meeting_request_created',
+        student_id: record.student_id,
+        mentor_id: record.mentor_id,
+        college_id: record.college_id,
+        subject: `New Meeting Request from Student (${record.student_id})`,
+        body_text: `Student ${record.student_name || record.student_id} has requested a mentoring consultation. Reason: ${record.reason_short}. Urgency: ${record.urgency}.`,
+        idempotency_key: `mr-new-${record.request_id}`
+      });
+    }
+
     return res.status(201).json({ success: true, data: record });
   } catch (err) {
     console.error('[CreateMeetingRequest Error]', err);

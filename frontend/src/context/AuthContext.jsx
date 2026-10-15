@@ -97,15 +97,31 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, []);
 
+  const completeLogin = (res) => {
+    if (res && res.token && res.user) {
+      setToken(res.token);
+      setCurrentUser(res.user);
+      sessionStorage.setItem('erp_token', res.token);
+      sessionStorage.setItem('erp_user', JSON.stringify(res.user));
+      return { success: true, user: res.user };
+    }
+    return { success: false, message: 'Invalid authentication response' };
+  };
+
   const login = async (username, password) => {
     try {
       const res = await api.login(username, password);
+      if (res && res.otp_required) {
+        return {
+          success: true,
+          otp_required: true,
+          challenge_id: res.challenge_id,
+          email_hint: res.email_hint,
+          expires_in: res.expires_in
+        };
+      }
       if (res && res.token && res.user) {
-        setToken(res.token);
-        setCurrentUser(res.user);
-        sessionStorage.setItem('erp_token', res.token);
-        sessionStorage.setItem('erp_user', JSON.stringify(res.user));
-        return { success: true, user: res.user };
+        return completeLogin(res);
       }
       return { success: false, message: 'Invalid server response' };
     } catch (err) {
@@ -134,7 +150,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, currentUser, login, logout, switchRole, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ token, currentUser, login, completeLogin, logout, switchRole, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

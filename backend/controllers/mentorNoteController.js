@@ -214,11 +214,9 @@ exports.upsertNote = async (req, res) => {
     return res.status(403).json({ error: 'Forbidden', message: 'Students cannot update mentor notes' });
   }
 
-  if (!note || typeof note !== 'string' || note.trim().length === 0) {
-    return res.status(400).json({ error: 'Validation Error', message: 'Note content cannot be empty' });
-  }
+  const noteStr = typeof note === 'string' ? note : String(note || '');
+  const trimmedNote = noteStr.trim();
 
-  const trimmedNote = note.trim();
   if (trimmedNote.length > 2000) {
     return res.status(422).json({ error: 'Validation Error', message: 'Note content cannot exceed 2000 characters' });
   }
@@ -237,6 +235,20 @@ exports.upsertNote = async (req, res) => {
     }
 
     const mentorId = user.linkedId;
+
+    // Empty note clears the stored note
+    if (trimmedNote.length === 0) {
+      if (getDBStatus()) {
+        await MentorNote.deleteMany({ student_id: studentId, mentor_id: mentorId });
+      } else {
+        for (const [key, n] of inMemoryNotes.entries()) {
+          if (n.student_id === studentId && n.mentor_id === mentorId) {
+            inMemoryNotes.delete(key);
+          }
+        }
+      }
+      return res.json({ success: true, message: 'Note cleared', data: null });
+    }
 
     if (getDBStatus()) {
       let existingNote = await MentorNote.findOne({ student_id: studentId, mentor_id: mentorId });

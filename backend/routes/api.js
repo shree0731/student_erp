@@ -8,6 +8,7 @@ const authController = require('../controllers/authController');
 const integrationController = require('../controllers/integrationController');
 const meetingRequestController = require('../controllers/meetingRequestController');
 const mentorNoteController = require('../controllers/mentorNoteController');
+const notificationController = require('../controllers/notificationController');
 const { requireAuth, requireRole } = require('../middleware/authMiddleware');
 const { serviceKeyAuth } = require('../middleware/serviceKeyAuth');
 const { authLimiter } = require('../middleware/rateLimiter');
@@ -17,8 +18,10 @@ const Curriculum = require('../models/Curriculum');
 const Student = require('../models/Student');
 const { getDBStatus } = require('../config/db');
 
-// --- 1. Authentication Route (Rate-limited) ---
+// --- 1. Authentication Routes (Rate-limited) ---
 router.post('/auth/login', authLimiter, authController.login);
+router.post('/auth/verify-otp', authLimiter, authController.verifyOtp);
+router.post('/auth/resend-otp', authLimiter, authController.resendOtp);
 
 // --- 2. Student Endpoints (Protected by JWT & Ownership) ---
 router.get('/students', requireAuth, studentController.getStudents);
@@ -386,5 +389,9 @@ router.get('/meeting-requests', requireAuth, meetingRequestController.getMeeting
 router.get('/meeting-requests/my', requireAuth, meetingRequestController.getMyMeetingRequests);
 router.patch('/meeting-requests/:requestId/status', requireAuth, meetingRequestController.updateMeetingRequestStatus);
 router.get('/notifications', requireAuth, meetingRequestController.getNotifications);
+router.get('/notifications/log', requireAuth, notificationController.getNotificationLogs);
+
+// --- 9. Parent Communication Alert ---
+router.post('/students/:id/parent-alert', requireAuth, requireRole('admin', 'mentor'), notificationController.sendParentAlert);
 
 module.exports = router;

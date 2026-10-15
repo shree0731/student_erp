@@ -70,6 +70,7 @@ async function seedDatabase() {
     await User.deleteMany({});
     const demoPassword = process.env.DEMO_PASSWORD || crypto.randomBytes(6).toString('hex');
     const demoHash = await bcrypt.hash(demoPassword, 10);
+    const demoEmail = process.env.DEMO_SHARED_EMAIL || '';
     const demoUsers = [
       {
         username: 'admin',
@@ -78,7 +79,8 @@ async function seedDatabase() {
         name: 'Academic Dean Office',
         department: 'Central Administration',
         college_id: 'C101',
-        passwordHash: demoHash
+        passwordHash: demoHash,
+        email: demoEmail
       },
       {
         username: 'mentor',
@@ -87,7 +89,8 @@ async function seedDatabase() {
         name: 'Dr. Sudha Rajagopalan',
         department: 'IT',
         college_id: 'C103',
-        passwordHash: demoHash
+        passwordHash: demoHash,
+        email: demoEmail
       },
       {
         username: 'student',
@@ -96,7 +99,8 @@ async function seedDatabase() {
         name: 'Bhoomika Gowda',
         department: 'IT',
         college_id: 'C103',
-        passwordHash: demoHash
+        passwordHash: demoHash,
+        email: demoEmail
       },
       {
         username: 'student2',
@@ -105,7 +109,8 @@ async function seedDatabase() {
         name: 'Vasanth Balasubramanian',
         department: 'IT',
         college_id: 'C103',
-        passwordHash: demoHash
+        passwordHash: demoHash,
+        email: demoEmail
       },
       {
         username: 'student3',
@@ -114,7 +119,8 @@ async function seedDatabase() {
         name: 'Sahana Hegde',
         department: 'IT',
         college_id: 'C103',
-        passwordHash: demoHash
+        passwordHash: demoHash,
+        email: demoEmail
       }
     ];
     await User.insertMany(demoUsers);

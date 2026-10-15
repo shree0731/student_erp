@@ -681,6 +681,20 @@ describe('Step 2: Data-Correctness Backend Verification Suite', () => {
         .send({ note: 'x'.repeat(2001) });
       expect(overLimitRes.status).toBe(422);
       expect(overLimitRes.body.error).toBe('Validation Error');
+
+      // 6. Empty save clears the note
+      const clearRes = await request(app)
+        .put(`/api/students/${menteeId}/notes`)
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .send({ note: '' });
+      expect(clearRes.status).toBe(200);
+      expect(clearRes.body.success).toBe(true);
+      expect(clearRes.body.data).toBeNull();
+
+      const getAfterClear = await request(app)
+        .get(`/api/students/${menteeId}/notes`)
+        .set('Authorization', `Bearer ${mentorToken}`);
+      expect(getAfterClear.body.count).toBe(0);
     });
   });
 });

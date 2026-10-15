@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { api } from '../services/api';
 import {
   X,
   Copy,
@@ -13,6 +14,8 @@ export default function ParentAlertModal({ isOpen, onClose, student, onAlertSent
   const [reason, setReason] = useState('attendance');
   const [customNotes, setCustomNotes] = useState('');
   const [copied, setCopied] = useState(false);
+  const [emailStatus, setEmailStatus] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     if (student) {
@@ -29,6 +32,8 @@ export default function ParentAlertModal({ isOpen, onClose, student, onAlertSent
       }
       setCopied(false);
       setCustomNotes('');
+      setEmailStatus('');
+      setSendingEmail(false);
     }
   }, [student]);
 
@@ -75,6 +80,33 @@ You are invited for a mentor consultation to discuss your ward's academic standi
       }
     } catch (err) {
       console.warn('[ParentAlertModal] Clipboard copy failed:', err.message);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!student || !student.student_id) return;
+    setSendingEmail(true);
+    setEmailStatus('Sending');
+    try {
+      const res = await api.sendParentAlert(student.student_id, {
+        message: messageText,
+        urgency: reason === 'attendance' ? 'high' : 'normal'
+      });
+      if (res && res.status === 'sent') {
+        if (res.channel === 'n8n') {
+          setEmailStatus('Sent via n8n');
+        } else if (res.channel === 'smtp_fallback') {
+          setEmailStatus('Sent (fallback)');
+        } else {
+          setEmailStatus('Sent');
+        }
+      } else {
+        setEmailStatus('Failed');
+      }
+    } catch (err) {
+      setEmailStatus('Failed');
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -143,7 +175,7 @@ You are invited for a mentor consultation to discuss your ward's academic standi
         }}>
           <FileText size={16} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
           <div>
-            <strong>Manual Communication Draft:</strong> No automatic SMS or Email dispatch service is connected. Faculty mentors should review and copy this prepared draft to contact the student's parent or guardian through official institutional communication channels.
+            <strong>Communication Notice:</strong> No automatic phone or SMS dispatch is supported. Official notice emails are sent through the configured automation channel. Faculty mentors may also copy this prepared draft to contact guardians directly.
           </div>
         </div>
 
@@ -244,39 +276,57 @@ You are invited for a mentor consultation to discuss your ward's academic standi
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onClose}
-            style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}
-          >
-            Close
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={onClose}
+              style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}
+            >
+              Close
+            </button>
 
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleCopy}
-            style={{
-              fontSize: '0.82rem',
-              padding: '0.55rem 1.25rem',
-              gap: '0.5rem',
-              background: copied ? 'var(--green)' : 'var(--primary)'
-            }}
-          >
-            {copied ? (
-              <>
-                <CheckCircle2 size={16} />
-                <span>Copied to Clipboard!</span>
-              </>
-            ) : (
-              <>
-                <Copy size={16} />
-                <span>Copy Message</span>
-              </>
-            )}
-          </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleCopy}
+              style={{
+                fontSize: '0.82rem',
+                padding: '0.55rem 1.25rem',
+                gap: '0.5rem',
+                background: copied ? 'var(--green)' : 'var(--primary)'
+              }}
+            >
+              {copied ? (
+                <>
+                  <CheckCircle2 size={16} />
+                  <span>Copied to Clipboard!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={16} />
+                  <span>Copy Message</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSendEmail}
+              disabled={sendingEmail}
+              style={{ fontSize: '0.82rem', padding: '0.55rem 1.25rem' }}
+            >
+              Send email to parent
+            </button>
+          </div>
+
+          {emailStatus && (
+            <div style={{ fontSize: '0.72rem', color: 'var(--muted)', textAlign: 'right' }}>
+              {emailStatus}
+            </div>
+          )}
         </div>
       </div>
     </div>

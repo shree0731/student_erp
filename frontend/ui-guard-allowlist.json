@@ -5,13 +5,14 @@
     { "file": "src/components/ChatbotWidget.jsx", "reason": "light-purple redesign & adjustable launcher" },
     { "file": "src/components/Navbar.jsx", "reason": "light-purple redesign & greeting header" },
     { "file": "src/components/Sidebar.jsx", "reason": "light-purple redesign & floating rail" },
-    { "file": "src/pages/public/LoginPage.jsx", "reason": "light-purple redesign & decorative layers" },
+    { "file": "src/pages/public/LoginPage.jsx", "reason": "OTP code verification step" },
     { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "light-purple redesign & sticky note action list" },
     { "file": "src/pages/mentor/StudentDetail.jsx", "reason": "light-purple redesign & sticky notes" },
     { "file": "src/pages/student/StudentDashboard.jsx", "reason": "light-purple redesign & sticky notes" },
     { "file": "src/pages/student/StudentMarks.jsx", "reason": "light-purple redesign & cards" },
     { "file": "src/pages/admin/AdminDashboard.jsx", "reason": "light-purple redesign & sticky notes" },
-    { "file": "src/components/ParentAlertModal.jsx", "reason": "light-purple redesign & dialogs" },
+    { "file": "src/components/ParentAlertModal.jsx", "reason": "Send email to parent button and delivery status line" },
+    { "file": "src/context/AuthContext.jsx", "reason": "Add completeLogin and handle otp_required during login" },
     { "file": "src/services/api.js", "reason": "add createMeetingRequest and getNotifications endpoints" }
   ],
   "allowedElements": []

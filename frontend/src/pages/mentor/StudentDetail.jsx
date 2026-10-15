@@ -27,7 +27,6 @@ export default function StudentDetail() {
 
   // Mentor notes state (stored on server with legacy localStorage migration)
   const [notes, setNotes] = useState('');
-  const [isNotesReadOnly, setIsNotesReadOnly] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [showParentModal, setShowParentModal] = useState(false);
   const [alertToast, setAlertToast] = useState('');
@@ -65,7 +64,6 @@ export default function StudentDetail() {
           if (serverNotes.length > 0) {
             // Single note per student loaded back as single value
             setNotes(serverNotes[0]?.note || '');
-            setIsNotesReadOnly(false);
             if (legacyNote && legacyNote.trim() === (serverNotes[0]?.note || '').trim()) {
               localStorage.removeItem(`mentor_notes_${id}`);
             }
@@ -76,7 +74,6 @@ export default function StudentDetail() {
                 const upserted = await api.upsertStudentNote(id, { note: trimmedLegacy });
                 if (upserted && upserted.data) {
                   setNotes(upserted.data.note);
-                  setIsNotesReadOnly(false);
                   localStorage.removeItem(`mentor_notes_${id}`);
                 } else {
                   setNotes(legacyNote);
@@ -86,13 +83,11 @@ export default function StudentDetail() {
                 setNotes(legacyNote);
               }
             } else {
-              // Legacy note is over 2000 chars: keep in localStorage and show read-only until saved
+              // Legacy note is over 2000 chars: keep in localStorage, show full text editable so mentor can shorten & save
               setNotes(legacyNote);
-              setIsNotesReadOnly(true);
             }
           } else {
             setNotes('');
-            setIsNotesReadOnly(false);
           }
         } else {
           // If loading from API fails, fall back to showing localStorage note in text box (do not delete it)
@@ -115,12 +110,10 @@ export default function StudentDetail() {
 
   const handleSaveNotes = async (e) => {
     e.preventDefault();
-    if (!notes.trim()) return;
     try {
-      const res = await api.upsertStudentNote(id, { note: notes.trim() });
-      if (res && res.data) {
-        setNotes(res.data.note);
-        setIsNotesReadOnly(false);
+      const res = await api.upsertStudentNote(id, { note: notes });
+      if (res) {
+        setNotes(res.data ? res.data.note : '');
         localStorage.removeItem(`mentor_notes_${id}`);
         setSavedSuccess(true);
         setTimeout(() => setSavedSuccess(false), 2500);
@@ -695,7 +688,6 @@ export default function StudentDetail() {
             style={{ width: '100%', resize: 'vertical', lineHeight: '1.6', marginBottom: '1rem' }}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            readOnly={isNotesReadOnly}
             placeholder="Log your counseling notes here..."
           />
 

@@ -20,6 +20,12 @@ const UserSchema = new mongoose.Schema({
     required: true,
     index: true
   },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    default: ''
+  },
   name: {
     type: String,
     default: ''

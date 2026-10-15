@@ -45,7 +45,6 @@ async function request(endpoint, options = {}) {
 }
 
 export const api = {
-  // Authentication
   login: async (username, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
@@ -57,6 +56,44 @@ export const api = {
       throw new Error(errData.message || errData.error || 'Authentication failed');
     }
     return await res.json();
+  },
+
+  verifyOtp: async ({ challenge_id, code, username }) => {
+    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge_id, code, username })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || errData.error || 'OTP verification failed');
+    }
+    return await res.json();
+  },
+
+  resendOtp: async ({ challenge_id }) => {
+    const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge_id })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || errData.error || 'Failed to resend OTP');
+    }
+    return await res.json();
+  },
+
+  sendParentAlert: async (studentId, data = {}) => {
+    return await request(`/students/${studentId}/parent-alert`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  getNotificationLog: async (studentId) => {
+    const query = studentId ? `?student_id=${encodeURIComponent(studentId)}` : '';
+    return await request(`/notifications/log${query}`);
   },
 
   // Students

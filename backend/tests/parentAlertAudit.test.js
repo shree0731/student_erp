@@ -38,12 +38,13 @@ describe('Task 6 — Parent Alert Modal Honesty & Hook Integrity Audit', () => {
     expect(content).not.toMatch(/Dr\.\s*Kavitha\s*Ramanathan/);
   });
 
-  test('Guarantees honest manual draft notice and copy button are present', () => {
+  test('Guarantees honest communication notice and copy button are present', () => {
     const content = fs.readFileSync(modalPath, 'utf8');
 
-    // Notice that dispatch is manual, no fake automated SMS/Email gateway
-    expect(content).toMatch(/No automatic SMS or Email dispatch service is connected/i);
-    expect(content).toMatch(/Manual Communication Draft/i);
+    // Notice that dispatch is truthful: emails sent through configured automation channel, no phone/SMS dispatch claimed
+    expect(content).toMatch(/emails are sent through the configured automation channel/i);
+    expect(content).toMatch(/no automatic phone or SMS dispatch/i);
+    expect(content).not.toMatch(/automatic (SMS|phone) dispatch service is connected/i);
 
     // Copy message to clipboard button
     expect(content).toMatch(/navigator\.clipboard\.writeText/);
