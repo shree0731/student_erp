@@ -14,6 +14,9 @@ function createTransporter() {
     host,
     port,
     secure,
+    connectionTimeout: 4000,
+    greetingTimeout: 4000,
+    socketTimeout: 5000,
     auth: (user && pass) ? { user, pass } : undefined,
     tls: {
       rejectUnauthorized: process.env.NODE_ENV === 'production'
