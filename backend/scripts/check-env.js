@@ -91,10 +91,22 @@ function checkEnv(env = process.env, options = { exitOnError: true, silent: fals
     errors.push('ERP_SERVICE_API_KEY contains an insecure placeholder phrase.');
   }
 
-  // 7. ALLOWED_ORIGINS
-  if (!env.ALLOWED_ORIGINS || !env.ALLOWED_ORIGINS.trim()) {
-    errors.push('ALLOWED_ORIGINS is missing (e.g. http://localhost:5173,http://localhost:3000).');
+  // 6b. OTP HMAC Secret (OTP_HMAC_SECRET or fallback JWT_SECRET)
+  const otpHmacSecret = env.OTP_HMAC_SECRET || env.JWT_SECRET;
+  if (!otpHmacSecret || !otpHmacSecret.trim()) {
+    errors.push('OTP HMAC secret (OTP_HMAC_SECRET or JWT_SECRET) is required.');
+  } else if (otpHmacSecret.length < 32) {
+    errors.push(`OTP HMAC secret must be at least 32 characters long (current length: ${otpHmacSecret.length}).`);
+  } else if (isPlaceholder(otpHmacSecret)) {
+    errors.push('OTP HMAC secret contains an insecure placeholder phrase.');
   }
+
+  // 7. CORS_ORIGINS / ALLOWED_ORIGINS
+  const corsOrigins = env.CORS_ORIGINS || env.ALLOWED_ORIGINS;
+  if (!corsOrigins || !corsOrigins.trim()) {
+    errors.push('CORS_ORIGINS (or ALLOWED_ORIGINS) is missing (e.g. http://localhost:5173,http://localhost:3000).');
+  }
+
 
   const isValid = errors.length === 0;
 

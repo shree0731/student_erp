@@ -152,9 +152,21 @@ async function getCurriculumData() {
   return cachedCurriculum || [];
 }
 
+async function addStudent(student) {
+  if (!cachedStudents) {
+    await getStudentsData();
+  }
+  if (!cachedStudents.some(s => s.student_id === student.student_id)) {
+    cachedStudents.unshift(student);
+  }
+  return student;
+}
+
 module.exports = {
   getStudentsData,
   getFacultyData,
   getMarksForStudent,
-  getCurriculumData
+  getCurriculumData,
+  addStudent
 };
+

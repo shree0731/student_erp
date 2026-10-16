@@ -400,15 +400,71 @@ async function getMetrics() {
   return null;
 }
 
+/**
+ * Sends the 16 features to the AI gateway as given (no marks lookup, no defaults).
+ * Surfaces gateway 422/503 messages to the caller unchanged.
+ *
+ * @param {Object} features - Plain object containing all 16 features
+ * @returns {Promise<Object>} Gateway prediction output
+ */
+async function predictFromFeatures(features) {
+  const url = `${AI_SERVICE_BASE_URL}/api/predict`;
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+  if (AI_SERVICE_API_KEY) {
+    headers['X-API-Key'] = AI_SERVICE_API_KEY;
+  }
+
+  let response;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(features),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+  } catch (netErr) {
+    const err = new Error('The AI prediction gateway is unreachable. No prediction was produced.');
+    err.status = 503;
+    err.gateway_unreachable = true;
+    throw err;
+  }
+
+  if (!response.ok) {
+    let errBody = null;
+    try {
+      errBody = await response.json();
+    } catch {
+      errBody = { message: await response.text().catch(() => 'AI Gateway Error') };
+    }
+    const err = new Error(errBody?.message || errBody?.detail || 'AI Gateway Error');
+    err.status = response.status;
+    err.data = errBody;
+    throw err;
+  }
+
+  return await response.json();
+}
+
 module.exports = {
   aiServiceClient: {
     getPrediction,
+    predictFromFeatures,
     mapStudentToPredictionPayload,
     sendChatMessage,
     getMetrics
   },
   getPrediction,
+  predictFromFeatures,
   mapStudentToPredictionPayload,
   sendChatMessage,
   getMetrics
 };
+

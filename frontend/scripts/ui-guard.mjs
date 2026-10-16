@@ -355,7 +355,10 @@ export function runGuard() {
     const relPath = path.relative(frontendDir, file).replace(/\\/g, '/');
 
     // 1. Check if allowed new file
-    if ((allowlist.allowedNewFiles || []).includes(relPath)) {
+    const isAllowedNew = (allowlist.allowedNewFiles || []).some(item =>
+      typeof item === 'string' ? item === relPath : (item.file === relPath || item.path === relPath)
+    );
+    if (isAllowedNew) {
       try {
         const code = fs.readFileSync(file, 'utf-8');
         parseCode(code);

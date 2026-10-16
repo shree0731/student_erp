@@ -4,7 +4,10 @@
  * Secured with JWT authentication attached to every request.
  */
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL
+  ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
+  : '/api';
+
 
 // Helper for HTTP requests with JWT authorization
 async function request(endpoint, options = {}) {
@@ -220,5 +223,30 @@ export const api = {
   // Health
   checkHealth: async () => {
     return await request('/health');
+  },
+
+  getDeepHealth: async () => {
+    return await request('/health/deep');
+  },
+
+  // Student Assessment Flow (Part B)
+  assessStudent: async (payload) => {
+    return await request('/students/assess', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
+  getStudentAssessments: async (studentId) => {
+    return await request(`/students/${studentId}/assessments`);
+  },
+
+  getStudentActions: async (studentId) => {
+    return await request(`/students/${studentId}/actions`);
+  },
+
+  getAssessExamples: async () => {
+    return await request('/assess/examples');
   }
 };
+

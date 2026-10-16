@@ -26,16 +26,25 @@ assertConfig();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for frontend development
-const defaultAllowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-const configuredOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
-  : defaultAllowedOrigins;
+// C3. Proxy awareness: set Express trust proxy from env var (default 1 in production)
+const trustProxyVal = process.env.TRUST_PROXY !== undefined
+  ? (process.env.TRUST_PROXY === 'true' || process.env.TRUST_PROXY === '1' ? 1 : (isNaN(Number(process.env.TRUST_PROXY)) ? process.env.TRUST_PROXY : Number(process.env.TRUST_PROXY)))
+  : (process.env.NODE_ENV === 'production' ? 1 : false);
+app.set('trust proxy', trustProxyVal);
+
+// C2. CORS: read CORS_ORIGINS (comma separated). In production, only those origins are allowed and wildcard is rejected.
+const rawCors = process.env.CORS_ORIGINS || process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:5174';
+const configuredOrigins = rawCors.split(',').map(o => o.trim()).filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (configuredOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'production' && configuredOrigins.includes('*')) {
+      const corsErr = new Error('CORS violation: Wildcard origin is forbidden in production.');
+      corsErr.status = 403;
+      return callback(corsErr);
+    }
+    if (configuredOrigins.includes(origin)) {
       return callback(null, true);
     }
     const corsErr = new Error(`CORS violation: Origin '${origin}' is not authorized.`);
@@ -45,6 +54,16 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
 }));
+
+// C6. Direct root health check (no auth)
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'fsd-erp-backend',
+    timestamp: new Date().toISOString()
+  });
+});
+
 
 // Body Parsing Middleware
 app.use(express.json({ limit: '100kb' }));

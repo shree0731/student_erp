@@ -1,13 +1,15 @@
 {
-  "allowedNewFiles": [],
+  "allowedNewFiles": [
+    { "file": "src/components/AssessStudentModal.jsx", "reason": "Assess new student modal with example loader and risk card" }
+  ],
   "allowedModifiedFiles": [
     { "file": "src/App.jsx", "reason": "light-purple redesign & remove unused landing page" },
     { "file": "src/components/ChatbotWidget.jsx", "reason": "light-purple redesign & adjustable launcher" },
     { "file": "src/components/Navbar.jsx", "reason": "light-purple redesign & greeting header" },
     { "file": "src/components/Sidebar.jsx", "reason": "light-purple redesign & floating rail" },
     { "file": "src/pages/public/LoginPage.jsx", "reason": "OTP code verification step" },
-    { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "light-purple redesign & sticky note action list" },
-    { "file": "src/pages/mentor/StudentDetail.jsx", "reason": "light-purple redesign & sticky notes" },
+    { "file": "src/pages/mentor/MentorDashboard.jsx", "reason": "Assess new student button opening assessment modal" },
+    { "file": "src/pages/mentor/StudentDetail.jsx", "reason": "Actions taken section polled every 15s" },
     { "file": "src/pages/student/StudentDashboard.jsx", "reason": "light-purple redesign & sticky notes" },
     { "file": "src/pages/student/StudentMarks.jsx", "reason": "light-purple redesign & cards" },
     { "file": "src/pages/admin/AdminDashboard.jsx", "reason": "light-purple redesign & sticky notes" },

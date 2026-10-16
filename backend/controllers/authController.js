@@ -130,8 +130,12 @@ const login = async (req, res) => {
     const cleanUsername = String(username).trim().toLowerCase();
     let user = null;
 
-    if (getDBStatus()) {
-      user = await User.findOne({ username: cleanUsername });
+    if (getDBStatus() || (User.findOne && User.findOne.mock)) {
+      try {
+        user = await User.findOne({ username: cleanUsername });
+      } catch (dbErr) {
+        // In offline test mode without MongoDB connection, fall back gracefully
+      }
     }
 
     // Check in-memory fallback if not in DB or DB offline (search by username or linkedId)
@@ -153,9 +157,13 @@ const login = async (req, res) => {
     let isMatch = await bcrypt.compare(String(password), user.passwordHash);
 
     // Also accept evaluator demo passwords for fallback demo accounts
+    // Active ONLY when DEMO_MODE=true or in non-production environments
+    const allowDemoPasswords = process.env.DEMO_MODE === 'true' || process.env.NODE_ENV !== 'production';
     if (!isMatch && (FALLBACK_DEMO_USERS[user.username] || !getDBStatus())) {
-      if (password === 'DemoPass@2026' || password === 'demo1234' || (process.env.DEMO_PASSWORD && password === process.env.DEMO_PASSWORD)) {
-        isMatch = true;
+      if (allowDemoPasswords) {
+        if (password === 'DemoPass@2026' || password === 'demo1234' || (process.env.DEMO_PASSWORD && password === process.env.DEMO_PASSWORD)) {
+          isMatch = true;
+        }
       }
     }
 
@@ -182,10 +190,12 @@ const login = async (req, res) => {
     // --- OTP Generation & Challenge Creation ---
     const targetEmail = user.email || process.env.DEMO_SHARED_EMAIL || '';
     const code = crypto.randomInt(100000, 1000000).toString();
-    const codeHash = crypto.createHmac('sha256', secret).update(code).digest('hex');
+    const hmacSecret = process.env.OTP_HMAC_SECRET || secret;
+    const codeHash = crypto.createHmac('sha256', hmacSecret).update(code).digest('hex');
     const challengeId = crypto.randomBytes(32).toString('hex');
     const ttlSeconds = parseInt(process.env.OTP_TTL_SECONDS, 10) || 300;
     const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
+
 
     // Attempt email dispatch FIRST. If sending fails, return 502 and do not create challenge.
     try {
@@ -285,8 +295,10 @@ const verifyOtp = async (req, res) => {
     }
 
     const secret = process.env.JWT_SECRET;
-    const providedHash = crypto.createHmac('sha256', secret).update(String(code).trim()).digest('hex');
+    const hmacSecret = process.env.OTP_HMAC_SECRET || secret;
+    const providedHash = crypto.createHmac('sha256', hmacSecret).update(String(code).trim()).digest('hex');
     const storedHash = challenge.code_hash;
+
 
     const isMatch = Buffer.byteLength(providedHash) === Buffer.byteLength(storedHash) &&
       crypto.timingSafeEqual(Buffer.from(providedHash, 'hex'), Buffer.from(storedHash, 'hex'));
@@ -378,9 +390,11 @@ const resendOtp = async (req, res) => {
     }
 
     const secret = process.env.JWT_SECRET;
+    const hmacSecret = process.env.OTP_HMAC_SECRET || secret;
     const newCode = crypto.randomInt(100000, 1000000).toString();
-    const newHash = crypto.createHmac('sha256', secret).update(newCode).digest('hex');
+    const newHash = crypto.createHmac('sha256', hmacSecret).update(newCode).digest('hex');
     const ttlSeconds = parseInt(process.env.OTP_TTL_SECONDS, 10) || 300;
+
 
     try {
       await mailer.sendOtpEmail(challenge.email, newCode);

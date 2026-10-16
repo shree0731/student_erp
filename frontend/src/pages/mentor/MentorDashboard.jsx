@@ -31,6 +31,8 @@ import {
   Mail
 } from 'lucide-react';
 import ParentAlertModal from '../../components/ParentAlertModal';
+import AssessStudentModal from '../../components/AssessStudentModal';
+
 
 const INITIAL_INTERVENTIONS = [
   {
@@ -251,6 +253,8 @@ export default function MentorDashboard() {
   // Parent Alert Modal State
   const [showParentModal, setShowParentModal] = useState(false);
   const [parentStudent, setParentStudent] = useState(null);
+  const [showAssessModal, setShowAssessModal] = useState(false);
+
 
   const handleParentAlertDispatched = (record) => {
     const updated = [record, ...interventions];
@@ -552,7 +556,17 @@ export default function MentorDashboard() {
                     <PlusCircle size={14} color="var(--primary)" />
                     <span>Log Counseling</span>
                   </button>
+
+                  <button
+                    className="btn btn-outline btn-sm"
+                    onClick={() => setShowAssessModal(true)}
+                    style={{ gap: '0.4rem' }}
+                  >
+                    <PlusCircle size={14} color="var(--primary)" />
+                    <span>Assess new student</span>
+                  </button>
                 </div>
+
               </div>
 
               {/* Right Illustration */}
@@ -1726,6 +1740,21 @@ export default function MentorDashboard() {
         />
       )}
 
+      {/* =====================================================================
+          ASSESS NEW STUDENT MODAL (Part B Live Demo)
+          ===================================================================== */}
+      {showAssessModal && (
+        <AssessStudentModal
+          isOpen={showAssessModal}
+          onClose={() => setShowAssessModal(false)}
+          onAssessmentCompleted={() => {
+            loadMentorData();
+            fetchMeetingRequests(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }
+

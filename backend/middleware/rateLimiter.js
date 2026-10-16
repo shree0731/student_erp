@@ -6,7 +6,7 @@ const authLimiter = rateLimit({
   max: 10, // limit each IP to 10 login requests per minute
   standardHeaders: true,
   legacyHeaders: false,
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: () => process.env.NODE_ENV === 'test' && process.env.TEST_RATE_LIMIT !== 'true',
   message: {
     error: 'Too Many Requests',
     message: 'Too many login attempts. Please wait 1 minute before trying again.'

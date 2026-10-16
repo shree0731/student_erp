@@ -9,6 +9,7 @@ const integrationController = require('../controllers/integrationController');
 const meetingRequestController = require('../controllers/meetingRequestController');
 const mentorNoteController = require('../controllers/mentorNoteController');
 const notificationController = require('../controllers/notificationController');
+const assessmentController = require('../controllers/assessmentController');
 const { requireAuth, requireRole } = require('../middleware/authMiddleware');
 const { serviceKeyAuth } = require('../middleware/serviceKeyAuth');
 const { authLimiter } = require('../middleware/rateLimiter');
@@ -16,7 +17,9 @@ const { aiServiceClient } = require('../services/aiServiceClient');
 const csvProvider = require('../utils/csvDataProvider');
 const Curriculum = require('../models/Curriculum');
 const Student = require('../models/Student');
+const mongoose = require('mongoose');
 const { getDBStatus } = require('../config/db');
+
 
 // --- 1. Authentication Routes (Rate-limited) ---
 router.post('/auth/login', authLimiter, authController.login);
@@ -28,8 +31,15 @@ router.get('/students', requireAuth, studentController.getStudents);
 router.get('/students/:id', requireAuth, studentController.getStudentById);
 router.get('/students/:id/marks', requireAuth, studentController.getStudentMarks);
 
+// --- 2a. Student Assessment Flow (Part B) ---
+router.post('/students/assess', requireAuth, requireRole('admin', 'mentor'), assessmentController.assessNewStudent);
+router.get('/students/:id/assessments', requireAuth, requireRole('admin', 'mentor'), assessmentController.getStudentAssessments);
+router.get('/students/:id/actions', requireAuth, requireRole('admin', 'mentor'), assessmentController.getStudentActions);
+router.get('/assess/examples', requireAuth, requireRole('admin', 'mentor'), assessmentController.getAssessExamples);
+
 // --- 2b. Mentor Notes Endpoints (Protected: Admin & Mentor) ---
 router.get('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.getNotes);
+
 router.post('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.createNote);
 router.put('/students/:id/notes', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.upsertNote);
 router.delete('/students/:id/notes/:noteId', requireAuth, requireRole('admin', 'mentor'), mentorNoteController.deleteNote);
@@ -379,6 +389,70 @@ router.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Deep Health Check (no auth, returns booleans + latency, never secrets)
+router.get('/health/deep', async (req, res) => {
+  const startTime = Date.now();
+  const latency = {};
+
+  // 1. MongoDB check
+  let mongo = false;
+  const mongoStart = Date.now();
+  try {
+    mongo = !!getDBStatus();
+    if (mongo && mongoose.connection && mongoose.connection.readyState === 1 && mongoose.connection.db) {
+      await mongoose.connection.db.admin().ping();
+    }
+  } catch (mErr) {
+    mongo = false;
+  }
+  latency.mongo = Date.now() - mongoStart;
+
+  // 2. AI Gateway check
+  let ai_gateway = false;
+  const aiStart = Date.now();
+  const aiBaseUrl = process.env.AI_SERVICE_BASE_URL || 'http://localhost:5001';
+  try {
+    const controller = new AbortController();
+    const tId = setTimeout(() => controller.abort(), 2000);
+    const aiRes = await fetch(`${aiBaseUrl}/health`, { signal: controller.signal });
+    clearTimeout(tId);
+    ai_gateway = aiRes.ok;
+  } catch {
+    ai_gateway = false;
+  }
+  latency.ai_gateway = Date.now() - aiStart;
+
+  // 3. ML Microservice check
+  let ml_service = false;
+  const mlStart = Date.now();
+  const mlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8001';
+  try {
+    const controller = new AbortController();
+    const tId = setTimeout(() => controller.abort(), 2000);
+    const mlRes = await fetch(`${mlUrl}/health`, { signal: controller.signal });
+    clearTimeout(tId);
+    ml_service = mlRes.ok;
+  } catch {
+    ml_service = false;
+  }
+  latency.ml_service = Date.now() - mlStart;
+
+  // 4. SMTP Configured check
+  const smtp_configured = Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
+  latency.total = Date.now() - startTime;
+
+  res.json({
+    status: (mongo || !getDBStatus()) && ai_gateway && ml_service ? 'ready' : 'degraded',
+    mongo,
+    ai_gateway,
+    ml_service,
+    smtp_configured,
+    latency,
+    timestamp: new Date().toISOString()
+  });
+});
+
 
 // --- 7. Service-Authenticated Integrations ---
 router.post('/integrations/meeting-requests', serviceKeyAuth, integrationController.ingestMeetingRequest);

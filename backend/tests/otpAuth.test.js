@@ -277,4 +277,70 @@ describe('Step 3: OTP Authentication & Security Tests', () => {
     expect(hijackAttempt.status).toBe(403);
     expect(hijackAttempt.body.message).toMatch(/cannot verify another user/i);
   });
+
+  test('A3: A user without an email field logs in using DEMO_SHARED_EMAIL', async () => {
+    let sentEmail = null;
+    mailer.sendMail = jest.fn(async (opts) => {
+      sentEmail = opts;
+      return { messageId: 'mock-123', channel: 'dry-run' };
+    });
+
+    process.env.DEMO_SHARED_EMAIL = 'custom_shared_fallback@college.edu';
+
+    const User = require('../models/User');
+    const origFindOne = User.findOne;
+    User.findOne = jest.fn().mockResolvedValue({
+      username: 'legacy_user',
+      role: 'mentor',
+      linkedId: 'FAC_LEGACY_01',
+      name: 'Legacy Faculty',
+      department: 'CSE',
+      college_id: 'C101',
+      passwordHash: require('bcryptjs').hashSync('LegacyPass123!', 10),
+      email: undefined
+    });
+
+    try {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({ username: 'legacy_user', password: 'LegacyPass123!' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.otp_required).toBe(true);
+      expect(mailer.sendMail).toHaveBeenCalledTimes(1);
+      expect(sentEmail.to).toBe('custom_shared_fallback@college.edu');
+    } finally {
+      User.findOne = origFindOne;
+    }
+  });
+
+  test('A4: OTP routes return 429 when rate limiter is active', async () => {
+    process.env.TEST_RATE_LIMIT = 'true';
+    mailer.sendMail = jest.fn().mockResolvedValue({ messageId: 'mock-rate-limit' });
+
+    let lastStatus = 200;
+    let res;
+    for (let i = 0; i < 15; i++) {
+      res = await request(app)
+        .post('/api/auth/login')
+        .send({ username: 'mentor', password: 'DemoPass@2026' });
+      lastStatus = res.status;
+      if (lastStatus === 429) break;
+    }
+
+    expect(lastStatus).toBe(429);
+    expect(res.body.error).toBe('Too Many Requests');
+  });
+
+  test('A1: Missing SMTP_PASS without EMAIL_DRY_RUN fails loudly with 502', async () => {
+    delete process.env.SMTP_PASS;
+    process.env.EMAIL_DRY_RUN = 'false';
+
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ username: 'mentor', password: 'DemoPass@2026' });
+
+    expect(res.status).toBe(502);
+    expect(res.body.message).toMatch(/Could not send verification email/i);
+  });
 });

@@ -32,7 +32,7 @@ function createTransporter() {
  * @returns {Promise<Object>}
  */
 async function sendMail({ to, subject, text, html }) {
-  const isDryRun = process.env.EMAIL_DRY_RUN === 'true' || !process.env.SMTP_PASS;
+  const isDryRun = process.env.EMAIL_DRY_RUN === 'true';
 
   if (isDryRun) {
     if (process.env.NODE_ENV !== 'production') {
@@ -41,20 +41,30 @@ async function sendMail({ to, subject, text, html }) {
     return {
       messageId: `dry-run-${Date.now()}`,
       accepted: [to],
-      rejected: []
+      rejected: [],
+      channel: 'dry-run'
     };
+  }
+
+  if (!process.env.SMTP_PASS) {
+    throw new Error('SMTP credentials not configured: missing SMTP_PASS');
   }
 
   const from = process.env.MAIL_FROM || process.env.SMTP_USER || 'no-reply@insighterp.edu';
   const transporter = createTransporter();
 
-  return await transporter.sendMail({
+  const info = await transporter.sendMail({
     from,
     to,
     subject,
     text,
     html: html || text
   });
+
+  return {
+    ...info,
+    channel: 'smtp'
+  };
 }
 
 /**

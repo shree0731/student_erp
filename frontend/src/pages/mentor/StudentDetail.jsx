@@ -32,9 +32,33 @@ export default function StudentDetail() {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [showParentModal, setShowParentModal] = useState(false);
   const [alertToast, setAlertToast] = useState('');
+  const [actions, setActions] = useState([]);
+
+  const fetchActions = async () => {
+    if (!id) return;
+    try {
+      const res = await api.getStudentActions(id);
+      if (res && Array.isArray(res.data)) {
+        setActions(res.data);
+      }
+    } catch (aErr) {
+      console.warn('Could not load student action logs:', aErr.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchActions();
+    const actionsInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchActions();
+      }
+    }, 15000);
+    return () => clearInterval(actionsInterval);
+  }, [id]);
 
   useEffect(() => {
     async function loadData() {
+
       setLoading(true);
       setErrorMessage('');
       try {
@@ -665,8 +689,63 @@ export default function StudentDetail() {
         </div>
       </div>
 
+      {/* Actions Taken Section (Part B - Polled every 15s) */}
+      <div className="card" style={{ marginBottom: '1.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+            <CheckCircle2 size={18} color="var(--purple)" />
+            <span>Actions taken</span>
+          </h3>
+          <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+            Auto-refreshed live (15s)
+          </span>
+        </div>
+
+        {actions && actions.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {actions.map((act, idx) => (
+              <div
+                key={act.assessment_id ? `${act.assessment_id}-${idx}` : idx}
+                style={{
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: '6px',
+                  background: '#F8FAFC',
+                  border: '1px solid var(--line)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '0.82rem'
+                }}
+              >
+                <div>
+                  <strong style={{ color: 'var(--ink)' }}>{act.step}</strong>: <span style={{ color: '#64748B' }}>{act.detail}</span>
+                  <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>
+                    {new Date(act.at || act.createdAt).toLocaleString()}
+                  </div>
+                </div>
+                <span style={{
+                  padding: '3px 8px',
+                  borderRadius: '9999px',
+                  fontSize: '0.7rem',
+                  fontWeight: '700',
+                  background: act.status === 'ok' ? '#D1FAE5' : act.status === 'skipped' ? '#E2E8F0' : '#FEE2E2',
+                  color: act.status === 'ok' ? '#059669' : act.status === 'skipped' ? '#475569' : '#DC2626'
+                }}>
+                  {act.status.toUpperCase()}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
+            No automated intervention actions recorded for this student yet.
+          </p>
+        )}
+      </div>
+
       {/* Mentor Notes & Intervention Logging Section */}
       <div className="card">
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <h3 style={{ fontSize: '1.05rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <FileText size={18} color="#4f46e5" />

@@ -93,7 +93,9 @@ You are invited for a mentor consultation to discuss your ward's academic standi
         urgency: reason === 'attendance' ? 'high' : 'normal'
       });
       if (res && res.status === 'sent') {
-        if (res.channel === 'n8n') {
+        if (res.channel === 'dry-run') {
+          setEmailStatus('Logged (dry run)');
+        } else if (res.channel === 'n8n') {
           setEmailStatus('Sent via n8n');
         } else if (res.channel === 'smtp_fallback') {
           setEmailStatus('Sent (fallback)');
